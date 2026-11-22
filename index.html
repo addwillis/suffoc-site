@@ -230,7 +230,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 10';
+const BUILD = 'build 11';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -648,8 +648,8 @@ menuBtn.addEventListener('click', () => {
 window.addEventListener('hashchange', route);
 status('loading data...');
 Promise.all([
-  fetch('data/areas.json').then(r => { if(!r.ok) throw new Error('areas.json HTTP ' + r.status); return r.json(); }),
-  fetch('data/events.json').then(r => { if(!r.ok) throw new Error('events.json HTTP ' + r.status); return r.json(); })
+  fetch('data/areas.json', { cache:'no-cache' }).then(r => { if(!r.ok) throw new Error('areas.json HTTP ' + r.status); return r.json(); }),
+  fetch('data/events.json', { cache:'no-cache' }).then(r => { if(!r.ok) throw new Error('events.json HTTP ' + r.status); return r.json(); })
 ]).then(([a, e]) => { loadData(asList(a), asList(e)); route(); status('loaded ' + EVENTS.length + ' events, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
