@@ -161,6 +161,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 .rrow .tbc{grid-column:2;margin:.1rem 0 0;color:var(--muted)}
 @media(min-width:760px){.rrow .datebox{grid-row:auto}.rrow{grid-template-columns:72px minmax(0,1fr) minmax(0,1.6fr);align-items:center}.rrow .links,.rrow .tbc{grid-column:3;margin:0;justify-content:flex-end;text-align:right}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.newscard .newsimg{display:block;width:calc(100% + 32px);margin:-16px -16px 12px;max-width:none;aspect-ratio:16/9;object-fit:cover;border-radius:var(--radius) var(--radius) 0 0}
 .card .date{color:var(--muted);font-weight:500;margin:0 0 .3rem}
 .stack{display:grid;gap:14px;align-content:start}
 
@@ -269,7 +270,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 44';
+const BUILD = 'build 45';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -277,6 +278,11 @@ let AREAS = {}, EVENTS = [], SKIPPED = [];
 /* Event and area data live in data/*.json (edited through Pages CMS). */
 const pairs = (list, k1, k2) => (list || []).filter(x => x && x[k1] && x[k2]).map(x => [x[k1], x[k2]]);
 const asList = d => Array.isArray(d) ? d : (d && Object.values(d).find(Array.isArray)) || [];
+function loadNews(list){
+  NEWS = list.filter(n => n && n.title && /^\d{4}-\d{2}-\d{2}$/.test(String(n.date || '').trim()))
+    .map(n => Object.assign({}, n, { date:String(n.date).trim() }))
+    .sort((a, b) => parseDate(b.date) - parseDate(a.date));
+}
 function loadData(areas, events){
   AREAS = {};
   areas.forEach(a => { let lat = parseFloat(a.lat), lon = parseFloat(a.lon);
@@ -309,14 +315,7 @@ function loadData(areas, events){
     if (id) o.area = id;
   });
 }
-const NEWS = [
-  { title:'SUFFOC at the Compass Sport Final', date:'2026-10-18',
-    text:'26 members travelled to East Sussex for the 2026 Compass Sport Trophy final. It is only the fifth time the club has qualified.',
-    link:'https://www.suffoc.co.uk/news/suffoc-compass-sport-final' },
-  { title:'SUFFOC 2026 AGM', date:'2026-08-26',
-    text:'The AGM came with a short score event in Christchurch Park beforehand, and a promise that nobody would be forced into a role.',
-    link:'https://www.suffoc.co.uk/news/suffoc-2026-agm' }
-];
+let NEWS = [];
 
 const CLUB = [
   { id:'about',         title:'About Us',          desc:'Who we are, where we run, and our club history.' },
@@ -478,12 +477,15 @@ function resultRow(e){
     ${has ? `<div class="links">${e.results.map(l => `<a class="btn small line" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div>` : `<p class="tbc">Results to follow</p>`}
   </div>`;
 }
+/* Picture paths come from Pages CMS (e.g. /images/x.jpg); make them relative so they work under /suffoc-site/ too. */
+const imgSrc = p => /^https?:/i.test(p) ? p : String(p).replace(/^\/+/, '');
 function newsCard(n){
-  return `<article class="card">
+  return `<article class="card newscard">
+    ${n.image ? `<img class="newsimg" src="${esc(imgSrc(n.image))}" alt="${esc(n.imageAlt || '')}" loading="lazy">` : ''}
     <p class="date">${fmtShort.format(parseDate(n.date))}</p>
     <h3>${esc(n.title)}</h3>
-    <p style="margin-top:.5rem">${esc(n.text)}</p>
-    <a href="${esc(n.link)}" ${ext}><strong>Read more</strong></a>
+    ${n.text ? `<p style="margin-top:.5rem">${esc(n.text)}</p>` : ''}
+    ${n.link ? `<a href="${esc(n.link)}" ${ext}><strong>Read more</strong></a>` : ''}
   </article>`;
 }
 
@@ -822,8 +824,9 @@ window.addEventListener('hashchange', route);
 status('loading data...');
 Promise.all([
   fetch('data/areas.json', { cache:'no-cache' }).then(r => { if(!r.ok) throw new Error('areas.json HTTP ' + r.status); return r.json(); }),
-  fetch('data/events.json', { cache:'no-cache' }).then(r => { if(!r.ok) throw new Error('events.json HTTP ' + r.status); return r.json(); })
-]).then(([a, e]) => { loadData(asList(a), asList(e)); route(); status('loaded ' + EVENTS.length + ' events, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+  fetch('data/events.json', { cache:'no-cache' }).then(r => { if(!r.ok) throw new Error('events.json HTTP ' + r.status); return r.json(); }),
+  fetch('data/news.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([a, e, n]) => { loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>

@@ -1,3 +1,6 @@
+media:
+  input: images
+  output: /images
 content:
 - name: events
   label: Events and results
@@ -201,3 +204,39 @@ content:
         - start
         - middle
         - end
+- name: news
+  label: News
+  type: file
+  path: data/news.json
+  format: json
+  fields:
+  - name: news
+    label: News items
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{date} {title}'
+    fields:
+    - name: title
+      label: Headline
+      type: string
+    - name: date
+      label: Date
+      type: string
+      description: Year-month-day, e.g. 2026-10-18
+    - name: image
+      label: Picture (optional)
+      type: image
+    - name: imageAlt
+      label: Picture description (optional)
+      type: string
+      description: A few words describing the picture, for people using screen readers.
+    - name: text
+      label: Summary
+      type: text
+      description: A sentence or two shown on the card.
+    - name: link
+      label: Link for 'Read more' (optional)
+      type: string
+      description: Leave blank if there is nothing more to read.
