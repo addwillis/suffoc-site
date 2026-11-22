@@ -122,6 +122,14 @@
           "url": "https://www.suffoc.co.uk/resources/event_comments/suffoc-sudbury-urban-2026-comments"
         }
       ]
+    },
+    {
+      "id": "street-o-claydon",
+      "title": "SUFFOC Mid-Week Street-O 3 Claydon",
+      "date": "2026-01-12",
+      "time": "18:00",
+      "type": "Street-O",
+      "area": "Claydon"
     }
   ]
 }
