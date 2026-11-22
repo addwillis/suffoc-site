@@ -10,7 +10,7 @@
         "courseClose": "14:00"
       },
       "type": "Regional",
-      "area": "tunstall",
+      "area": "Tunstall Forest",
       "entryUrl": "https://racesignup.co.uk/tunstall-forest-2026",
       "detail": {
         "about": "Barnes Carr and The Birches is in the south-east portion of Tunstall Forest, in the East Suffolk Sandlings. The area has interesting terrain, with a variety of water and relief features and some nice areas of deciduous woodland.",
@@ -41,7 +41,7 @@
         "startsFrom": "18:00"
       },
       "type": "Street-O",
-      "area": "hardwick",
+      "area": "Hardwick",
       "detail": {
         "gridRef": "TL858628",
         "organiser": "Gareth Radcliffe",
@@ -53,7 +53,7 @@
       "title": "Needham Lakes",
       "date": "2026-07-05",
       "type": "Local event",
-      "area": "needham",
+      "area": "Needham Lakes",
       "resultLinks": {
         "results": "http://www.suffoc.co.uk/results/2026/Needham/index.html",
         "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113907",
@@ -65,7 +65,7 @@
       "title": "Clare Country Park",
       "date": "2026-06-21",
       "type": "Local event",
-      "area": "clare",
+      "area": "Clare Country Park",
       "resultLinks": {
         "results": "http://www.suffoc.co.uk/results/2026/Clare/index.html",
         "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113649",
@@ -77,7 +77,7 @@
       "title": "Sudbury Urban",
       "date": "2026-05-17",
       "type": "Regional",
-      "area": "sudbury",
+      "area": "Sudbury",
       "results": [
         {
           "label": "Routegadget courses 1 to 3",
@@ -102,7 +102,7 @@
         "startsFrom": "18:00"
       },
       "type": "Street-O",
-      "area": "claydon",
+      "area": "Claydon",
       "detail": {
         "gridRef": "TL858628",
         "w3w": "only.pint.form"
@@ -120,7 +120,7 @@
         "courseClose": "14:00"
       },
       "type": "Regional",
-      "area": "kings-forest",
+      "area": "Kings Forest",
       "detail": {
         "gridRef": "TL 821760",
         "organiser": "Rod Mansel",
@@ -132,7 +132,7 @@
       "id": "Brandon Country Park",
       "title": "Brandon Country park",
       "date": "2026-02-22",
-      "area": "brandon"
+      "area": "Brandon Country Park"
     }
   ]
 }

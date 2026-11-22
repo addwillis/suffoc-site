@@ -205,6 +205,9 @@ dl.facts dd a:hover{color:var(--sky)}
 .legend{display:flex;flex-wrap:wrap;gap:8px 22px;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.95rem;align-items:center}
 .legend i{display:inline-block;width:16px;height:16px;border-radius:50%;border:3px solid var(--navy);background:#fff;vertical-align:-3px;margin-right:6px}
 .legend i.up{background:var(--gold)}
+.person{display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;margin-top:.6rem}
+.personimg{width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid var(--gold)}
+.rrow .pill{margin-bottom:.3rem}
 .chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:1rem 0 0;padding:0}
 .chips li{background:var(--card);border:1px solid var(--line);border-radius:999px;font-weight:500}
 .chips li a{display:block;padding:.3rem .8rem;text-decoration:none;color:var(--ink)}
@@ -282,7 +285,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 54';
+const BUILD = 'build 55';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -313,7 +316,7 @@ function loadData(areas, events){
       .concat(pairs(e.results, 'label', 'url'));
     const d = e.detail;
     if (d && (d.about || d.postcode || d.w3w || d.organiser || d.planner || d.controller)) {
-      o.detail = Object.assign({}, d, { address: (d.address || []).filter(Boolean), officials: [['Organiser', d.organiser], ['Planner', d.planner], ['Controller', d.controller]].filter(x => x[1]).concat(pairs(d.officials, 'role', 'name')), docs: pairs(d.docs, 'label', 'url') });
+      o.detail = Object.assign({}, d, { address: (d.address || []).filter(Boolean), officials: [['Organiser', d.organiser], ['Planner', d.planner], ['Controller', d.controller]].filter(x => x[1]).map(x => { const id = memberId(x[1]); return [x[0], id ? MEMBERS[id].name : personKey(x[1]) ? String(x[1]).replace(/^.*\//, '').replace(/\.json$/i, '') : x[1], id ? '#person-' + id : '']; }).concat(pairs(d.officials, 'role', 'name').map(x => { const id = memberId(x[1]); return [x[0], x[1], id ? '#person-' + id : '']; })), docs: pairs(d.docs, 'label', 'url') });
     } else delete o.detail;
     o.loc = o.detail && o.detail.gridRef ? gridToLatLon(o.detail.gridRef) : null;
     return o;
@@ -328,7 +331,17 @@ function loadData(areas, events){
     if (id) o.area = id;
   });
 }
-let NEWS = [];
+let NEWS = [], MEMBERS = {};
+const personKey = v => String(v == null ? '' : v).replace(/^.*\//, '').replace(/\.json$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+function loadMembers(list){
+  MEMBERS = {};
+  list.forEach(m => { if (m && m.name) MEMBERS[m.id || personKey(m.name)] = m; });
+}
+/* Which member does a name (or the file path Pages CMS may store) refer to? */
+function memberId(v){
+  const k = personKey(v);
+  return k ? Object.keys(MEMBERS).find(id => personKey(id) === k || personKey(MEMBERS[id].name) === k) || null : null;
+}
 
 const CLUB = [
   { id:'about',         title:'About Us',          desc:'Who we are, where we run, and our club history.' },
@@ -788,6 +801,33 @@ function areaPage(id){
       <section class="section"><div class="section-head"><h2>Previous events</h2></div>${old.length ? pastByYear(old) : '<div class="empty">No previous events are listed for this area yet.</div>'}</section>
     </div>`;
 }
+/* One page per club member: their details and every event they have organised, planned or controlled. */
+function personPage(id){
+  const m = MEMBERS[id];
+  if (!m) return VIEWS.club();
+  const roles = ev => { const d = ev.detail || {}, r = []; [['Organiser', d.organiser], ['Planner', d.planner], ['Controller', d.controller]].forEach(x => { if (x[1] && memberId(x[1]) === id) r.push(x[0]); }); (d.officials || []).forEach(x => { if (x[1] && memberId(x[1]) === id && !r.includes(x[0])) r.push(x[0]); }); return r; };
+  const mine = EVENTS.map(ev => ({ ev: ev, r: roles(ev) })).filter(x => x.r.length).sort((a, b) => parseDate(b.ev.date) - parseDate(a.ev.date));
+  const row = x => { const e = x.ev, d = parseDate(e.date); return `<div class="rrow">
+      <div class="datebox" aria-hidden="true"><span class="wd">${d.toLocaleString('en-GB', { weekday:'short' })}</span><span class="day">${d.getDate()}</span><span class="mon">${d.toLocaleString('en-GB', { month:'short' })}</span></div>
+      <span class="sr">${fmtShort.format(d)}</span>
+      <div>${e.type ? `<span class="pill">${esc(e.type)}</span>` : ''}<h3>${e.detail ? `<a class="title-link" href="#event-${esc(e.id)}">${esc(e.title)}</a>` : esc(e.title)}</h3></div>
+      <p class="tbc">${esc(x.r.join(', '))}</p></div>`; };
+  const upc = mine.filter(x => !isPast(x.ev)).reverse(), old = mine.filter(x => isPast(x.ev));
+  return `<section class="pagehead"><div class="wrap">
+      <a class="back" href="#club">&larr; Back to Club</a>
+      <div class="person">
+        ${m.photo ? `<img class="personimg" src="${esc(imgSrc(m.photo))}" alt="${esc(m.name)}">` : ''}
+        <div><h1 class="event-title">${esc(m.name)}</h1>
+          ${m.role ? `<p class="lead" style="margin:.5rem 0 0">${esc(m.role)}</p>` : ''}
+          ${m.email ? `<p style="margin:.8rem 0 0"><a class="btn small gold" href="mailto:${esc(m.email)}">Email ${esc(String(m.name).split(' ')[0])}</a></p>` : ''}</div>
+      </div>
+    </div></section>
+    <div class="wrap">
+      ${upc.length ? `<section class="section"><div class="section-head"><h2>Coming up</h2></div><div class="rlist">${upc.map(row).join('')}</div></section>` : ''}
+      <section class="section"><div class="section-head"><h2>Events they have helped with</h2></div>
+        ${old.length ? `<div class="rlist">${old.map(row).join('')}</div>` : '<div class="empty">No events are listed for this person yet.</div>'}</section>
+    </div>`;
+}
 function eventPage(id){
   const e = EVENTS.find(x => x.id === id && x.detail);
   if (!e) return VIEWS.events();
@@ -811,7 +851,7 @@ function eventPage(id){
         ${timingsRows(e).length ? `<div class="card"><h3>Timings</h3>
           <dl class="facts">${timingsRows(e).map(r => `<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join('')}</dl></div>` : ''}
         ${d.officials.length ? `<div class="card"><h3>Event Officials</h3>
-          <dl class="facts">${d.officials.map(o => `<dt>${esc(o[0])}</dt><dd>${esc(o[1])}</dd>`).join('')}</dl></div>` : ''}
+          <dl class="facts">${d.officials.map(o => `<dt>${esc(o[0])}</dt><dd>${o[2] ? `<a href="${esc(o[2])}">${esc(o[1])}</a>` : esc(o[1])}</dd>`).join('')}</dl></div>` : ''}
         ${docs.length ? `<div class="card"><h3>Documents and links</h3>
           <div class="links" style="margin-top:.8rem">${docs.map(x => `<a class="btn small line" href="${esc(x[1])}" ${ext}>${esc(x[0])}</a>`).join('')}</div></div>` : ''}
       </aside>
@@ -856,6 +896,7 @@ function route(){
   const h = (location.hash || '#home').slice(1);
   let key = 'home', html;
   if (h.startsWith('club-')) { key = 'club'; html = clubPage(h.slice(5)); }
+  else if (h.startsWith('person-')) { key = 'club'; html = personPage(h.slice(7)); }
   else if (h.startsWith('area-')) { key = 'events'; html = areaPage(h.slice(5)); }
   else if (h.startsWith('news-')) { key = 'news'; html = newsPage(h.slice(5)); }
   else if (h.startsWith('event-')) { key = 'events'; html = eventPage(h.slice(6)); }
@@ -878,8 +919,9 @@ status('loading data...');
 Promise.all([
   fetch('data/areas.json', { cache:'no-cache' }).then(r => { if(!r.ok) throw new Error('areas.json HTTP ' + r.status); return r.json(); }),
   fetch('data/events.json', { cache:'no-cache' }).then(r => { if(!r.ok) throw new Error('events.json HTTP ' + r.status); return r.json(); }),
-  fetch('data/news.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-]).then(([a, e, n]) => { loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+  fetch('data/news.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  fetch('data/members.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([a, e, n, m]) => { loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>

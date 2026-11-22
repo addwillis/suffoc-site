@@ -75,6 +75,7 @@ content:
         collection: areas
         search: name
         label: '{primary}'
+        value: '{primary}'
     - name: link
       label: Link to existing event page (optional)
       type: string
@@ -113,13 +114,43 @@ content:
         description: e.g. only.pint.form. Shown as text and a link only, it does not move the map pin.
       - name: organiser
         label: Organiser
-        type: string
+        type: reference
+        description: Pick from Club members. If they aren't there yet, add them under Club members first, or use Other officials below.
+        options:
+          collection: members
+          search: name
+          label: '{primary}'
+          value: '{primary}'
       - name: planner
         label: Planner
-        type: string
+        type: reference
+        description: Pick from Club members. If they aren't there yet, add them under Club members first, or use Other officials below.
+        options:
+          collection: members
+          search: name
+          label: '{primary}'
+          value: '{primary}'
       - name: controller
         label: Controller
-        type: string
+        type: reference
+        description: Pick from Club members. If they aren't there yet, add them under Club members first, or use Other officials below.
+        options:
+          collection: members
+          search: name
+          label: '{primary}'
+          value: '{primary}'
+      - name: officials
+        label: Other officials (optional)
+        type: object
+        list: true
+        description: For helpers who aren't club members, e.g. a controller from another club.
+        fields:
+        - name: role
+          label: Role
+          type: string
+        - name: name
+          label: Name
+          type: string
       - name: docs
         label: Documents and links
         type: object
@@ -200,6 +231,35 @@ content:
       - start
       - middle
       - end
+- name: members
+  label: Club members
+  type: collection
+  path: data/members
+  format: json
+  filename: '{primary}.json'
+  view:
+    primary: name
+    fields: [name, role]
+  fields:
+  - name: name
+    label: Name
+    type: string
+    required: true
+  - name: role
+    label: Club role (optional)
+    type: string
+    description: e.g. Chair, Treasurer, Fixtures Secretary.
+  - name: email
+    label: Email (optional)
+    type: string
+    description: Only add this if the person is happy for it to be public. A role address such as chair@ is usually better than a personal one.
+  - name: photo
+    label: Photo (optional)
+    type: image
+    description: Only add this if the person is happy for it to be public.
+  - name: committee
+    label: Show on the committee page
+    type: boolean
 - name: news
   label: News
   type: file
