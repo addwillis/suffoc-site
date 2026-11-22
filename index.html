@@ -164,7 +164,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 .lpin.up{background:var(--gold)}
 .ctl{position:relative;width:30px;height:30px}
 .ctl .ring{position:absolute;inset:0;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box}
-.ctl .num{position:absolute;left:25px;top:-12px;font:700 20px/1 var(--display);color:var(--course);white-space:nowrap;text-shadow:-1.5px -1.5px 0 #fff,1.5px -1.5px 0 #fff,-1.5px 1.5px 0 #fff,1.5px 1.5px 0 #fff,0 0 4px #fff}
+.ctl .num{position:absolute;left:36px;top:-8px;font:700 20px/1 var(--display);color:var(--course);white-space:nowrap;text-shadow:-1.5px -1.5px 0 #fff,1.5px -1.5px 0 #fff,-1.5px 1.5px 0 #fff,1.5px 1.5px 0 #fff,0 0 4px #fff}
 .ctl .tri{position:absolute;left:0;top:0;width:30px;height:30px;overflow:visible}
 .ctl .fin{position:absolute;inset:-4px;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box}
 .ctl .fin2{position:absolute;inset:3px;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box}
@@ -250,7 +250,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 30';
+const BUILD = 'build 31';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -539,7 +539,7 @@ function initMaps(){
           const shape = o.role === 'start'
             ? '<svg class="tri" viewBox="0 0 30 30" style="transform:rotate(' + startRot.toFixed(1) + 'deg);transform-origin:15px 17px"><polygon points="15,2.5 28,25.5 2,25.5" fill="none" stroke="#A3238E" stroke-width="3.5" stroke-linejoin="miter"/></svg>'
             : o.role === 'finish'
-              ? '<span class="fin"></span><span class="fin2"></span>'
+              ? '<svg class="tri" viewBox="0 0 30 30"><circle cx="15" cy="15" r="13" fill="none" stroke="#A3238E" stroke-width="3"/><circle cx="15" cy="15" r="7" fill="none" stroke="#A3238E" stroke-width="3"/></svg>'
               : '<span class="ring"></span>';
           icon = L.divIcon({ className:'', html:'<div class="ctl">' + shape + num + '</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-18] });
         } else if (up.has(k)) {
