@@ -1,31 +1,13 @@
 {
   "areas": [
     {
-      "id": "tunstall",
-      "name": "Tunstall Forest",
-      "lat": 52.1211,
-      "lon": 1.5036,
+      "id": "brandon",
+      "name": "Brandon Country Park",
+      "lat": 52.449,
+      "lon": 0.625,
       "label_dx": 14,
-      "label_dy": 5,
+      "label_dy": 0,
       "label_anchor": "start"
-    },
-    {
-      "id": "hardwick",
-      "name": "Hardwick",
-      "lat": 52.222,
-      "lon": 0.708,
-      "label_dx": -14,
-      "label_dy": 16,
-      "label_anchor": "end"
-    },
-    {
-      "id": "needham",
-      "name": "Needham Lakes",
-      "lat": 52.15,
-      "lon": 1.052,
-      "label_dx": 0,
-      "label_dy": -15,
-      "label_anchor": "middle"
     },
     {
       "id": "clare",
@@ -34,15 +16,6 @@
       "lon": 0.583,
       "label_dx": 14,
       "label_dy": -4,
-      "label_anchor": "start"
-    },
-    {
-      "id": "sudbury",
-      "name": "Sudbury",
-      "lat": 52.038,
-      "lon": 0.73,
-      "label_dx": 14,
-      "label_dy": 18,
       "label_anchor": "start"
     },
     {
@@ -55,13 +28,13 @@
       "label_anchor": "start"
     },
     {
-      "id": "brandon",
-      "name": "Brandon Country Park",
-      "lat": 52.449,
-      "lon": 0.625,
-      "label_dx": 14,
-      "label_dy": 0,
-      "label_anchor": "start"
+      "id": "hardwick",
+      "name": "Hardwick",
+      "lat": 52.222,
+      "lon": 0.708,
+      "label_dx": -14,
+      "label_dy": 16,
+      "label_anchor": "end"
     },
     {
       "id": "kings-forest",
@@ -69,6 +42,33 @@
       "gridRef": "TL 821760",
       "label_dx": 14,
       "label_dy": 0,
+      "label_anchor": "start"
+    },
+    {
+      "id": "needham",
+      "name": "Needham Lakes",
+      "lat": 52.15,
+      "lon": 1.052,
+      "label_dx": 0,
+      "label_dy": -15,
+      "label_anchor": "middle"
+    },
+    {
+      "id": "sudbury",
+      "name": "Sudbury",
+      "lat": 52.038,
+      "lon": 0.73,
+      "label_dx": 14,
+      "label_dy": 18,
+      "label_anchor": "start"
+    },
+    {
+      "id": "tunstall",
+      "name": "Tunstall Forest",
+      "lat": 52.1211,
+      "lon": 1.5036,
+      "label_dx": 14,
+      "label_dy": 5,
       "label_anchor": "start"
     }
   ]
