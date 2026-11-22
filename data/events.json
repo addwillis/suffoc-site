@@ -25,15 +25,15 @@
         "postcode": "IP12 2AP",
         "gridRef": "TM 39950 52750",
         "w3w": "economies.winter.windmills",
+        "organiser": "Louise Walker",
+        "planner": "Gareth Radcliffe",
+        "controller": "Paul Beckett",
         "docs": [
           {
             "label": "Area overview: Tunstall Forest",
             "url": "http://www.suffoc.co.uk/area-overview/tunstall-forest"
           }
-        ],
-        "organiser": "Louise Walker",
-        "planner": "Gareth Radcliffe",
-        "controller": "Paul Beckett"
+        ]
       }
     },
     {
@@ -45,7 +45,10 @@
       },
       "type": "Street-O",
       "area": "hardwick",
-      "link": "https://www.suffoc.co.uk/events/street-o-hardwick"
+      "link": "https://www.suffoc.co.uk/events/street-o-hardwick",
+      "detail": {
+        "gridRef": "TL858628"
+      }
     },
     {
       "id": "needham-2026",
