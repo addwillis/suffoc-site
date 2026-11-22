@@ -223,7 +223,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 5';
+const BUILD = 'build 6';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -340,14 +340,15 @@ function newsCard(n){
 }
 
 /* Map: equirectangular projection with a cos(latitude) correction. */
-function mapSVG(onlyId){
+function mapSVG(only){
+  const keep = k => !only || (Array.isArray(only) ? only.includes(k) : k === only);
   const W = 700, H = 500, LON0 = 0.30, LAT0 = 52.58, KX = 451.6, KY = 735.3;
   const px = (lon, lat) => [ (lon - LON0) * KX, (LAT0 - lat) * KY ];
   const up = new Set(upcoming().map(e => e.area));
   const outline = OUTLINE.map(p => px(p[0], p[1]).map(n => n.toFixed(1)).join(',')).join(' ');
   const towns = TOWNS.map(t => { const [x,y] = px(t.lon, t.lat);
     return `<circle class="town-dot" cx="${x}" cy="${y}" r="3"/><text class="town" x="${x+t.dx}" y="${y+t.dy}" text-anchor="${t.anchor}">${t.name}</text>`; }).join('');
-  const pins = Object.entries(AREAS).filter(([k]) => !onlyId || k === onlyId).map(([k, a]) => {
+  const pins = Object.entries(AREAS).filter(([k]) => keep(k)).map(([k, a]) => {
     const isUp = up.has(k);
     const [x,y] = px(a.lon, a.lat);
     return `<g class="pin${isUp ? ' up' : ''}"><circle class="ring" cx="${x}" cy="${y}" r="9"/><circle class="dot" cx="${x}" cy="${y}" r="2.6"/><text class="area" x="${x+a.dx}" y="${y+a.dy}" text-anchor="${a.anchor}">${a.name}</text></g>`;
@@ -361,7 +362,13 @@ function mapSVG(onlyId){
   </svg>`;
 }
 const FALLBACK_NOTE = '<p class="note" style="margin:0;padding:8px 16px">Schematic outline, for layout only</p>';
-function mapBlock(){
+function mapBlock(mode){
+  if (mode === 'upcoming') {
+    const ids = [...new Set(upcoming().map(e => e.area))].filter(k => AREAS[k]);
+    if (!ids.length) return '';
+    return `<div class="map"><div class="leafmap" data-map="upcoming">${mapSVG(ids)}${FALLBACK_NOTE}</div>
+      <div class="legend"><span><i class="up"></i>Upcoming event</span></div></div>`;
+  }
   return `<div class="map"><div class="leafmap" data-map="all">${mapSVG()}${FALLBACK_NOTE}</div>
     <div class="legend"><span><i class="up"></i>Upcoming event</span><span><i></i>Previously mapped area</span></div>
   </div>
@@ -385,10 +392,10 @@ function initMaps(){
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19,
         attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
       const pts = [];
-      Object.entries(AREAS).filter(([k]) => key === 'all' || k === key).forEach(([k, a]) => {
+      Object.entries(AREAS).filter(([k]) => key === 'all' || (key === 'upcoming' ? up.has(k) : k === key)).forEach(([k, a]) => {
         if (isNaN(a.lat) || isNaN(a.lon)) return;
         const icon = L.divIcon({ className:'', html:'<span class="lpin' + (up.has(k) ? ' up' : '') + '"></span>', iconSize:[22,22], iconAnchor:[11,11], popupAnchor:[0,-12] });
-        const evs = EVENTS.filter(e => e.area === k).sort((x, y) => parseDate(y.date) - parseDate(x.date));
+        const evs = EVENTS.filter(e => e.area === k && (key !== 'upcoming' || parseDate(e.date) >= today)).sort((x, y) => parseDate(y.date) - parseDate(x.date));
         const list = evs.map(e => {
           const label = esc(e.title) + ' (' + fmtShort.format(parseDate(e.date)) + ')';
           return '<br>' + (e.detail ? '<a href="#event-' + esc(e.id) + '">' + label + '</a>' : label);
@@ -396,8 +403,8 @@ function initMaps(){
         L.marker([a.lat, a.lon], { icon:icon, title:a.name }).addTo(map).bindPopup('<strong>' + esc(a.name) + '</strong>' + list);
         pts.push([a.lat, a.lon]);
       });
-      if (key !== 'all' && pts.length) map.setView(pts[0], 14);
-      else if (pts.length) map.fitBounds(pts, { padding:[40,40], maxZoom:11 });
+      if (key !== 'all' && key !== 'upcoming' && pts.length) map.setView(pts[0], 14);
+      else if (pts.length) map.fitBounds(pts, { padding:[40,40], maxZoom:key === 'upcoming' ? 12 : 11 });
       else map.setView([52.2, 1.0], 9);
       LMAPS.push(map);
     } catch (err) { el.innerHTML = fallback; }
@@ -442,12 +449,15 @@ const VIEWS = {
   events(){
     return `${pageHead('Events', 'Planned club events, street-Os and MapRun evenings.')}
     <div class="wrap">
-      <section class="section"><div class="section-head"><h2>Upcoming</h2></div>${eventsList(upcoming())}</section>
-      <section class="section">
-        <div class="section-head"><h2>Where we have mapped</h2></div>
-        <p>A sense of the area the club covers. Each marker is a place we have made a map for.</p>
-        ${mapBlock()}
-      </section>
+      <section class="section">${mapBlock('upcoming')}</section>
+      <section class="section"><div class="section-head"><h2>Upcoming</h2></div>${eventsList(upcoming())}
+        <p style="margin-top:1.4rem"><a href="#mapped"><strong>See everywhere we have mapped &rarr;</strong></a></p></section>
+    </div>`;
+  },
+  mapped(){
+    return `${pageHead('Where we have mapped', 'A sense of the area the club covers. Each marker is a place we have made a map for.')}
+    <div class="wrap">
+      <section class="section"><a class="back" href="#events">&larr; Back to Events</a><div style="height:1rem"></div>${mapBlock()}</section>
     </div>`;
   },
   results(){
@@ -557,7 +567,7 @@ function route(){
   let key = 'home', html;
   if (h.startsWith('club-')) { key = 'club'; html = clubPage(h.slice(5)); }
   else if (h.startsWith('event-')) { key = 'events'; html = eventPage(h.slice(6)); }
-  else if (VIEWS[h]) { key = h; html = VIEWS[h](); }
+  else if (VIEWS[h]) { key = h === 'mapped' ? 'events' : h; html = VIEWS[h](); }
   else { html = VIEWS.home(); }
   view.innerHTML = html;
   initMaps();
