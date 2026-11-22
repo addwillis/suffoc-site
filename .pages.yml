@@ -4,10 +4,7 @@ content:
     type: file
     path: data/events.json
     format: json
-    list:
-      collapsible:
-        collapsed: true
-        summary: "{date} {title}"
+    list: true
     fields:
       - name: id
         label: Short ID (web address)
