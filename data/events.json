@@ -138,15 +138,7 @@
       "type": "Street-O",
       "area": "claydon",
       "detail": {
-<<<<<<< Updated upstream
-        "w3w": "only.pint.form",
-        "nearestTown": "Claydon"
-=======
         "w3w": "only.pint.form"
-      },
-      "timings": {
-        "startsFrom": "18:00"
->>>>>>> Stashed changes
       }
     }
   ]
