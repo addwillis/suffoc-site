@@ -234,7 +234,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 22';
+const BUILD = 'build 24';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -255,11 +255,19 @@ function loadData(areas, events){
     const o = Object.assign({}, e);
     o.results = pairs(e.results, 'label', 'url');
     const d = e.detail;
-    if (d && (d.about || d.postcode || d.w3w)) {
-      o.detail = Object.assign({}, d, { address: (d.address || []).filter(Boolean), officials: pairs(d.officials, 'role', 'name'), docs: pairs(d.docs, 'label', 'url') });
+    if (d && (d.about || d.postcode || d.w3w || d.organiser || d.planner || d.controller)) {
+      o.detail = Object.assign({}, d, { address: (d.address || []).filter(Boolean), officials: [['Organiser', d.organiser], ['Planner', d.planner], ['Controller', d.controller]].filter(x => x[1]).concat(pairs(d.officials, 'role', 'name')), docs: pairs(d.docs, 'label', 'url') });
     } else delete o.detail;
     o.loc = o.detail && o.detail.gridRef ? gridToLatLon(o.detail.gridRef) : null;
     return o;
+  });
+  const slug = s => String(s == null ? '' : s).toLowerCase().replace(/[^a-z0-9]/g, '');
+  EVENTS.forEach(o => {
+    const key = slug(o.area);
+    if (!key) return;
+    let id = Object.keys(AREAS).find(k => slug(k) === key || slug(AREAS[k].name) === key);
+    if (!id && o.loc) { id = key; AREAS[id] = { name:String(o.area).trim(), lat:o.loc.lat, lon:o.loc.lon, dx:14, dy:0, anchor:'start' }; }
+    if (id) o.area = id;
   });
 }
 const NEWS = [
@@ -382,7 +390,7 @@ function eventCard(e){
   const d = parseDate(e.date);
   const wd = d.toLocaleString('en-GB', { weekday:'short' });
   const mon = d.toLocaleString('en-GB', { month:'short' });
-  const place = AREAS[e.area] ? AREAS[e.area].name : '';
+  const place = AREAS[e.area] ? AREAS[e.area].name : (e.area || '');
   return `<article class="event">
     <div class="datebox" aria-hidden="true"><span class="wd">${wd}</span><span class="day">${d.getDate()}</span><span class="mon">${mon}</span></div>
     <div>
@@ -650,9 +658,9 @@ function timingsRows(e){
 function eventPage(id){
   const e = EVENTS.find(x => x.id === id && x.detail);
   if (!e) return VIEWS.events();
-  const d = e.detail, area = AREAS[e.area], date = parseDate(e.date);
-  const loc = e.loc || area, q = loc.lat + ',' + loc.lon;
-  const facts = [['Date', fmtLong.format(date)], ['Level', d.level], ['Area', area.name]].filter(f => f[1]);
+  const d = e.detail, area = AREAS[e.area] || null, date = parseDate(e.date);
+  const loc = e.loc || (area && isFinite(area.lat) && isFinite(area.lon) ? area : null), q = loc ? loc.lat + ',' + loc.lon : '';
+  const facts = [['Date', fmtLong.format(date)], ['Level', d.level], ['Area', area ? area.name : e.area]].filter(f => f[1]);
   const docs = [];
   if (e.pdf) docs.push(['Preliminary details (PDF)', e.pdf]);
   (d.docs || []).forEach(x => docs.push(x));
@@ -669,7 +677,7 @@ function eventPage(id){
           <dl class="facts">${facts.map(f => `<dt>${esc(f[0])}</dt><dd>${esc(f[1])}</dd>`).join('')}</dl></div>
         ${timingsRows(e).length ? `<div class="card"><h3>Timings</h3>
           <dl class="facts">${timingsRows(e).map(r => `<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join('')}</dl></div>` : ''}
-        ${d.officials.length ? `<div class="card"><h3>Officials</h3>
+        ${d.officials.length ? `<div class="card"><h3>Event Officials</h3>
           <dl class="facts">${d.officials.map(o => `<dt>${esc(o[0])}</dt><dd>${esc(o[1])}</dd>`).join('')}</dl></div>` : ''}
         ${docs.length ? `<div class="card"><h3>Documents and links</h3>
           <div class="links" style="margin-top:.8rem">${docs.map(x => `<a class="btn small line" href="${esc(x[1])}" ${ext}>${esc(x[0])}</a>`).join('')}</div></div>` : ''}
@@ -678,19 +686,19 @@ function eventPage(id){
         ${e.results && e.results.length ? `<section class="card"><h3>Results</h3><div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small gold" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div></section>`
           : (isPast(e) ? `<section class="card todo"><h3>Results</h3><p style="margin:.6rem 0 0">Results to follow.</p></section>` : '')}
         ${d.about ? `<section class="card"><h3>About the area</h3><p style="margin-top:.6rem">${esc(d.about)}</p></section>` : ''}
-        <section class="card"><h3>Location</h3>
+        ${(loc || d.address.length || d.postcode || d.gridRef || d.w3w) ? `<section class="card"><h3>Location</h3>
           ${(d.address.length || d.postcode) ? `<p style="margin:.6rem 0">${[...d.address.map(esc), esc(d.postcode)].filter(Boolean).join('<br>')}</p>` : ''}
           <dl class="facts" style="margin-bottom:1rem">
             ${d.gridRef ? `<dt>Grid reference</dt><dd class="code">${esc(d.gridRef)}</dd>` : ''}
             ${d.w3w ? `<dt>what3words</dt><dd class="code">///${esc(d.w3w)}</dd>` : ''}
           </dl>
           <div class="links" style="margin-bottom:1rem">
-            <a class="btn small gold" href="https://www.google.com/maps/search/?api=1&query=${q}" ${ext}>Open in Google Maps</a>
-            <a class="btn small line" href="https://www.openstreetmap.org/?mlat=${loc.lat}&mlon=${loc.lon}#map=16/${loc.lat}/${loc.lon}" ${ext}>OpenStreetMap</a>
+            ${loc ? `<a class="btn small gold" href="https://www.google.com/maps/search/?api=1&query=${q}" ${ext}>Open in Google Maps</a>
+            <a class="btn small line" href="https://www.openstreetmap.org/?mlat=${loc.lat}&mlon=${loc.lon}#map=16/${loc.lat}/${loc.lon}" ${ext}>OpenStreetMap</a>` : ''}
             ${d.w3w ? `<a class="btn small line" href="https://what3words.com/${esc(d.w3w)}" ${ext}>what3words</a>` : ''}
           </div>
-          <div class="map"><div class="leafmap single" data-map="event:${esc(e.id)}">${mapSVG(e.area)}${FALLBACK_NOTE}</div></div>
-        </section>
+          ${loc ? `<div class="map"><div class="leafmap single" data-map="event:${esc(e.id)}">${mapSVG(e.area)}${FALLBACK_NOTE}</div></div>` : ''}
+        </section>` : ''}
         <section class="card todo"><h3>Courses, fees and entry</h3>
           <p style="margin:.6rem 0 0">To add: courses and lengths, entry fees, how to enter, start times and parking. These come from the preliminary details once confirmed.</p></section>
       </div>

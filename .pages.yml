@@ -107,17 +107,15 @@ content:
         label: what3words (no ///)
         type: string
         description: e.g. only.pint.form. Shown as text and a link only, it does not move the map pin.
-      - name: officials
-        label: Officials
-        type: object
-        list: true
-        fields:
-        - name: role
-          label: Role
-          type: string
-        - name: name
-          label: Name
-          type: string
+      - name: organiser
+        label: Organiser
+        type: string
+      - name: planner
+        label: Planner
+        type: string
+      - name: controller
+        label: Controller
+        type: string
       - name: docs
         label: Documents and links
         type: object
