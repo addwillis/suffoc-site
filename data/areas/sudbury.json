@@ -1,0 +1,9 @@
+{
+  "id": "sudbury",
+  "name": "Sudbury",
+  "lat": 52.038,
+  "lon": 0.73,
+  "label_dx": 14,
+  "label_dy": 18,
+  "label_anchor": "start"
+}

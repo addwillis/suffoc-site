@@ -67,10 +67,14 @@ content:
         - Training
         - Other
     - name: area
-      label: Area ID
-      type: string
-      description: Must match an ID in Areas, e.g. tunstall
+      label: Area
+      type: reference
+      description: Pick from the Mapped areas list. If the place isn't there yet, add it under Mapped areas first.
       required: true
+      options:
+        collection: areas
+        search: name
+        label: '{primary}'
     - name: link
       label: Link to existing event page (optional)
       type: string
@@ -158,52 +162,44 @@ content:
         type: string
 - name: areas
   label: Mapped areas
-  type: file
-  path: data/areas.json
+  type: collection
+  path: data/areas
   format: json
+  filename: '{primary}.json'
+  view:
+    primary: name
+    fields: [name]
   fields:
-  - name: areas
-    label: Areas
-    type: object
-    list:
-      collapsible:
-        collapsed: true
-        summary: '{name}'
-    fields:
-    - name: id
-      label: Area ID
-      type: string
-      required: true
-    - name: name
-      label: Name
-      type: string
-      required: true
-    - name: gridRef
-      label: Grid reference (OS)
-      type: string
-      description: e.g. TM 39950 52750. The map pin is placed from this, so you don't need latitude and longitude.
-    - name: lat
-      label: Latitude (optional)
-      type: number
-      description: Only needed if there is no grid reference.
-    - name: lon
-      label: Longitude (optional)
-      type: number
-      description: Only needed if there is no grid reference.
-    - name: label_dx
-      label: Map label shift across
-      type: number
-    - name: label_dy
-      label: Map label shift down
-      type: number
-    - name: label_anchor
-      label: Map label side
-      type: select
-      options:
-        values:
-        - start
-        - middle
-        - end
+  - name: name
+    label: Name
+    type: string
+    required: true
+  - name: gridRef
+    label: Grid reference (OS)
+    type: string
+    description: e.g. TM 39950 52750. The map pin is placed from this, so you don't need latitude and longitude.
+  - name: lat
+    label: Latitude (optional)
+    type: number
+    description: Only needed if there is no grid reference.
+  - name: lon
+    label: Longitude (optional)
+    type: number
+    description: Only needed if there is no grid reference.
+  - name: label_dx
+    label: Map label shift across
+    type: number
+  - name: label_dy
+    label: Map label shift down
+    type: number
+  - name: label_anchor
+    label: Map label side
+    type: select
+    options:
+      values:
+      - start
+      - middle
+      - end
 - name: news
   label: News
   type: file

@@ -120,7 +120,7 @@
         "courseClose": "14:00"
       },
       "type": "Regional",
-      "area": "Kings Forest",
+      "area": "kings-forest",
       "detail": {
         "gridRef": "TL 821760",
         "organiser": "Rod Mansel",
@@ -132,7 +132,7 @@
       "id": "Brandon Country Park",
       "title": "Brandon Country park",
       "date": "2026-02-22",
-      "area": "Brandon"
+      "area": "brandon"
     }
   ]
 }

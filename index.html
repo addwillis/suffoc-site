@@ -278,7 +278,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 49';
+const BUILD = 'build 51';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -316,7 +316,8 @@ function loadData(areas, events){
   });
   const slug = s => String(s == null ? '' : s).toLowerCase().replace(/[^a-z0-9]/g, '');
   EVENTS.forEach(o => {
-    const key = slug(o.area);
+    /* The Area dropdown in Pages CMS may store a file path (data/areas/tunstall.json); keep just the name. */
+    const key = slug(String(o.area == null ? '' : o.area).replace(/^.*\//, '').replace(/\.json$/i, ''));
     if (!key) return;
     let id = Object.keys(AREAS).find(k => slug(k) === key || slug(AREAS[k].name) === key);
     if (!id && o.loc) { id = key; AREAS[id] = { name:String(o.area).trim(), lat:o.loc.lat, lon:o.loc.lon, dx:14, dy:0, anchor:'start' }; }
@@ -807,8 +808,7 @@ function eventPage(id){
         <section class="card todo"><h3>Courses, fees and entry</h3>
           <p style="margin:.6rem 0 0">To add: courses and lengths, entry fees, how to enter, start times and parking. These come from the preliminary details once confirmed.</p></section>
       </div>
-    </div>
-    ${exploreTiles()}</div>`;
+    </div></div>`;
 }
 
 function clubPage(id){

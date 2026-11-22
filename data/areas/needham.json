@@ -1,0 +1,9 @@
+{
+  "id": "needham",
+  "name": "Needham Lakes",
+  "lat": 52.15,
+  "lon": 1.052,
+  "label_dx": 0,
+  "label_dy": -15,
+  "label_anchor": "middle"
+}
