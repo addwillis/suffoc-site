@@ -104,11 +104,7 @@ p{margin:0 0 1rem;max-width:65ch}
 .section{padding:2.4rem 0 .6rem}
 .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:1.1rem}
 .more{font-weight:600;white-space:nowrap}
-.pagehead{position:relative;overflow:hidden;padding:2.2rem 0 1.2rem;border-bottom:1px solid var(--line);background:var(--card)}
-.pagehead .cont{position:absolute;inset:-35%;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400' preserveAspectRatio='xMaxYMid slice'%3E%3Cg fill='none' stroke='%234DA3E0' stroke-width='1.2'%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(0.35) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(0.55) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(0.75) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(1) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(1.25) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(1.5) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(1.8) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3C/g%3E%3C/svg%3E") no-repeat center/cover;opacity:.22;pointer-events:none;will-change:transform;transform:translate(var(--cx,0%),var(--cy,0%)) scale(var(--cs,1)) rotate(var(--cr,0deg))}
-.pagehead .cont.go{transition:transform 1.4s cubic-bezier(.22,.7,.2,1)}
-@media (prefers-reduced-motion:reduce){.pagehead .cont.go{transition:none}}
-.pagehead>.wrap{position:relative}
+.pagehead{padding:2.2rem 0 1.2rem;border-bottom:1px solid var(--line);background:var(--card)}
 .pagehead h1{font-size:clamp(2.2rem,6vw,3.4rem);text-transform:uppercase;font-weight:700}
 .pagehead .hi{width:.8em;height:.8em;fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.04em;margin-right:.3em}
 .pagehead .lead{margin:.7rem 0 0;color:var(--muted);font-size:1.1rem}
@@ -289,7 +285,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 58';
+const BUILD = 'build 59';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -897,26 +893,6 @@ function clubPage(id){
 const view = document.getElementById('view');
 const nav = document.getElementById('nav');
 const menuBtn = document.getElementById('menuBtn');
-/* Each page sits at its own spot on the contour 'map'; moving between pages slides the lines from the last spot to the new one. */
-let LASTCONT = { x:0, y:0, s:1.1, r:0 };
-function contourSpot(key){
-  let n = 0; for (let i = 0; i < key.length; i++) n = (n * 31 + key.charCodeAt(i)) >>> 0;
-  const f = k => { n = (n * 1103515245 + 12345 + k) >>> 0; return (n % 1000) / 1000; };
-  return { x:(f(1) * 22 - 6), y:(f(2) * 16 - 8), s:(1 + f(3) * 0.5), r:(f(4) * 30 - 15) };
-}
-function moveContours(key){
-  const head = view.querySelector('.pagehead');
-  if (!head) return;
-  const el = document.createElement('div'); el.className = 'cont'; el.setAttribute('aria-hidden', 'true');
-  const set = p => { el.style.setProperty('--cx', p.x + '%'); el.style.setProperty('--cy', p.y + '%'); el.style.setProperty('--cs', p.s); el.style.setProperty('--cr', p.r + 'deg'); };
-  set(LASTCONT);
-  head.insertBefore(el, head.firstChild);
-  const to = contourSpot(key || 'home');
-  void el.offsetWidth;
-  el.classList.add('go');
-  requestAnimationFrame(() => set(to));
-  LASTCONT = to;
-}
 function route(){
   const h = (location.hash || '#home').slice(1);
   let key = 'home', html;
@@ -929,7 +905,6 @@ function route(){
   else { html = VIEWS.home(); }
   view.innerHTML = html;
   initMaps();
-  moveContours(h);
   document.querySelectorAll('.nav a[data-route]').forEach(a => {
     if (a.dataset.route === key) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
