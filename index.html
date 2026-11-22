@@ -126,6 +126,21 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 .event-title{font-size:clamp(2rem,5.5vw,3rem)!important}
 
 /* Cards */
+.year{margin:0 0 1rem}
+.year>summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:.8rem;font:700 1.7rem var(--display);color:var(--navy);padding:.3rem 0;text-transform:uppercase;letter-spacing:.02em}
+.year>summary::-webkit-details-marker{display:none}
+.year>summary::before{content:"\25B8";font-size:1.1rem;transition:transform .15s}
+.year[open]>summary::before{transform:rotate(90deg)}
+.year>summary .count{font:500 1rem var(--body);color:var(--muted);text-transform:none;letter-spacing:0}
+.rlist{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin-top:.5rem;overflow:hidden}
+.rrow{display:grid;grid-template-columns:5rem 1fr;gap:.35rem 1rem;align-items:start;padding:.85rem 1rem;border-top:1px solid var(--line)}
+.rrow:first-child{border-top:0}
+.rrow .rdate{font:700 1.05rem var(--body);color:var(--navy);white-space:nowrap}
+.rrow h3{font-size:1.1rem;margin:0}
+.rrow .pill{margin:0 0 0 .5rem;vertical-align:2px}
+.rrow .links{grid-column:2;margin-top:.35rem}
+.rrow .tbc{grid-column:2;margin:.1rem 0 0;color:var(--muted)}
+@media(min-width:760px){.rrow{grid-template-columns:5rem minmax(0,1fr) minmax(0,1.6fr);align-items:center}.rrow .links,.rrow .tbc{grid-column:3;margin:0;justify-content:flex-end;text-align:right}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
 .card .date{color:var(--muted);font-weight:500;margin:0 0 .3rem}
 .stack{display:grid;gap:14px;align-content:start}
@@ -235,7 +250,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 28';
+const BUILD = 'build 29';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -421,6 +436,14 @@ function resultCard(e){
       ? `<div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small line" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div>`
       : `<p class="meta" style="margin-top:.6rem">Results to follow</p>`}
   </article>`;
+}
+function resultRow(e){
+  const d = parseDate(e.date), has = e.results && e.results.length;
+  return `<div class="rrow">
+    <span class="rdate">${d.getDate()} ${d.toLocaleString('en-GB', { month:'short' })}</span>
+    <h3>${e.detail ? `<a class="title-link" href="#event-${esc(e.id)}">${esc(e.title)}</a>` : esc(e.title)}${e.type && e.type !== 'Local event' ? `<span class="pill">${esc(e.type)}</span>` : ''}</h3>
+    ${has ? `<div class="links">${e.results.map(l => `<a class="btn small line" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div>` : `<p class="tbc">Results to follow</p>`}
+  </div>`;
 }
 function newsCard(n){
   return `<article class="card">
@@ -613,8 +636,14 @@ const VIEWS = {
     </div>`;
   },
   results(){
-    return `${pageHead('Results', 'Results, split times and routes from recent events.')}
-    <div class="wrap"><section class="section"><div class="grid">${past().map(resultCard).join('')}</div></section></div>`;
+    const list = past(), years = [...new Set(list.map(e => e.date.slice(0, 4)))];
+    const body = years.length ? years.map((y, i) => {
+      const evs = list.filter(e => e.date.slice(0, 4) === y);
+      return `<details class="year"${i === 0 ? ' open' : ''}><summary>${y} <span class="count">${evs.length} event${evs.length === 1 ? '' : 's'}</span></summary>
+        <div class="rlist">${evs.map(resultRow).join('')}</div></details>`;
+    }).join('') : `<div class="empty">No results yet.</div>`;
+    return `${pageHead('Results', 'Results, split times and routes from past events.')}
+    <div class="wrap"><section class="section">${body}</section></div>`;
   },
   news(){
     return `${pageHead('News')}
