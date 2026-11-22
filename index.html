@@ -192,10 +192,10 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 .lpin.up{background:var(--gold)}
 .ctl{position:relative;width:30px;height:30px}
 .ctl .ring{position:absolute;inset:0;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box}
-.ctl .num{position:absolute;left:36px;top:-8px;font:700 20px/1 var(--display);color:var(--course);white-space:nowrap;text-shadow:-1.5px -1.5px 0 #fff,1.5px -1.5px 0 #fff,-1.5px 1.5px 0 #fff,1.5px 1.5px 0 #fff,0 0 4px #fff}
-.ctl .tri{position:absolute;left:0;top:0;width:30px;height:30px;overflow:visible}
-.ctl .fin{position:absolute;inset:-4px;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box}
-.ctl .fin2{position:absolute;inset:3px;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box}
+.dbadge{position:relative;width:48px;height:48px;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.35);color:var(--course);font-family:var(--display);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.dbadge b{font-size:1.2rem;font-weight:700}
+.dbadge i{font-style:normal;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
+.dbadge .more{position:absolute;top:-8px;right:-8px;min-width:18px;height:18px;border-radius:9px;background:var(--gold);color:var(--navy);font:700 .7rem/18px var(--body);padding:0 4px;box-sizing:border-box}
 .legend i.course{background:transparent;border-color:var(--course)}
 .leaflet-popup-content{font-size:15px;line-height:1.4;margin:12px 14px}
 .leaflet-popup-content .pop+.pop{margin-top:8px}
@@ -278,7 +278,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 47';
+const BUILD = 'build 48';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -580,7 +580,7 @@ function mapBlock(mode){
     const ids = [...new Set(upcoming().map(e => e.area))].filter(k => AREAS[k]);
     if (!ids.length) return '';
     return `<div class="map"><div class="leafmap" data-map="upcoming">${mapSVG(ids)}${FALLBACK_NOTE}</div>
-      <div class="legend"><span><i class="course"></i>Upcoming events in date order: triangle (first), numbered circles, double circle (last)</span></div></div>`;
+      <div class="legend"><span><i class="course"></i>Upcoming events, each marked with its date</span></div></div>`;
   }
   return `<div class="map"><div class="leafmap" data-map="all">${mapSVG()}${FALLBACK_NOTE}</div>
     <div class="legend"><span><i class="course"></i>Upcoming event</span><span><i></i>Previously mapped area</span></div>
@@ -605,20 +605,8 @@ function initMaps(){
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19,
         attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
       const pts = [];
-      const seq = key === 'upcoming' ? upcoming() : [];
-      /* Course roles by date order: first = start triangle, last = finish (double circle), the rest numbered controls. */
-      const nSeq = seq.length, roleOf = i => i === 0 ? 'start' : (i === nSeq - 1 ? 'finish' : 'ctl');
-      const info = {};
-      seq.forEach((e, i) => {
-        const o = info[e.area] || (info[e.area] = { role: roleOf(i), nums: [] });
-        if (roleOf(i) === 'ctl') o.nums.push(i);
-      });
-      let startRot = 0;
-      if (nSeq > 1 && AREAS[seq[0].area] && AREAS[seq[1].area] && seq[0].area !== seq[1].area) {
-        const A = AREAS[seq[0].area], B = AREAS[seq[1].area];
-        const my = la => Math.log(Math.tan(Math.PI / 4 + la * Math.PI / 360));
-        startRot = Math.atan2(B.lon - A.lon, (my(B.lat) - my(A.lat)) * 180 / Math.PI) * 180 / Math.PI;
-      }
+      const nextBy = {};
+      if (key === 'upcoming') upcoming().forEach(e => { (nextBy[e.area] = nextBy[e.area] || []).push(e); });
       const evKey = key.indexOf('event:') === 0 ? EVENTS.find(x => x.id === key.slice(6)) : null;
       const entries = evKey
         ? (AREAS[evKey.area] || evKey.loc ? [[evKey.area, Object.assign({}, AREAS[evKey.area] || { name:evKey.title, dx:14, dy:0, anchor:'start' }, evKey.loc ? { lat:evKey.loc.lat, lon:evKey.loc.lon } : {})]] : [])
@@ -626,14 +614,10 @@ function initMaps(){
       entries.forEach(([k, a]) => {
         if (isNaN(a.lat) || isNaN(a.lon)) return;
         let icon;
-        if (key === 'upcoming' && info[k]) {
-          const o = info[k], num = o.nums.length ? '<span class="num">' + o.nums.join(', ') + '</span>' : '';
-          const shape = o.role === 'start'
-            ? '<svg class="tri" viewBox="0 0 30 30" style="transform:rotate(' + startRot.toFixed(1) + 'deg);transform-origin:15px 17px"><polygon points="15,2.5 28,25.5 2,25.5" fill="none" stroke="#A3238E" stroke-width="3.5" stroke-linejoin="miter"/></svg>'
-            : o.role === 'finish'
-              ? '<svg class="tri" viewBox="0 0 30 30"><circle cx="15" cy="15" r="13" fill="none" stroke="#A3238E" stroke-width="3"/><circle cx="15" cy="15" r="7" fill="none" stroke="#A3238E" stroke-width="3"/></svg>'
-              : '<span class="ring"></span>';
-          icon = L.divIcon({ className:'', html:'<div class="ctl">' + shape + num + '</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-18] });
+        if (key === 'upcoming' && nextBy[k]) {
+          const n1 = nextBy[k][0], d1 = parseDate(n1.date), more = nextBy[k].length > 1;
+          icon = L.divIcon({ className:'', html:'<div class="dbadge"><b>' + d1.getDate() + '</b><i>' + d1.toLocaleString('en-GB', { month:'short' }) + '</i>' + (more ? '<span class="more">' + nextBy[k].length + '</span>' : '') + '</div>',
+            iconSize:[48,48], iconAnchor:[24,24], popupAnchor:[0,-26] });
         } else if (up.has(k)) {
           icon = L.divIcon({ className:'', html:'<div class="ctl"><span class="ring"></span></div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-16] });
         } else {
@@ -651,41 +635,6 @@ function initMaps(){
       if (key !== 'all' && key !== 'upcoming' && pts.length) map.setView(pts[0], evKey && evKey.loc ? 16 : 14);
       else if (pts.length) map.fitBounds(pts, { padding:[40,40], maxZoom:key === 'upcoming' ? 12 : 11 });
       else map.setView([52.2, 1.0], 9);
-      if (key === 'upcoming' && seq.length > 1) {
-        /* Course legs: a plain SVG overlay on the map, redrawn whenever the map moves or zooms.
-           Lines stop short of each circle, like the legs of an orienteering course. */
-        const NS = 'http://www.w3.org/2000/svg', R = 18;
-        const svg = document.createElementNS(NS, 'svg');
-        svg.setAttribute('class', 'legs');
-        svg.style.cssText = 'position:absolute;pointer-events:none;overflow:visible';
-        /* Own map pane: above the tiles and markers, but below the pop-ups (marker pane is 600, pop-up pane 700). */
-        const legPane = map.createPane('legs');
-        legPane.style.zIndex = 650; legPane.style.pointerEvents = 'none';
-        legPane.appendChild(svg);
-        const drawLegs = () => {
-          let n = 0, html = '';
-          const off = L.DomUtil.getPosition(map.getPanes().mapPane) || { x:0, y:0 }, sz = map.getSize();
-          svg.style.left = (-off.x) + 'px'; svg.style.top = (-off.y) + 'px';
-          svg.setAttribute('width', sz.x); svg.setAttribute('height', sz.y);
-          for (let i = 0; i < seq.length - 1; i++) {
-            const A = AREAS[seq[i].area], B = AREAS[seq[i + 1].area];
-            if (!A || !B || seq[i].area === seq[i + 1].area) continue;
-            const p = map.latLngToContainerPoint([A.lat, A.lon]), q = map.latLngToContainerPoint([B.lat, B.lon]);
-            const dx = q.x - p.x, dy = q.y - p.y, d = Math.sqrt(dx * dx + dy * dy);
-            if (!(d > 2 * R + 2)) continue;
-            const ux = dx / d, uy = dy / d;
-            html += '<line x1="' + (p.x + ux * R).toFixed(1) + '" y1="' + (p.y + uy * R).toFixed(1) + '" x2="' + (q.x - ux * R).toFixed(1) + '" y2="' + (q.y - uy * R).toFixed(1) + '" stroke="#A3238E" stroke-width="3" stroke-linecap="round"/>';
-            n++;
-          }
-          svg.innerHTML = html;
-          el.dataset.legs = n;
-          const st = document.getElementById('status');
-          if (st) st.textContent = st.textContent.replace(/ \| legs: \d+/, '') + ' | legs: ' + n;
-        };
-        map.on('move zoom moveend zoomend resize', drawLegs);
-        drawLegs();
-        setTimeout(drawLegs, 300);
-      }
       LMAPS.push(map);
     } catch (err) { el.innerHTML = fallback; }
   });
