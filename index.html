@@ -230,7 +230,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 16';
+const BUILD = 'build 18';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -304,13 +304,22 @@ const ext = 'target="_blank" rel="noopener"';
 /* An event moves from Events to Results this many minutes after its course close time
    (or at the end of the day if no close time is set). Change the number to adjust. */
 const GRACE_MINUTES = 60;
+const clean = v => String(v == null ? '' : v).trim();
+const rng = (a, b) => a && b ? a + '\u2013' + b : (a || b || '');
+/* Timings come from e.timings (older entries with plain time / courseClose still work). */
+function tm(e){
+  const t = e.timings || {};
+  const startsFrom = clean(t.startsFrom || e.time), close = clean(t.courseClose || e.courseClose);
+  return { regFrom:clean(t.registrationFrom), regTo:clean(t.registrationTo), startsFrom:startsFrom, startsTo:clean(t.startsTo),
+           close:close, sumStart:startsFrom || clean(t.registrationFrom), sumEnd:close };
+}
+const timeRange = e => { const t = tm(e); return t.sumStart && t.sumEnd ? t.sumStart + '\u2013' + t.sumEnd : t.sumStart || (t.sumEnd ? 'closes ' + t.sumEnd : ''); };
 function endsAt(e){
   const d = parseDate(e.date);
-  const m = /^(\d{1,2})[:.](\d{2})/.exec(String(e.courseClose || '').trim());
+  const m = /^(\d{1,2})[:.](\d{2})/.exec(tm(e).sumEnd);
   if (m) { d.setHours(+m[1], +m[2] + GRACE_MINUTES, 0, 0); return d; }
   d.setHours(23, 59, 59, 999); return d;
 }
-const timeRange = e => e.time && e.courseClose ? e.time + '\u2013' + e.courseClose : e.time ? e.time : e.courseClose ? 'closes ' + e.courseClose : '';
 const isPast = e => new Date() >= endsAt(e);
 const upcoming = () => EVENTS.filter(e => !isPast(e)).sort((a,b) => parseDate(a.date) - parseDate(b.date));
 const past = () => EVENTS.filter(e => isPast(e)).sort((a,b) => parseDate(b.date) - parseDate(a.date));
@@ -575,12 +584,16 @@ const VIEWS = {
   }
 };
 
+function timingsRows(e){
+  const t = tm(e);
+  return [['Registration', rng(t.regFrom, t.regTo)], ['Starts', rng(t.startsFrom, t.startsTo)], ['Course closes', t.close]].filter(r => r[1]);
+}
 function eventPage(id){
   const e = EVENTS.find(x => x.id === id && x.detail);
   if (!e) return VIEWS.events();
   const d = e.detail, area = AREAS[e.area], date = parseDate(e.date);
   const q = area.lat + ',' + area.lon;
-  const facts = [['Date', fmtLong.format(date)], ['Time', e.time], ['Course closes', e.courseClose], ['Level', d.level], ['Area', area.name], ['Nearest town', d.nearestTown]].filter(f => f[1]);
+  const facts = [['Date', fmtLong.format(date)], ['Level', d.level], ['Area', area.name], ['Nearest town', d.nearestTown]].filter(f => f[1]);
   const docs = [];
   if (e.pdf) docs.push(['Preliminary details (PDF)', e.pdf]);
   (d.docs || []).forEach(x => docs.push(x));
@@ -594,6 +607,8 @@ function eventPage(id){
       <aside class="stack">
         <div class="card"><h3>Key facts</h3>
           <dl class="facts">${facts.map(f => `<dt>${esc(f[0])}</dt><dd>${esc(f[1])}</dd>`).join('')}</dl></div>
+        ${timingsRows(e).length ? `<div class="card"><h3>Timings</h3>
+          <dl class="facts">${timingsRows(e).map(r => `<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join('')}</dl></div>` : ''}
         ${d.officials.length ? `<div class="card"><h3>Officials</h3>
           <dl class="facts">${d.officials.map(o => `<dt>${esc(o[0])}</dt><dd>${esc(o[1])}</dd>`).join('')}</dl></div>` : ''}
         ${docs.length ? `<div class="card"><h3>Documents and links</h3>

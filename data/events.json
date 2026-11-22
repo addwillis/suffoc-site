@@ -4,8 +4,6 @@
       "id": "tunstall",
       "title": "Tunstall Forest Barnes Carr and The Birches",
       "date": "2026-11-29",
-      "time": "10:30",
-      "courseClose": "14:00",
       "type": "Regional event",
       "area": "tunstall",
       "link": "https://www.suffoc.co.uk/tunstall-2026",
@@ -42,16 +40,22 @@
             "url": "http://www.suffoc.co.uk/area-overview/tunstall-forest"
           }
         ]
+      },
+      "timings": {
+        "startsFrom": "10:30",
+        "courseClose": "14:00"
       }
     },
     {
       "id": "hardwick-street-o-2",
       "title": "SUFFOC Mid-Week Street-O 2 Hardwick",
       "date": "2026-12-08",
-      "time": "18:00",
       "type": "Street-O",
       "area": "hardwick",
-      "link": "https://www.suffoc.co.uk/events/street-o-hardwick"
+      "link": "https://www.suffoc.co.uk/events/street-o-hardwick",
+      "timings": {
+        "startsFrom": "18:00"
+      }
     },
     {
       "id": "needham-2026",
@@ -128,12 +132,14 @@
       "id": "street-o-claydon",
       "title": "SUFFOC Mid-Week Street-O 3 Claydon",
       "date": "2027-01-12",
-      "time": "18:00",
       "type": "Street-O",
       "area": "claydon",
       "detail": {
         "w3w": "only.pint.form",
         "nearestTown": "Claydon"
+      },
+      "timings": {
+        "startsFrom": "18:00"
       }
     }
   ]

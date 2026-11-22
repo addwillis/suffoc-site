@@ -27,14 +27,31 @@ content:
       type: string
       description: Format YYYY-MM-DD, e.g. 2026-11-29
       required: true
-    - name: time
-      label: Start time
-      type: string
-      description: e.g. 10:30 (optional)
-    - name: courseClose
-      label: Course close time
-      type: string
-      description: e.g. 13:30 (optional)
+    - name: timings
+      label: Timings
+      type: object
+      description: Fill in what you know. The first Starts time and the last Course closes time are shown on the home page and Events page.
+      fields:
+      - name: registrationFrom
+        label: Registration opens
+        type: string
+        description: e.g. 10:00
+      - name: registrationTo
+        label: Registration closes
+        type: string
+        description: e.g. 11:30
+      - name: startsFrom
+        label: Starts open
+        type: string
+        description: First start time, e.g. 10:30
+      - name: startsTo
+        label: Starts close
+        type: string
+        description: Last start time, e.g. 12:00
+      - name: courseClose
+        label: Course closes
+        type: string
+        description: Final course close time, e.g. 14:00
     - name: type
       label: Event type
       type: select
