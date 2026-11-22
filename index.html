@@ -227,7 +227,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 7';
+const BUILD = 'build 8';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -417,23 +417,33 @@ function initMaps(){
       else if (pts.length) map.fitBounds(pts, { padding:[40,40], maxZoom:key === 'upcoming' ? 12 : 11 });
       else map.setView([52.2, 1.0], 9);
       if (key === 'upcoming' && seq.length > 1) {
-        /* Course legs: straight lines between consecutive events, stopped short of each circle. */
-        const legs = L.layerGroup().addTo(map), R = 18;
+        /* Course legs: a plain SVG overlay on the map, redrawn whenever the map moves or zooms.
+           Lines stop short of each circle, like the legs of an orienteering course. */
+        const NS = 'http://www.w3.org/2000/svg', R = 18;
+        const svg = document.createElementNS(NS, 'svg');
+        svg.setAttribute('class', 'legs');
+        svg.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:450;overflow:visible';
+        el.appendChild(svg);
         const drawLegs = () => {
-          legs.clearLayers();
+          let n = 0, html = '';
           for (let i = 0; i < seq.length - 1; i++) {
             const A = AREAS[seq[i].area], B = AREAS[seq[i + 1].area];
             if (!A || !B || seq[i].area === seq[i + 1].area) continue;
-            const p = map.latLngToLayerPoint([A.lat, A.lon]), q = map.latLngToLayerPoint([B.lat, B.lon]);
+            const p = map.latLngToContainerPoint([A.lat, A.lon]), q = map.latLngToContainerPoint([B.lat, B.lon]);
             const dx = q.x - p.x, dy = q.y - p.y, d = Math.sqrt(dx * dx + dy * dy);
-            if (d <= 2 * R + 2) continue;
+            if (!(d > 2 * R + 2)) continue;
             const ux = dx / d, uy = dy / d;
-            L.polyline([map.layerPointToLatLng({ x:p.x + ux * R, y:p.y + uy * R }), map.layerPointToLatLng({ x:q.x - ux * R, y:q.y - uy * R })],
-              { color:'#A3238E', weight:3, opacity:.95, interactive:false }).addTo(legs);
+            html += '<line x1="' + (p.x + ux * R).toFixed(1) + '" y1="' + (p.y + uy * R).toFixed(1) + '" x2="' + (q.x - ux * R).toFixed(1) + '" y2="' + (q.y - uy * R).toFixed(1) + '" stroke="#A3238E" stroke-width="3" stroke-linecap="round"/>';
+            n++;
           }
+          svg.innerHTML = html;
+          el.dataset.legs = n;
+          const st = document.getElementById('status');
+          if (st) st.textContent = st.textContent.replace(/ \| legs: \d+/, '') + ' | legs: ' + n;
         };
-        map.on('zoomend', drawLegs);
+        map.on('move zoom moveend zoomend resize', drawLegs);
         drawLegs();
+        setTimeout(drawLegs, 300);
       }
       LMAPS.push(map);
     } catch (err) { el.innerHTML = fallback; }
