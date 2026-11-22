@@ -9,13 +9,12 @@
         "startsTo": "13:00",
         "courseClose": "14:00"
       },
-      "type": "Regional event",
+      "type": "Regional",
       "area": "tunstall",
       "link": "https://www.suffoc.co.uk/tunstall-2026",
       "pdf": "https://www.suffoc.co.uk/events/Preliminary_details_Tunstall.pdf",
       "entryUrl": "https://racesignup.co.uk/tunstall-forest-2026",
       "detail": {
-        "level": "Regional",
         "about": "Barnes Carr and The Birches is in the south-east portion of Tunstall Forest, in the East Suffolk Sandlings. The area has interesting terrain, with a variety of water and relief features and some nice areas of deciduous woodland.",
         "address": [
           "Tunstall Forest",
@@ -97,7 +96,7 @@
       "id": "sudbury-2026",
       "title": "Sudbury Urban",
       "date": "2026-05-17",
-      "type": "Regional event",
+      "type": "Regional",
       "area": "sudbury",
       "results": [
         {
@@ -147,7 +146,7 @@
         "startsTo": "12:30",
         "courseClose": "14:00"
       },
-      "type": "Regional event",
+      "type": "Regional",
       "area": "Kings Forest",
       "detail": {
         "gridRef": "TL 821760",

@@ -235,7 +235,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 26';
+const BUILD = 'build 28';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -661,7 +661,7 @@ function eventPage(id){
   if (!e) return VIEWS.events();
   const d = e.detail, area = AREAS[e.area] || null, date = parseDate(e.date);
   const loc = e.loc || (area && isFinite(area.lat) && isFinite(area.lon) ? area : null), q = loc ? loc.lat + ',' + loc.lon : '';
-  const facts = [['Date', fmtLong.format(date)], ['Level', d.level], ['Area', area ? area.name : e.area]].filter(f => f[1]);
+  const facts = [['Date', fmtLong.format(date)], ['Area', area ? area.name : e.area]].filter(f => f[1]);
   const docs = [];
   if (e.pdf) docs.push(['Preliminary details (PDF)', e.pdf]);
   (d.docs || []).forEach(x => docs.push(x));

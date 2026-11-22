@@ -57,7 +57,7 @@ content:
       type: select
       options:
         values:
-        - Regional event
+        - Regional
         - Local event
         - Street-O
         - Score event
@@ -86,9 +86,6 @@ content:
       label: Event page details (optional, creates a full event page)
       type: object
       fields:
-      - name: level
-        label: Level
-        type: string
       - name: about
         label: About the area
         type: text
