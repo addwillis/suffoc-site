@@ -1,95 +1,156 @@
 content:
+- name: events
+  label: Events and results
+  type: file
+  path: data/events.json
+  format: json
+  fields:
   - name: events
-    label: Events and results
-    type: file
-    path: data/events.json
-    format: json
-    list: true
+    label: Events
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{date} {title}'
     fields:
-      - name: id
-        label: Short ID (web address)
+    - name: id
+      label: Short ID (web address)
+      type: string
+      description: Lowercase, no spaces, e.g. tunstall-2026. Used in the event page link.
+      required: true
+    - name: title
+      label: Event name
+      type: string
+      required: true
+    - name: date
+      label: Date
+      type: string
+      description: Format YYYY-MM-DD, e.g. 2026-11-29
+      required: true
+    - name: time
+      label: Start time
+      type: string
+      description: e.g. 10:30 (optional)
+    - name: type
+      label: Event type
+      type: select
+      options:
+        values:
+        - Regional event
+        - Local event
+        - Street-O
+        - Score event
+        - Training
+        - Other
+    - name: area
+      label: Area ID
+      type: string
+      description: Must match an ID in Areas, e.g. tunstall
+      required: true
+    - name: link
+      label: Link to existing event page (optional)
+      type: string
+    - name: pdf
+      label: Preliminary details PDF link (optional)
+      type: string
+    - name: detail
+      label: Event page details (optional, creates a full event page)
+      type: object
+      fields:
+      - name: level
+        label: Level
         type: string
-        description: "Lowercase, no spaces, e.g. tunstall-2026. Used in the event page link."
-        required: true
-      - name: title
-        label: Event name
+      - name: about
+        label: About the area
+        type: text
+      - name: address
+        label: Address lines
         type: string
-        required: true
-      - name: date
-        label: Date
+        list: true
+      - name: postcode
+        label: Postcode
         type: string
-        description: "Format YYYY-MM-DD, e.g. 2026-11-29"
-        required: true
-      - name: time
-        label: Start time
+      - name: gridRef
+        label: Grid reference
         type: string
-        description: "e.g. 10:30 (optional)"
-      - name: type
-        label: Event type
-        type: select
-        options:
-          values: [Regional event, Local event, Street-O, Score event, Training, Other]
-      - name: area
-        label: Area ID
+      - name: w3w
+        label: what3words (no ///)
         type: string
-        description: "Must match an ID in Areas, e.g. tunstall"
-        required: true
-      - name: link
-        label: Link to existing event page (optional)
+      - name: nearestTown
+        label: Nearest town
         type: string
-      - name: pdf
-        label: Preliminary details PDF link (optional)
-        type: string
-      - name: detail
-        label: Event page details (optional, creates a full event page)
-        type: object
-        fields:
-          - { name: level, label: Level, type: string }
-          - { name: about, label: About the area, type: text }
-          - { name: address, label: Address lines, type: string, list: true }
-          - { name: postcode, label: Postcode, type: string }
-          - { name: gridRef, label: Grid reference, type: string }
-          - { name: w3w, label: what3words (no ///), type: string }
-          - { name: nearestTown, label: Nearest town, type: string }
-          - name: officials
-            label: Officials
-            type: object
-            list: true
-            fields:
-              - { name: role, label: Role, type: string }
-              - { name: name, label: Name, type: string }
-          - name: docs
-            label: Documents and links
-            type: object
-            list: true
-            fields:
-              - { name: label, label: Link text, type: string }
-              - { name: url, label: Web address, type: string }
-      - name: results
-        label: Results (add after the event)
+      - name: officials
+        label: Officials
         type: object
         list: true
         fields:
-          - { name: label, label: Link text (e.g. Results and split times), type: string }
-          - { name: url, label: Web address, type: string }
+        - name: role
+          label: Role
+          type: string
+        - name: name
+          label: Name
+          type: string
+      - name: docs
+        label: Documents and links
+        type: object
+        list: true
+        fields:
+        - name: label
+          label: Link text
+          type: string
+        - name: url
+          label: Web address
+          type: string
+    - name: results
+      label: Results (add after the event)
+      type: object
+      list: true
+      fields:
+      - name: label
+        label: Link text (e.g. Results and split times)
+        type: string
+      - name: url
+        label: Web address
+        type: string
+- name: areas
+  label: Mapped areas
+  type: file
+  path: data/areas.json
+  format: json
+  fields:
   - name: areas
-    label: Mapped areas
-    type: file
-    path: data/areas.json
-    format: json
-     list:
+    label: Areas
+    type: object
+    list:
       collapsible:
         collapsed: true
-        summary: "{name}"
+        summary: '{name}'
     fields:
-      - { name: id, label: Area ID, type: string, required: true }
-      - { name: name, label: Name, type: string, required: true }
-      - { name: lat, label: Latitude, type: number }
-      - { name: lon, label: Longitude, type: number }
-      - { name: label_dx, label: Map label shift across, type: number }
-      - { name: label_dy, label: Map label shift down, type: number }
-      - name: label_anchor
-        label: Map label side
-        type: select
-        options:
-          values: [start, middle, end]
+    - name: id
+      label: Area ID
+      type: string
+      required: true
+    - name: name
+      label: Name
+      type: string
+      required: true
+    - name: lat
+      label: Latitude
+      type: number
+    - name: lon
+      label: Longitude
+      type: number
+    - name: label_dx
+      label: Map label shift across
+      type: number
+    - name: label_dy
+      label: Map label shift down
+      type: number
+    - name: label_anchor
+      label: Map label side
+      type: select
+      options:
+        values:
+        - start
+        - middle
+        - end
