@@ -278,7 +278,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 51';
+const BUILD = 'build 52';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -320,7 +320,7 @@ function loadData(areas, events){
     const key = slug(String(o.area == null ? '' : o.area).replace(/^.*\//, '').replace(/\.json$/i, ''));
     if (!key) return;
     let id = Object.keys(AREAS).find(k => slug(k) === key || slug(AREAS[k].name) === key);
-    if (!id && o.loc) { id = key; AREAS[id] = { name:String(o.area).trim(), lat:o.loc.lat, lon:o.loc.lon, dx:14, dy:0, anchor:'start' }; }
+    if (!id && o.loc) { id = key; AREAS[id] = { name:String(o.area).trim(), lat:o.loc.lat, lon:o.loc.lon, dx:14, dy:0, anchor:'start', auto:true }; }
     if (id) o.area = id;
   });
 }
@@ -562,8 +562,8 @@ function mapSVG(only){
   const outline = OUTLINE.map(p => px(p[0], p[1]).map(n => n.toFixed(1)).join(',')).join(' ');
   const towns = TOWNS.map(t => { const [x,y] = px(t.lon, t.lat);
     return `<circle class="town-dot" cx="${x}" cy="${y}" r="3"/><text class="town" x="${x+t.dx}" y="${y+t.dy}" text-anchor="${t.anchor}">${t.name}</text>`; }).join('');
-  const pins = Object.entries(AREAS).filter(([k, a]) => keep(k) && isFinite(a.lat) && isFinite(a.lon)).map(([k, a]) => {
-    const isUp = up.has(k);
+  const pins = Object.entries(AREAS).filter(([k, a]) => keep(k) && isFinite(a.lat) && isFinite(a.lon) && (only || !a.auto)).map(([k, a]) => {
+    const isUp = !!only && up.has(k);
     const [x,y] = px(a.lon, a.lat);
     return `<g class="pin${isUp ? ' up' : ''}"><circle class="ring" cx="${x}" cy="${y}" r="9"/><circle class="dot" cx="${x}" cy="${y}" r="2.6"/><text class="area" x="${x+a.dx}" y="${y+a.dy}" text-anchor="${a.anchor}">${a.name}</text></g>`;
   }).join('');
@@ -584,9 +584,9 @@ function mapBlock(mode){
       <div class="legend"><span><i class="course"></i>Upcoming events, each marked with its date</span></div></div>`;
   }
   return `<div class="map"><div class="leafmap" data-map="all">${mapSVG()}${FALLBACK_NOTE}</div>
-    <div class="legend"><span><i class="course"></i>Upcoming event</span><span><i></i>Previously mapped area</span></div>
+    <div class="legend"><span><i></i>Area the club has mapped</span></div>
   </div>
-  <ul class="chips">${Object.values(AREAS).map(a => `<li>${esc(a.name)}</li>`).join('')}</ul>`;
+  <ul class="chips">${Object.values(AREAS).filter(a => !a.auto).map(a => `<li>${esc(a.name)}</li>`).join('')}</ul>`;
 }
 
 /* Real map (Leaflet + OpenStreetMap). If Leaflet cannot load, the schematic SVG above stays as a fallback. */
@@ -611,7 +611,7 @@ function initMaps(){
       const evKey = key.indexOf('event:') === 0 ? EVENTS.find(x => x.id === key.slice(6)) : null;
       const entries = evKey
         ? (AREAS[evKey.area] || evKey.loc ? [[evKey.area, Object.assign({}, AREAS[evKey.area] || { name:evKey.title, dx:14, dy:0, anchor:'start' }, evKey.loc ? { lat:evKey.loc.lat, lon:evKey.loc.lon } : {})]] : [])
-        : Object.entries(AREAS).filter(([k]) => key === 'all' || (key === 'upcoming' ? up.has(k) : k === key));
+        : Object.entries(AREAS).filter(([k, a]) => key === 'all' ? !a.auto : (key === 'upcoming' ? up.has(k) : k === key));
       entries.forEach(([k, a]) => {
         if (isNaN(a.lat) || isNaN(a.lon)) return;
         let icon;
@@ -619,13 +619,13 @@ function initMaps(){
           const n1 = nextBy[k][0], d1 = parseDate(n1.date), more = nextBy[k].length > 1;
           icon = L.divIcon({ className:'', html:'<div class="dbadge"><b>' + d1.getDate() + '</b><i>' + d1.toLocaleString('en-GB', { month:'short' }) + '</i>' + (more ? '<span class="more">' + nextBy[k].length + '</span>' : '') + '</div>',
             iconSize:[48,48], iconAnchor:[24,24], popupAnchor:[0,-26] });
-        } else if (up.has(k)) {
+        } else if (key !== 'all' && up.has(k)) {
           icon = L.divIcon({ className:'', html:'<div class="ctl"><span class="ring"></span></div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-16] });
         } else {
           icon = L.divIcon({ className:'', html:'<span class="lpin"></span>', iconSize:[22,22], iconAnchor:[11,11], popupAnchor:[0,-12] });
         }
         const evs = EVENTS.filter(e => e.area === k && (key !== 'upcoming' || !isPast(e))).sort((x, y) => parseDate(y.date) - parseDate(x.date));
-        const html = evs.length ? evs.map(e => {
+        const html = evs.length && key !== 'all' ? evs.map(e => {
           const t = timeRange(e), when = fmtShort.format(parseDate(e.date)) + (t ? ', ' + t : '');
           const name = '<strong>' + esc(e.title) + '</strong>';
           return '<div class="pop">' + (e.detail ? '<a href="#event-' + esc(e.id) + '">' + name + '</a>' : name) + '<br>' + esc(when) + '</div>';
@@ -696,7 +696,7 @@ const VIEWS = {
     </div>`;
   },
   mapped(){
-    return `${pageHead('Where we have mapped', 'A sense of the area the club covers. Each marker is a place we have made a map for.', 'newcomers')}
+    return `${pageHead('Where we have mapped', 'A sense of the area the club covers. Each marker is an area the club has made a map for.', 'newcomers')}
     <div class="wrap">
       <section class="section"><a class="back" href="#events">&larr; Back to Events</a><div style="height:1rem"></div>${mapBlock()}</section>
     </div>`;
