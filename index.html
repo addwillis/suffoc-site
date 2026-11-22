@@ -79,10 +79,9 @@ p{margin:0 0 1rem;max-width:65ch}
 .btn.line{color:var(--navy);border-color:var(--navy)}
 .btn:hover{filter:brightness(1.08)}
 .btn.big{font-size:1.3rem;padding:1rem 2.2rem;border-radius:10px;box-shadow:0 2px 0 rgba(0,0,0,.15)}
-.entry{background:var(--tint);border-bottom:1px solid var(--line);padding:1.1rem 0}
-.entry .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px}
-.entry .note-line{margin:0;color:var(--navy);font-weight:600}
-@media(max-width:520px){.entry .btn.big{display:block;width:100%;text-align:center}}
+.entrycard{background:var(--tint);border-color:#bcd7ec;text-align:center}
+.entrycard .btn.big{display:block;width:100%;text-align:center}
+.entrycard .note-line{margin:.8rem 0 0;color:var(--navy);font-weight:600}
 .btn.small{font-size:.92rem;padding:.4rem .8rem;border-width:1.5px}
 
 /* Sections */
@@ -235,7 +234,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 20';
+const BUILD = 'build 21';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -609,9 +608,9 @@ function eventPage(id){
       <h1 class="event-title">${esc(e.title)}</h1>
       <p class="lead">${esc(fmtLong.format(date))}${timeRange(e) ? ' &middot; ' + esc(timeRange(e)) : ''}</p>
     </div></section>
-    ${e.entryUrl && !isPast(e) ? `<section class="entry"><div class="wrap"><a class="btn big gold" href="${esc(e.entryUrl)}" ${ext}>Enter online</a>${e.entryNote ? `<p class="note-line">${esc(e.entryNote)}</p>` : ''}</div></section>` : ''}
     <div class="wrap"><div class="detail-grid">
       <aside class="stack">
+        ${e.entryUrl && !isPast(e) ? `<div class="card entrycard"><a class="btn big gold" href="${esc(e.entryUrl)}" ${ext}>Enter online</a>${e.entryNote ? `<p class="note-line">${esc(e.entryNote)}</p>` : ''}</div>` : ''}
         <div class="card"><h3>Key facts</h3>
           <dl class="facts">${facts.map(f => `<dt>${esc(f[0])}</dt><dd>${esc(f[1])}</dd>`).join('')}</dl></div>
         ${timingsRows(e).length ? `<div class="card"><h3>Timings</h3>
