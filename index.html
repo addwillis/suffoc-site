@@ -106,6 +106,7 @@ p{margin:0 0 1rem;max-width:65ch}
 .more{font-weight:600;white-space:nowrap}
 .pagehead{padding:2.2rem 0 1.2rem;border-bottom:1px solid var(--line);background:var(--card)}
 .pagehead h1{font-size:clamp(2.2rem,6vw,3.4rem);text-transform:uppercase;font-weight:700}
+.pagehead .hi{width:.8em;height:.8em;fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.04em;margin-right:.3em}
 .pagehead .lead{margin:.7rem 0 0;color:var(--muted);font-size:1.1rem}
 .back{display:inline-block;margin-bottom:.8rem;font-weight:600}
 .empty{background:var(--card);border:1px dashed var(--line);border-radius:var(--radius);padding:1.2rem}
@@ -265,7 +266,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 37';
+const BUILD = 'build 38';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -614,8 +615,18 @@ function initMaps(){
   });
 }
 
-function pageHead(title, intro){
-  return `<section class="pagehead"><div class="wrap"><h1>${esc(title)}</h1>${intro ? `<p class="lead">${intro}</p>` : ''}</div></section>`;
+const ICONS = {
+  home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',
+  events:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  results:'<path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3M12 14v4M8 21h8"/>',
+  news:'<path d="M4 5h13v14H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v8a2 2 0 0 1-2 2M8 9h6M8 13h6"/>',
+  anytime:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 3h6"/>',
+  club:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5a5 5 0 0 1 4.5 5"/>',
+  newcomers:'<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>'
+};
+function pageHead(title, intro, icon){
+  const ic = icon && ICONS[icon] ? `<svg class="hi" viewBox="0 0 24 24" aria-hidden="true">${ICONS[icon]}</svg>` : '';
+  return `<section class="pagehead"><div class="wrap"><h1>${ic}${esc(title)}</h1>${intro ? `<p class="lead">${intro}</p>` : ''}</div></section>`;
 }
 
 const VIEWS = {
@@ -650,7 +661,7 @@ const VIEWS = {
     </div>`;
   },
   events(){
-    return `${pageHead('Events', 'Planned club events, street-Os and MapRun evenings.')}
+    return `${pageHead('Events', 'Planned club events, street-Os and MapRun evenings.', 'events')}
     <div class="wrap">
       <section class="section">${mapBlock('upcoming')}</section>
       <section class="section"><div class="section-head"><h2>Upcoming</h2></div>${eventsList(upcoming())}
@@ -658,7 +669,7 @@ const VIEWS = {
     </div>`;
   },
   mapped(){
-    return `${pageHead('Where we have mapped', 'A sense of the area the club covers. Each marker is a place we have made a map for.')}
+    return `${pageHead('Where we have mapped', 'A sense of the area the club covers. Each marker is a place we have made a map for.', 'newcomers')}
     <div class="wrap">
       <section class="section"><a class="back" href="#events">&larr; Back to Events</a><div style="height:1rem"></div>${mapBlock()}</section>
     </div>`;
@@ -670,15 +681,15 @@ const VIEWS = {
       return `<details class="year"${i === 0 ? ' open' : ''}><summary>${y} <span class="count">${evs.length} event${evs.length === 1 ? '' : 's'}</span></summary>
         <div class="rlist">${evs.map(resultRow).join('')}</div></details>`;
     }).join('') : `<div class="empty">No results yet.</div>`;
-    return `${pageHead('Results', 'Results, split times and routes from past events.')}
+    return `${pageHead('Results', 'Results, split times and routes from past events.', 'results')}
     <div class="wrap"><section class="section">${body}</section></div>`;
   },
   news(){
-    return `${pageHead('News')}
+    return `${pageHead('News', '', 'news')}
     <div class="wrap"><section class="section"><div class="grid">${NEWS.map(newsCard).join('')}</div></section></div>`;
   },
   anytime(){
-    return `${pageHead('Anytime O', 'Orienteer whenever you like, no event needed.')}
+    return `${pageHead('Anytime O', 'Orienteer whenever you like, no event needed.', 'anytime')}
     <div class="wrap">
       <section class="section"><div class="grid">
         <article class="card"><h3>Permanent courses</h3><p style="margin-top:.5rem">Courses set up in parks and woods that you can follow at any time with a downloadable map.</p></article>
@@ -688,13 +699,13 @@ const VIEWS = {
     </div>`;
   },
   club(){
-    return `${pageHead('Club', 'Everything about SUFFOC in one place.')}
+    return `${pageHead('Club', 'Everything about SUFFOC in one place.', 'club')}
     <div class="wrap"><section class="section"><div class="tiles">
       ${CLUB.map(c => `<a class="tile" href="#club-${c.id}"><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p></a>`).join('')}
     </div></section></div>`;
   },
   newcomers(){
-    return `${pageHead('New to orienteering?', 'A quick guide to getting started.')}
+    return `${pageHead('New to orienteering?', 'A quick guide to getting started.', 'newcomers')}
     <div class="wrap"><section class="section">
       <ol class="steps">
         <li><h3>What is orienteering?</h3><p style="margin-top:.4rem">Navigating between marked points on a detailed map, choosing your own route. You can run, jog or walk.</p></li>
@@ -766,7 +777,7 @@ function clubPage(id){
   const c = CLUB.find(x => x.id === id) || (id === 'contact' ? { title:'Contact', desc:'' } : null);
   if (!c) return VIEWS.club();
   const extra = id === 'agm' ? ' The link to the Google Drive folder goes here.' : '';
-  return `${pageHead(c.title)}
+  return `${pageHead(c.title, '', 'club')}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
     <div class="empty">This page is a placeholder. The content from the current site moves here.${extra}</div>
