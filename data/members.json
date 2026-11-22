@@ -22,6 +22,8 @@
     },
     {
       "name": "Rod Mansel",
+      "role": "Secretary",
+      "committee": true,
       "id": "rod-mansel"
     }
   ]
