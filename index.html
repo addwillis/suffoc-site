@@ -250,7 +250,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 29';
+const BUILD = 'build 30';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -431,17 +431,23 @@ function resultCard(e){
   return `<article class="card">
     <p class="date">${fmtShort.format(parseDate(e.date))}</p>
     ${e.type && e.type !== 'Local event' ? `<span class="pill">${esc(e.type)}</span>` : ''}
-    <h3>${e.detail ? `<a class="title-link" href="#event-${esc(e.id)}">${esc(e.title)}</a>` : esc(e.title)}</h3>
+    <h3>${titleLink(e)}</h3>
     ${has
       ? `<div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small line" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div>`
       : `<p class="meta" style="margin-top:.6rem">Results to follow</p>`}
   </article>`;
 }
+/* Title for a result: the event's own page if it has one, otherwise its old event page link. */
+function titleLink(e){
+  if (e.detail) return `<a class="title-link" href="#event-${esc(e.id)}">${esc(e.title)}</a>`;
+  if (e.link) return `<a class="title-link" href="${esc(e.link)}" ${ext}>${esc(e.title)}</a>`;
+  return esc(e.title);
+}
 function resultRow(e){
   const d = parseDate(e.date), has = e.results && e.results.length;
   return `<div class="rrow">
     <span class="rdate">${d.getDate()} ${d.toLocaleString('en-GB', { month:'short' })}</span>
-    <h3>${e.detail ? `<a class="title-link" href="#event-${esc(e.id)}">${esc(e.title)}</a>` : esc(e.title)}${e.type && e.type !== 'Local event' ? `<span class="pill">${esc(e.type)}</span>` : ''}</h3>
+    <h3>${titleLink(e)}${e.type && e.type !== 'Local event' ? `<span class="pill">${esc(e.type)}</span>` : ''}</h3>
     ${has ? `<div class="links">${e.results.map(l => `<a class="btn small line" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div>` : `<p class="tbc">Results to follow</p>`}
   </div>`;
 }
