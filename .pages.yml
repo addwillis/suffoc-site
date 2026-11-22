@@ -74,6 +74,14 @@ content:
     - name: pdf
       label: Preliminary details PDF link (optional)
       type: string
+    - name: entryUrl
+      label: Enter online link (optional)
+      type: string
+      description: The full web address of the entry page, e.g. the RaceSignup link. Adds a big Enter online button.
+    - name: entryNote
+      label: Entry note (optional)
+      type: string
+      description: Short line shown next to the button, e.g. Entries close Friday 27 November
     - name: detail
       label: Event page details (optional, creates a full event page)
       type: object
@@ -96,9 +104,6 @@ content:
         type: string
       - name: w3w
         label: what3words (no ///)
-        type: string
-      - name: nearestTown
-        label: Nearest town
         type: string
       - name: officials
         label: Officials

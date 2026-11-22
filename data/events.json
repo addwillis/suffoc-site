@@ -24,7 +24,6 @@
         "postcode": "IP12 2AP",
         "gridRef": "TM 39950 52750",
         "w3w": "economies.winter.windmills",
-        "nearestTown": "Woodbridge",
         "officials": [
           {
             "role": "Organiser",
@@ -139,8 +138,15 @@
       "type": "Street-O",
       "area": "claydon",
       "detail": {
+<<<<<<< Updated upstream
         "w3w": "only.pint.form",
         "nearestTown": "Claydon"
+=======
+        "w3w": "only.pint.form"
+      },
+      "timings": {
+        "startsFrom": "18:00"
+>>>>>>> Stashed changes
       }
     }
   ]
