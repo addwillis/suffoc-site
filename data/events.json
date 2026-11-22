@@ -152,6 +152,12 @@
         "planner": "Phil Halford",
         "controller": "Mike Bickle"
       }
+    },
+    {
+      "id": "Brandon Country Park",
+      "title": "Brandon Country park",
+      "date": "2026-02-22",
+      "area": "Brandon"
     }
   ]
 }
