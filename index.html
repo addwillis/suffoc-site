@@ -278,7 +278,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 46';
+const BUILD = 'build 47';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -531,8 +531,8 @@ function excerpt(src){
 function newsCard(n){
   return `<article class="card newscard">
     ${n.image ? `<a href="#news-${esc(n.id)}"><img class="newsimg" src="${esc(imgSrc(n.image))}" alt="${esc(n.imageAlt || '')}" loading="lazy"></a>` : ''}
-    <p class="date">${fmtShort.format(parseDate(n.date))}</p>
     <h3><a class="title-link" href="#news-${esc(n.id)}">${esc(n.title)}</a></h3>
+    <p class="date" style="margin:.25rem 0 0">${fmtShort.format(parseDate(n.date))}</p>
     ${n.text ? `<p style="margin-top:.5rem">${esc(excerpt(n.text))}</p>` : ''}
     <a href="#news-${esc(n.id)}"><strong>Read more</strong></a>
   </article>`;
@@ -542,8 +542,8 @@ function newsPage(id){
   if (!n) return VIEWS.news();
   return `<section class="pagehead"><div class="wrap">
       <a class="back" href="#news">&larr; Back to News</a>
-      <p class="date" style="margin:0 0 .3rem;color:var(--muted)">${fmtLong.format(parseDate(n.date))}</p>
       <h1 class="event-title">${esc(n.title)}</h1>
+      <p class="date" style="margin:.6rem 0 0;color:var(--muted);font-size:1.05rem">${fmtLong.format(parseDate(n.date))}</p>
     </div></section>
     <div class="wrap"><section class="section"><article class="newsfull">
       ${n.image ? `<img class="newsimg-full" src="${esc(imgSrc(n.image))}" alt="${esc(n.imageAlt || '')}">` : ''}
