@@ -100,11 +100,13 @@ content:
         label: Postcode
         type: string
       - name: gridRef
-        label: Grid reference
+        label: Grid reference (OS)
         type: string
+        description: e.g. TM 39950 52750. Places the pin on this event's map and the Google Maps link.
       - name: w3w
         label: what3words (no ///)
         type: string
+        description: e.g. only.pint.form. Shown as text and a link only, it does not move the map pin.
       - name: officials
         label: Officials
         type: object
@@ -160,12 +162,18 @@ content:
       label: Name
       type: string
       required: true
+    - name: gridRef
+      label: Grid reference (OS)
+      type: string
+      description: e.g. TM 39950 52750. The map pin is placed from this, so you don't need latitude and longitude.
     - name: lat
-      label: Latitude
+      label: Latitude (optional)
       type: number
+      description: Only needed if there is no grid reference.
     - name: lon
-      label: Longitude
+      label: Longitude (optional)
       type: number
+      description: Only needed if there is no grid reference.
     - name: label_dx
       label: Map label shift across
       type: number

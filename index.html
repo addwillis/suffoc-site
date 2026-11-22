@@ -234,7 +234,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 21';
+const BUILD = 'build 22';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -244,7 +244,9 @@ const pairs = (list, k1, k2) => (list || []).filter(x => x && x[k1] && x[k2]).ma
 const asList = d => Array.isArray(d) ? d : (d && Object.values(d).find(Array.isArray)) || [];
 function loadData(areas, events){
   AREAS = {};
-  areas.forEach(a => { AREAS[a.id] = { name:a.name, lat:+a.lat, lon:+a.lon, dx:+(a.label_dx||14), dy:+(a.label_dy||0), anchor:a.label_anchor||'start' }; });
+  areas.forEach(a => { let lat = parseFloat(a.lat), lon = parseFloat(a.lon);
+    if (!isFinite(lat) || !isFinite(lon)) { const g = gridToLatLon(a.gridRef); lat = g ? g.lat : NaN; lon = g ? g.lon : NaN; }
+    AREAS[a.id] = { name:a.name, lat:lat, lon:lon, dx:+(a.label_dx||14), dy:+(a.label_dy||0), anchor:a.label_anchor||'start' }; });
   const ok = e => e && e.title && /^\d{4}-\d{2}-\d{2}$/.test(String(e.date || '').trim());
   SKIPPED = events.filter(e => !ok(e)).map(e => (e && e.title) || '(no name)');
   events = events.filter(ok);
@@ -256,6 +258,7 @@ function loadData(areas, events){
     if (d && (d.about || d.postcode || d.w3w)) {
       o.detail = Object.assign({}, d, { address: (d.address || []).filter(Boolean), officials: pairs(d.officials, 'role', 'name'), docs: pairs(d.docs, 'label', 'url') });
     } else delete o.detail;
+    o.loc = o.detail && o.detail.gridRef ? gridToLatLon(o.detail.gridRef) : null;
     return o;
   });
 }
@@ -299,6 +302,53 @@ const TOWNS = [
    ===================================================================== */
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const parseDate = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+/* OS National Grid reference -> WGS84 latitude / longitude (accurate to a few metres). */
+function gridToEN(ref){
+  const m = String(ref == null ? '' : ref).toUpperCase().replace(/\s+/g, '').match(/^([A-Z]{2})(\d{2,10})$/);
+  if (!m || m[2].length % 2) return null;
+  const h = m[2].length / 2;
+  let l1 = m[1].charCodeAt(0) - 65, l2 = m[1].charCodeAt(1) - 65;
+  if (l1 > 7) l1--; if (l2 > 7) l2--;
+  const e100 = ((l1 - 2) % 5) * 5 + (l2 % 5), n100 = (19 - Math.floor(l1 / 5) * 5) - Math.floor(l2 / 5);
+  if (e100 < 0 || e100 > 6 || n100 < 0 || n100 > 12) return null;
+  const sc = Math.pow(10, 5 - h);
+  return { e:e100 * 100000 + parseInt(m[2].slice(0, h), 10) * sc, n:n100 * 100000 + parseInt(m[2].slice(h), 10) * sc };
+}
+function gridToLatLon(ref){
+  const en = gridToEN(ref); if (!en) return null;
+  const rad = Math.PI / 180;
+  /* Inverse Transverse Mercator on the Airy 1830 ellipsoid (OSGB36) */
+  let a = 6377563.396, b = 6356256.909, F0 = 0.9996012717, lat0 = 49 * rad, lon0 = -2 * rad, N0 = -100000, E0 = 400000;
+  const e2 = 1 - (b * b) / (a * a), n = (a - b) / (a + b);
+  let lat = lat0, M = 0, guard = 0;
+  do {
+    lat = (en.n - N0 - M) / (a * F0) + lat;
+    const Ma = (1 + n + (5 / 4) * n * n + (5 / 4) * n * n * n) * (lat - lat0);
+    const Mb = (3 * n + 3 * n * n + (21 / 8) * n * n * n) * Math.sin(lat - lat0) * Math.cos(lat + lat0);
+    const Mc = ((15 / 8) * n * n + (15 / 8) * n * n * n) * Math.sin(2 * (lat - lat0)) * Math.cos(2 * (lat + lat0));
+    const Md = (35 / 24) * n * n * n * Math.sin(3 * (lat - lat0)) * Math.cos(3 * (lat + lat0));
+    M = b * F0 * (Ma - Mb + Mc - Md);
+  } while (Math.abs(en.n - N0 - M) >= 0.00001 && ++guard < 50);
+  const sin = Math.sin(lat), cos = Math.cos(lat), tan = Math.tan(lat), sec = 1 / cos;
+  const nu = a * F0 / Math.sqrt(1 - e2 * sin * sin), rho = a * F0 * (1 - e2) / Math.pow(1 - e2 * sin * sin, 1.5), eta2 = nu / rho - 1;
+  const t2 = tan * tan, t4 = t2 * t2, t6 = t4 * t2, nu3 = nu * nu * nu, nu5 = nu3 * nu * nu, nu7 = nu5 * nu * nu;
+  const VII = tan / (2 * rho * nu), VIII = tan / (24 * rho * nu3) * (5 + 3 * t2 + eta2 - 9 * t2 * eta2), IX = tan / (720 * rho * nu5) * (61 + 90 * t2 + 45 * t4);
+  const X = sec / nu, XI = sec / (6 * nu3) * (nu / rho + 2 * t2), XII = sec / (120 * nu5) * (5 + 28 * t2 + 24 * t4), XIIA = sec / (5040 * nu7) * (61 + 662 * t2 + 1320 * t4 + 720 * t6);
+  const dE = en.e - E0;
+  const phi = lat - VII * Math.pow(dE, 2) + VIII * Math.pow(dE, 4) - IX * Math.pow(dE, 6);
+  const lam = lon0 + X * dE - XI * Math.pow(dE, 3) + XII * Math.pow(dE, 5) - XIIA * Math.pow(dE, 7);
+  /* Helmert datum shift OSGB36 -> WGS84 */
+  const nu1 = a / Math.sqrt(1 - e2 * Math.sin(phi) * Math.sin(phi));
+  const x1 = nu1 * Math.cos(phi) * Math.cos(lam), y1 = nu1 * Math.cos(phi) * Math.sin(lam), z1 = (nu1 * (1 - e2)) * Math.sin(phi);
+  const tx = 446.448, ty = -125.157, tz = 542.060, s = -20.4894 / 1e6 + 1, as = Math.PI / 648000;
+  const rx = 0.1502 * as, ry = 0.2470 * as, rz = 0.8421 * as;
+  const x2 = tx + x1 * s - y1 * rz + z1 * ry, y2 = ty + x1 * rz + y1 * s - z1 * rx, z2 = tz - x1 * ry + y1 * rx + z1 * s;
+  a = 6378137; b = 6356752.314245; const e2b = 1 - (b * b) / (a * a), p = Math.sqrt(x2 * x2 + y2 * y2);
+  let ph = Math.atan2(z2, p * (1 - e2b)), prev;
+  do { prev = ph; const nu2 = a / Math.sqrt(1 - e2b * Math.sin(ph) * Math.sin(ph)); ph = Math.atan2(z2 + e2b * nu2 * Math.sin(ph), p); } while (Math.abs(ph - prev) > 1e-12);
+  return { lat:ph / rad, lon:Math.atan2(y2, x2) / rad };
+}
+
 const now = new Date();
 const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 const fmtShort = new Intl.DateTimeFormat('en-GB', { day:'numeric', month:'short', year:'numeric' });
@@ -381,7 +431,7 @@ function mapSVG(only){
   const outline = OUTLINE.map(p => px(p[0], p[1]).map(n => n.toFixed(1)).join(',')).join(' ');
   const towns = TOWNS.map(t => { const [x,y] = px(t.lon, t.lat);
     return `<circle class="town-dot" cx="${x}" cy="${y}" r="3"/><text class="town" x="${x+t.dx}" y="${y+t.dy}" text-anchor="${t.anchor}">${t.name}</text>`; }).join('');
-  const pins = Object.entries(AREAS).filter(([k]) => keep(k)).map(([k, a]) => {
+  const pins = Object.entries(AREAS).filter(([k, a]) => keep(k) && isFinite(a.lat) && isFinite(a.lon)).map(([k, a]) => {
     const isUp = up.has(k);
     const [x,y] = px(a.lon, a.lat);
     return `<g class="pin${isUp ? ' up' : ''}"><circle class="ring" cx="${x}" cy="${y}" r="9"/><circle class="dot" cx="${x}" cy="${y}" r="2.6"/><text class="area" x="${x+a.dx}" y="${y+a.dy}" text-anchor="${a.anchor}">${a.name}</text></g>`;
@@ -439,7 +489,11 @@ function initMaps(){
         const my = la => Math.log(Math.tan(Math.PI / 4 + la * Math.PI / 360));
         startRot = Math.atan2(B.lon - A.lon, (my(B.lat) - my(A.lat)) * 180 / Math.PI) * 180 / Math.PI;
       }
-      Object.entries(AREAS).filter(([k]) => key === 'all' || (key === 'upcoming' ? up.has(k) : k === key)).forEach(([k, a]) => {
+      const evKey = key.indexOf('event:') === 0 ? EVENTS.find(x => x.id === key.slice(6)) : null;
+      const entries = evKey
+        ? (AREAS[evKey.area] || evKey.loc ? [[evKey.area, Object.assign({}, AREAS[evKey.area] || { name:evKey.title, dx:14, dy:0, anchor:'start' }, evKey.loc ? { lat:evKey.loc.lat, lon:evKey.loc.lon } : {})]] : [])
+        : Object.entries(AREAS).filter(([k]) => key === 'all' || (key === 'upcoming' ? up.has(k) : k === key));
+      entries.forEach(([k, a]) => {
         if (isNaN(a.lat) || isNaN(a.lon)) return;
         let icon;
         if (key === 'upcoming' && info[k]) {
@@ -463,7 +517,7 @@ function initMaps(){
         L.marker([a.lat, a.lon], { icon:icon, title:a.name }).addTo(map).bindPopup('<strong>' + esc(a.name) + '</strong>' + list);
         pts.push([a.lat, a.lon]);
       });
-      if (key !== 'all' && key !== 'upcoming' && pts.length) map.setView(pts[0], 14);
+      if (key !== 'all' && key !== 'upcoming' && pts.length) map.setView(pts[0], evKey && evKey.loc ? 16 : 14);
       else if (pts.length) map.fitBounds(pts, { padding:[40,40], maxZoom:key === 'upcoming' ? 12 : 11 });
       else map.setView([52.2, 1.0], 9);
       if (key === 'upcoming' && seq.length > 1) {
@@ -597,7 +651,7 @@ function eventPage(id){
   const e = EVENTS.find(x => x.id === id && x.detail);
   if (!e) return VIEWS.events();
   const d = e.detail, area = AREAS[e.area], date = parseDate(e.date);
-  const q = area.lat + ',' + area.lon;
+  const loc = e.loc || area, q = loc.lat + ',' + loc.lon;
   const facts = [['Date', fmtLong.format(date)], ['Level', d.level], ['Area', area.name]].filter(f => f[1]);
   const docs = [];
   if (e.pdf) docs.push(['Preliminary details (PDF)', e.pdf]);
@@ -624,7 +678,7 @@ function eventPage(id){
         ${e.results && e.results.length ? `<section class="card"><h3>Results</h3><div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small gold" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div></section>`
           : (isPast(e) ? `<section class="card todo"><h3>Results</h3><p style="margin:.6rem 0 0">Results to follow.</p></section>` : '')}
         ${d.about ? `<section class="card"><h3>About the area</h3><p style="margin-top:.6rem">${esc(d.about)}</p></section>` : ''}
-        <section class="card"><h3>Getting there</h3>
+        <section class="card"><h3>Location</h3>
           ${(d.address.length || d.postcode) ? `<p style="margin:.6rem 0">${[...d.address.map(esc), esc(d.postcode)].filter(Boolean).join('<br>')}</p>` : ''}
           <dl class="facts" style="margin-bottom:1rem">
             ${d.gridRef ? `<dt>Grid reference</dt><dd class="code">${esc(d.gridRef)}</dd>` : ''}
@@ -632,10 +686,10 @@ function eventPage(id){
           </dl>
           <div class="links" style="margin-bottom:1rem">
             <a class="btn small gold" href="https://www.google.com/maps/search/?api=1&query=${q}" ${ext}>Open in Google Maps</a>
-            <a class="btn small line" href="https://www.openstreetmap.org/?mlat=${area.lat}&mlon=${area.lon}#map=15/${area.lat}/${area.lon}" ${ext}>OpenStreetMap</a>
+            <a class="btn small line" href="https://www.openstreetmap.org/?mlat=${loc.lat}&mlon=${loc.lon}#map=16/${loc.lat}/${loc.lon}" ${ext}>OpenStreetMap</a>
             ${d.w3w ? `<a class="btn small line" href="https://what3words.com/${esc(d.w3w)}" ${ext}>what3words</a>` : ''}
           </div>
-          <div class="map"><div class="leafmap single" data-map="${esc(e.area)}">${mapSVG(e.area)}${FALLBACK_NOTE}</div></div>
+          <div class="map"><div class="leafmap single" data-map="event:${esc(e.id)}">${mapSVG(e.area)}${FALLBACK_NOTE}</div></div>
         </section>
         <section class="card todo"><h3>Courses, fees and entry</h3>
           <p style="margin:.6rem 0 0">To add: courses and lengths, entry fees, how to enter, start times and parking. These come from the preliminary details once confirmed.</p></section>
