@@ -132,6 +132,7 @@
       "type": "Street-O",
       "area": "claydon",
       "detail": {
+        "gridRef": "TL858628",
         "w3w": "only.pint.form"
       }
     },
