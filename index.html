@@ -79,6 +79,7 @@ p{margin:0 0 1rem;max-width:65ch}
 .btn.line{color:var(--navy);border-color:var(--navy)}
 .btn:hover{filter:brightness(1.08)}
 .btn.big{font-size:1.3rem;padding:1rem 2.2rem;border-radius:10px;box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.facts dd.code a{color:var(--navy);text-decoration:underline;text-underline-offset:3px}
 .entrycard{background:var(--tint);border-color:#bcd7ec;text-align:center}
 .entrycard .btn.big{display:block;width:100%;text-align:center}
 .entrycard .note-line{margin:.8rem 0 0;color:var(--navy);font-weight:600}
@@ -234,7 +235,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 24';
+const BUILD = 'build 26';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -686,16 +687,15 @@ function eventPage(id){
         ${e.results && e.results.length ? `<section class="card"><h3>Results</h3><div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small gold" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div></section>`
           : (isPast(e) ? `<section class="card todo"><h3>Results</h3><p style="margin:.6rem 0 0">Results to follow.</p></section>` : '')}
         ${d.about ? `<section class="card"><h3>About the area</h3><p style="margin-top:.6rem">${esc(d.about)}</p></section>` : ''}
-        ${(loc || d.address.length || d.postcode || d.gridRef || d.w3w) ? `<section class="card"><h3>Location</h3>
+        ${(loc || d.address.length || d.postcode || d.gridRef || d.w3w) ? `<section class="card"><h3>Event Location</h3>
           ${(d.address.length || d.postcode) ? `<p style="margin:.6rem 0">${[...d.address.map(esc), esc(d.postcode)].filter(Boolean).join('<br>')}</p>` : ''}
           <dl class="facts" style="margin-bottom:1rem">
             ${d.gridRef ? `<dt>Grid reference</dt><dd class="code">${esc(d.gridRef)}</dd>` : ''}
-            ${d.w3w ? `<dt>what3words</dt><dd class="code">///${esc(d.w3w)}</dd>` : ''}
+            ${d.w3w ? `<dt>what3words</dt><dd class="code"><a href="https://what3words.com/${encodeURIComponent(d.w3w)}" ${ext}>///${esc(d.w3w)}</a></dd>` : ''}
           </dl>
           <div class="links" style="margin-bottom:1rem">
             ${loc ? `<a class="btn small gold" href="https://www.google.com/maps/search/?api=1&query=${q}" ${ext}>Open in Google Maps</a>
             <a class="btn small line" href="https://www.openstreetmap.org/?mlat=${loc.lat}&mlon=${loc.lon}#map=16/${loc.lat}/${loc.lon}" ${ext}>OpenStreetMap</a>` : ''}
-            ${d.w3w ? `<a class="btn small line" href="https://what3words.com/${esc(d.w3w)}" ${ext}>what3words</a>` : ''}
           </div>
           ${loc ? `<div class="map"><div class="leafmap single" data-map="event:${esc(e.id)}">${mapSVG(e.area)}${FALLBACK_NOTE}</div></div>` : ''}
         </section>` : ''}
