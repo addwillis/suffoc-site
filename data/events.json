@@ -121,5 +121,14 @@
         "url": "https://www.suffoc.co.uk/resources/event_comments/suffoc-sudbury-urban-2026-comments"
       }
     ]
-  }
+  },
+  {
+    "id": "test",
+    "title": "Test Event",
+    "date": "2026-12-25",
+    "time": "10:00",
+    "type": "Regional event",
+    "area": "tunstall"
+  },
+  {}
 ]
