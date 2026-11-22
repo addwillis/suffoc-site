@@ -204,7 +204,9 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 .legend i{display:inline-block;width:16px;height:16px;border-radius:50%;border:3px solid var(--navy);background:#fff;vertical-align:-3px;margin-right:6px}
 .legend i.up{background:var(--gold)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:1rem 0 0;padding:0}
-.chips li{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:.3rem .8rem;font-weight:500}
+.chips li{background:var(--card);border:1px solid var(--line);border-radius:999px;font-weight:500}
+.chips li a{display:block;padding:.3rem .8rem;text-decoration:none;color:var(--ink)}
+.chips li:hover{border-color:var(--sky)}
 .note{font-size:.92rem;color:var(--muted)}
 
 /* Club hub tiles */
@@ -278,7 +280,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 52';
+const BUILD = 'build 53';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -586,7 +588,7 @@ function mapBlock(mode){
   return `<div class="map"><div class="leafmap" data-map="all">${mapSVG()}${FALLBACK_NOTE}</div>
     <div class="legend"><span><i></i>Area the club has mapped</span></div>
   </div>
-  <ul class="chips">${Object.values(AREAS).filter(a => !a.auto).map(a => `<li>${esc(a.name)}</li>`).join('')}</ul>`;
+  <ul class="chips">${Object.entries(AREAS).filter(([k, a]) => !a.auto).map(([k, a]) => `<li><a href="#area-${esc(k)}">${esc(a.name)}</a></li>`).join('')}</ul>`;
 }
 
 /* Real map (Leaflet + OpenStreetMap). If Leaflet cannot load, the schematic SVG above stays as a fallback. */
@@ -630,7 +632,9 @@ function initMaps(){
           const name = '<strong>' + esc(e.title) + '</strong>';
           return '<div class="pop">' + (e.detail ? '<a href="#event-' + esc(e.id) + '">' + name + '</a>' : name) + '<br>' + esc(when) + '</div>';
         }).join('') : '<strong>' + esc(a.name) + '</strong>';
-        L.marker([a.lat, a.lon], { icon:icon, title:a.name }).addTo(map).bindPopup(html);
+        const nEv = EVENTS.filter(e => e.area === k).length;
+        const popHtml = key === 'all' ? '<a href="#area-' + esc(k) + '"><strong>' + esc(a.name) + '</strong></a><br>' + (nEv ? nEv + ' event' + (nEv === 1 ? '' : 's') + ' &middot; ' : '') + '<a href="#area-' + esc(k) + '">See events here</a>' : html;
+        L.marker([a.lat, a.lon], { icon:icon, title:a.name }).addTo(map).bindPopup(popHtml);
         pts.push([a.lat, a.lon]);
       });
       if (key !== 'all' && key !== 'upcoming' && pts.length) map.setView(pts[0], evKey && evKey.loc ? 16 : 14);
@@ -696,20 +700,14 @@ const VIEWS = {
     </div>`;
   },
   mapped(){
-    return `${pageHead('Where we have mapped', 'A sense of the area the club covers. Each marker is an area the club has made a map for.', 'newcomers')}
+    return `${pageHead('Mapped areas', 'A sense of the area the club covers. Each marker is an area the club has made a map for.', 'newcomers')}
     <div class="wrap">
       <section class="section"><a class="back" href="#events">&larr; Back to Events</a><div style="height:1rem"></div>${mapBlock()}</section>
     </div>`;
   },
   results(){
-    const list = past(), years = [...new Set(list.map(e => e.date.slice(0, 4)))];
-    const body = years.length ? years.map((y, i) => {
-      const evs = list.filter(e => e.date.slice(0, 4) === y);
-      return `<details class="year"${i === 0 ? ' open' : ''}><summary>${y} <span class="count">${evs.length} event${evs.length === 1 ? '' : 's'}</span></summary>
-        <div class="rlist">${evs.map(resultRow).join('')}</div></details>`;
-    }).join('') : `<div class="empty">No results yet.</div>`;
     return `${pageHead('Results', 'Results, split times and routes from past events.', 'results')}
-    <div class="wrap"><section class="section">${body}</section></div>`;
+    <div class="wrap"><section class="section">${pastByYear(past())}</section></div>`;
   },
   news(){
     return `${pageHead('News', '', 'news')}
@@ -761,6 +759,32 @@ function exploreTiles(){
   return `<section class="section"><div class="section-head"><h2>More to explore</h2></div><div class="tiles">
     ${t.map(x => `<a class="tile" href="${x[0]}"><h3>${esc(x[1])}</h3><p>${esc(x[2])}</p></a>`).join('')}
   </div></section>`;
+}
+/* Past events grouped by year, newest year open. Used by Results and the area pages. */
+function pastByYear(list){
+  const years = [...new Set(list.map(e => e.date.slice(0, 4)))];
+  return years.length ? years.map((y, i) => {
+    const evs = list.filter(e => e.date.slice(0, 4) === y);
+    return `<details class="year"${i === 0 ? ' open' : ''}><summary>${y} <span class="count">${evs.length} event${evs.length === 1 ? '' : 's'}</span></summary>
+      <div class="rlist">${evs.map(resultRow).join('')}</div></details>`;
+  }).join('') : `<div class="empty">No results yet.</div>`;
+}
+/* One page per mapped area: every event held there, upcoming first, then past events by year. */
+function areaPage(id){
+  const a = AREAS[id];
+  if (!a || a.auto) return VIEWS.mapped();
+  const here = EVENTS.filter(e => e.area === id), up = here.filter(e => !isPast(e)).sort((x, y) => parseDate(x.date) - parseDate(y.date)), old = here.filter(isPast).sort((x, y) => parseDate(y.date) - parseDate(x.date));
+  const q = isFinite(a.lat) && isFinite(a.lon) ? a.lat + ',' + a.lon : '';
+  return `<section class="pagehead"><div class="wrap">
+      <a class="back" href="#mapped">&larr; Back to Mapped areas</a>
+      <h1 class="event-title">${esc(a.name)}</h1>
+      ${q ? `<div class="links" style="margin-top:.8rem"><a class="btn small line" href="https://www.google.com/maps/search/?api=1&query=${q}" ${ext}>Open in Google Maps</a>
+        <a class="btn small line" href="https://www.openstreetmap.org/?mlat=${a.lat}&mlon=${a.lon}#map=14/${a.lat}/${a.lon}" ${ext}>OpenStreetMap</a></div>` : ''}
+    </div></section>
+    <div class="wrap">
+      ${up.length ? `<section class="section"><div class="section-head"><h2>Coming up</h2></div><div class="events">${up.map(eventCard).join('')}</div></section>` : ''}
+      <section class="section"><div class="section-head"><h2>Previous events</h2></div>${old.length ? pastByYear(old) : '<div class="empty">No previous events are listed for this area yet.</div>'}</section>
+    </div>`;
 }
 function eventPage(id){
   const e = EVENTS.find(x => x.id === id && x.detail);
@@ -830,6 +854,7 @@ function route(){
   const h = (location.hash || '#home').slice(1);
   let key = 'home', html;
   if (h.startsWith('club-')) { key = 'club'; html = clubPage(h.slice(5)); }
+  else if (h.startsWith('area-')) { key = 'events'; html = areaPage(h.slice(5)); }
   else if (h.startsWith('news-')) { key = 'news'; html = newsPage(h.slice(5)); }
   else if (h.startsWith('event-')) { key = 'events'; html = eventPage(h.slice(6)); }
   else if (VIEWS[h]) { key = h === 'mapped' ? 'events' : h; html = VIEWS[h](); }
