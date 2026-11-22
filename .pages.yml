@@ -31,6 +31,10 @@ content:
       label: Start time
       type: string
       description: e.g. 10:30 (optional)
+    - name: courseClose
+      label: Course close time
+      type: string
+      description: e.g. 13:30 (optional)
     - name: type
       label: Event type
       type: select

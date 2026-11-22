@@ -230,7 +230,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 11';
+const BUILD = 'build 13';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -569,13 +569,13 @@ function eventPage(id){
   if (!e) return VIEWS.events();
   const d = e.detail, area = AREAS[e.area], date = parseDate(e.date);
   const q = area.lat + ',' + area.lon;
-  const facts = [['Date', fmtLong.format(date)], ...(e.time ? [['Time', e.time]] : []), ['Level', d.level], ['Area', area.name], ['Nearest town', d.nearestTown]];
+  const facts = [['Date', fmtLong.format(date)], ['Time', e.time], ['Course closes', e.courseClose], ['Level', d.level], ['Area', area.name], ['Nearest town', d.nearestTown]].filter(f => f[1]);
   const docs = [];
   if (e.pdf) docs.push(['Preliminary details (PDF)', e.pdf]);
   (d.docs || []).forEach(x => docs.push(x));
   return `<section class="pagehead"><div class="wrap">
       <a class="back" href="#events">&larr; Back to Events</a><br>
-      <span class="pill">${esc(d.level)} event</span>
+      <span class="pill">${esc(e.type || 'Event')}</span>
       <h1 class="event-title">${esc(e.title)}</h1>
       <p class="lead">${esc(fmtLong.format(date))}${e.time ? ' &middot; ' + esc(e.time) : ''}</p>
     </div></section>
@@ -583,25 +583,25 @@ function eventPage(id){
       <aside class="stack">
         <div class="card"><h3>Key facts</h3>
           <dl class="facts">${facts.map(f => `<dt>${esc(f[0])}</dt><dd>${esc(f[1])}</dd>`).join('')}</dl></div>
-        <div class="card"><h3>Officials</h3>
-          <dl class="facts">${d.officials.map(o => `<dt>${esc(o[0])}</dt><dd>${esc(o[1])}</dd>`).join('')}</dl></div>
-        <div class="card"><h3>Documents and links</h3>
-          <div class="links" style="margin-top:.8rem">${docs.map(x => `<a class="btn small line" href="${esc(x[1])}" ${ext}>${esc(x[0])}</a>`).join('')}</div></div>
+        ${d.officials.length ? `<div class="card"><h3>Officials</h3>
+          <dl class="facts">${d.officials.map(o => `<dt>${esc(o[0])}</dt><dd>${esc(o[1])}</dd>`).join('')}</dl></div>` : ''}
+        ${docs.length ? `<div class="card"><h3>Documents and links</h3>
+          <div class="links" style="margin-top:.8rem">${docs.map(x => `<a class="btn small line" href="${esc(x[1])}" ${ext}>${esc(x[0])}</a>`).join('')}</div></div>` : ''}
       </aside>
       <div class="stack">
         ${e.results && e.results.length ? `<section class="card"><h3>Results</h3><div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small gold" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div></section>`
           : (parseDate(e.date) < today ? `<section class="card todo"><h3>Results</h3><p style="margin:.6rem 0 0">Results to follow.</p></section>` : '')}
-        <section class="card"><h3>About the area</h3><p style="margin-top:.6rem">${esc(d.about)}</p></section>
+        ${d.about ? `<section class="card"><h3>About the area</h3><p style="margin-top:.6rem">${esc(d.about)}</p></section>` : ''}
         <section class="card"><h3>Getting there</h3>
-          <p style="margin:.6rem 0">${d.address.map(esc).join('<br>')}<br>${esc(d.postcode)}</p>
+          ${(d.address.length || d.postcode) ? `<p style="margin:.6rem 0">${[...d.address.map(esc), esc(d.postcode)].filter(Boolean).join('<br>')}</p>` : ''}
           <dl class="facts" style="margin-bottom:1rem">
-            <dt>Grid reference</dt><dd class="code">${esc(d.gridRef)}</dd>
-            <dt>what3words</dt><dd class="code">///${esc(d.w3w)}</dd>
+            ${d.gridRef ? `<dt>Grid reference</dt><dd class="code">${esc(d.gridRef)}</dd>` : ''}
+            ${d.w3w ? `<dt>what3words</dt><dd class="code">///${esc(d.w3w)}</dd>` : ''}
           </dl>
           <div class="links" style="margin-bottom:1rem">
             <a class="btn small gold" href="https://www.google.com/maps/search/?api=1&query=${q}" ${ext}>Open in Google Maps</a>
             <a class="btn small line" href="https://www.openstreetmap.org/?mlat=${area.lat}&mlon=${area.lon}#map=15/${area.lat}/${area.lon}" ${ext}>OpenStreetMap</a>
-            <a class="btn small line" href="https://what3words.com/${esc(d.w3w)}" ${ext}>what3words</a>
+            ${d.w3w ? `<a class="btn small line" href="https://what3words.com/${esc(d.w3w)}" ${ext}>what3words</a>` : ''}
           </div>
           <div class="map"><div class="leafmap single" data-map="${esc(e.area)}">${mapSVG(e.area)}${FALLBACK_NOTE}</div></div>
         </section>
