@@ -278,7 +278,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 48';
+const BUILD = 'build 49';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -690,7 +690,8 @@ const VIEWS = {
     <div class="wrap">
       <section class="section">${mapBlock('upcoming')}</section>
       <section class="section"><div class="section-head"><h2>Upcoming</h2></div>${eventsList(upcoming())}
-        <p style="margin-top:1.4rem"><a href="#mapped"><strong>See everywhere we have mapped &rarr;</strong></a></p></section>
+      </section>
+      ${exploreTiles()}
     </div>`;
   },
   mapped(){
@@ -749,6 +750,17 @@ function timingsRows(e){
   const t = tm(e);
   return [['Registration', rng(t.regFrom, t.regTo)], ['Starts', rng(t.startsFrom, t.startsTo)], ['Course closes', t.close]].filter(r => r[1]);
 }
+/* "More ways to get out" tiles, shown at the bottom of the Events page and each event page. */
+function exploreTiles(){
+  const t = [
+    ['#mapped', 'Mapped areas', 'Every place the club has made a map for.'],
+    ['#anytime', 'MapRun', 'Virtual controls on your phone, any time.'],
+    ['#anytime', 'Permanent orienteering courses', 'Courses to follow whenever you like.']
+  ];
+  return `<section class="section"><div class="section-head"><h2>More to explore</h2></div><div class="tiles">
+    ${t.map(x => `<a class="tile" href="${x[0]}"><h3>${esc(x[1])}</h3><p>${esc(x[2])}</p></a>`).join('')}
+  </div></section>`;
+}
 function eventPage(id){
   const e = EVENTS.find(x => x.id === id && x.detail);
   if (!e) return VIEWS.events();
@@ -795,7 +807,8 @@ function eventPage(id){
         <section class="card todo"><h3>Courses, fees and entry</h3>
           <p style="margin:.6rem 0 0">To add: courses and lengths, entry fees, how to enter, start times and parking. These come from the preliminary details once confirmed.</p></section>
       </div>
-    </div></div>`;
+    </div>
+    ${exploreTiles()}</div>`;
 }
 
 function clubPage(id){
