@@ -45,9 +45,10 @@
       },
       "type": "Street-O",
       "area": "hardwick",
-      "link": "https://www.suffoc.co.uk/events/street-o-hardwick",
       "detail": {
-        "gridRef": "TL858628"
+        "gridRef": "TL858628",
+        "organiser": "Gareth Radcliffe",
+        "planner": "Gareth Radcliffe"
       }
     },
     {
