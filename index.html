@@ -136,6 +136,8 @@ p{margin:0 0 1rem;max-width:65ch}
 dl.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 16px;margin:.8rem 0 0}
 dl.facts dt{color:var(--muted);font-weight:500}
 dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+dl.facts dd a{color:var(--navy);text-decoration:underline;text-underline-offset:3px}
+dl.facts dd a:hover{color:var(--sky)}
 .detail-grid > *{min-width:0}
 .code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:600;font-size:.98rem}
 .todo{border-style:dashed;background:transparent}
@@ -280,7 +282,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 53';
+const BUILD = 'build 54';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -791,7 +793,7 @@ function eventPage(id){
   if (!e) return VIEWS.events();
   const d = e.detail, area = AREAS[e.area] || null, date = parseDate(e.date);
   const loc = e.loc || (area && isFinite(area.lat) && isFinite(area.lon) ? area : null), q = loc ? loc.lat + ',' + loc.lon : '';
-  const facts = [['Date', fmtLong.format(date)], ['Area', area ? area.name : e.area]].filter(f => f[1]);
+  const facts = [['Date', fmtLong.format(date)], ['Area', area ? area.name : e.area, area && !area.auto ? '#area-' + e.area : '']].filter(f => f[1]);
   const docs = [];
   if (e.pdf) docs.push(['Preliminary details (PDF)', e.pdf]);
   (d.docs || []).forEach(x => docs.push(x));
@@ -805,7 +807,7 @@ function eventPage(id){
       <aside class="stack">
         ${e.entryUrl && !isPast(e) ? `<div class="card entrycard"><a class="btn big gold" href="${esc(e.entryUrl)}" ${ext}>Enter online</a>${e.entryNote ? `<p class="note-line">${esc(e.entryNote)}</p>` : ''}</div>` : ''}
         <div class="card"><h3>Key facts</h3>
-          <dl class="facts">${facts.map(f => `<dt>${esc(f[0])}</dt><dd>${esc(f[1])}</dd>`).join('')}</dl></div>
+          <dl class="facts">${facts.map(f => `<dt>${esc(f[0])}</dt><dd>${f[2] ? `<a href="${esc(f[2])}">${esc(f[1])}</a>` : esc(f[1])}</dd>`).join('')}</dl></div>
         ${timingsRows(e).length ? `<div class="card"><h3>Timings</h3>
           <dl class="facts">${timingsRows(e).map(r => `<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join('')}</dl></div>` : ''}
         ${d.officials.length ? `<div class="card"><h3>Event Officials</h3>
