@@ -56,6 +56,9 @@ p{margin:0 0 1rem;max-width:65ch}
 .nav ul{list-style:none;margin:0;padding:0}
 .nav a{display:block;color:#fff;text-decoration:none;font:600 1.05rem var(--body);padding:.7rem .25rem;border-bottom:1px solid rgba(255,255,255,.14)}
 .nav a[aria-current="page"]{color:var(--gold)}
+.nav a{transition:color .15s,background-color .15s}
+.nav a:not(.join):hover,.nav a:not(.join):focus-visible{color:var(--gold);background:rgba(255,255,255,.08)}
+.nav .join:hover,.nav .join:focus-visible{background:#ffc933}
 .nav .join{display:inline-block;margin-top:.8rem;background:var(--gold);color:var(--navy);border:0;border-radius:8px;padding:.6rem 1.1rem;font-weight:700}
 @media (min-width:880px){
   .menu-btn{display:none}
@@ -63,6 +66,7 @@ p{margin:0 0 1rem;max-width:65ch}
   .nav ul{display:flex;align-items:center;gap:2px}
   .nav a{border-bottom:3px solid transparent;padding:1.2rem .7rem 1rem;font-size:1rem}
   .nav a[aria-current="page"]{border-bottom-color:var(--gold)}
+  .nav a:not(.join):hover{border-bottom-color:rgba(242,183,5,.55);border-radius:6px 6px 0 0}
   .nav .join{margin:0 0 0 10px;padding:.5rem 1rem;border-bottom:0}
 }
 
@@ -251,7 +255,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 33';
+const BUILD = 'build 34';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
