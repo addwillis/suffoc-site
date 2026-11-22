@@ -57,6 +57,7 @@ p{margin:0 0 1rem;max-width:65ch}
 .nav a{display:block;color:#fff;text-decoration:none;font:600 1.05rem var(--body);padding:.7rem .25rem;border-bottom:1px solid rgba(255,255,255,.14)}
 .nav a[aria-current="page"]{color:var(--gold)}
 .nav a{transition:color .15s,background-color .15s}
+.nav .ni{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;margin-right:.5rem;flex:none}
 .nav a:not(.join):hover,.nav a:not(.join):focus-visible{color:var(--gold);background:rgba(255,255,255,.08)}
 .nav .join:hover,.nav .join:focus-visible{background:#ffc933}
 .nav .join{display:inline-block;margin-top:.8rem;background:var(--gold);color:var(--navy);border:0;border-radius:8px;padding:.6rem 1.1rem;font-weight:700}
@@ -218,13 +219,13 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
     </div>
     <nav class="nav" id="nav" aria-label="Main">
       <ul>
-        <li><a href="#home" data-route="home">Home</a></li>
-        <li><a href="#events" data-route="events">Events</a></li>
-        <li><a href="#results" data-route="results">Results</a></li>
-        <li><a href="#news" data-route="news">News</a></li>
-        <li><a href="#anytime" data-route="anytime">Anytime O</a></li>
-        <li><a href="#club" data-route="club">Club</a></li>
-        <li><a href="#newcomers" data-route="newcomers">Newcomers</a></li>
+        <li><a href="#home" data-route="home"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>Home</a></li>
+        <li><a href="#events" data-route="events"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Events</a></li>
+        <li><a href="#results" data-route="results"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3M12 14v4M8 21h8"/></svg>Results</a></li>
+        <li><a href="#news" data-route="news"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h13v14H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v8a2 2 0 0 1-2 2M8 9h6M8 13h6"/></svg>News</a></li>
+        <li><a href="#anytime" data-route="anytime"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 3h6"/></svg>Anytime O</a></li>
+        <li><a href="#club" data-route="club"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5a5 5 0 0 1 4.5 5"/></svg>Club</a></li>
+        <li><a href="#newcomers" data-route="newcomers"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Newcomers</a></li>
         <li><a class="join" href="#club-membership">Join</a></li>
       </ul>
     </nav>
@@ -255,7 +256,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 34';
+const BUILD = 'build 35';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
