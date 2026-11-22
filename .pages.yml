@@ -233,10 +233,12 @@ content:
       type: string
       description: A few words describing the picture, for people using screen readers.
     - name: text
-      label: Summary
-      type: text
-      description: A sentence or two shown on the card.
+      label: Main text
+      type: rich-text
+      description: The full article. The cards on the home and News pages show the first few words, with Read more taking people to the full article.
+      options:
+        format: html
     - name: link
-      label: Link for 'Read more' (optional)
+      label: Link to old news page (optional)
       type: string
-      description: Leave blank if there is nothing more to read.
+      description: Only if the article also exists on the old website.

@@ -162,6 +162,14 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 @media(min-width:760px){.rrow .datebox{grid-row:auto}.rrow{grid-template-columns:72px minmax(0,1fr) minmax(0,1.6fr);align-items:center}.rrow .links,.rrow .tbc{grid-column:3;margin:0;justify-content:flex-end;text-align:right}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
 .newscard .newsimg{display:block;width:calc(100% + 32px);margin:-16px -16px 12px;max-width:none;aspect-ratio:16/9;object-fit:cover;border-radius:var(--radius) var(--radius) 0 0}
+.newsfull{max-width:46rem}
+.newsimg-full{display:block;width:100%;height:auto;border-radius:var(--radius);margin:0 0 1.2rem}
+.prose{font-size:1.08rem;line-height:1.65}
+.prose p{margin:0 0 1em}
+.prose ul,.prose ol{margin:0 0 1em;padding-left:1.4em}
+.prose h2,.prose h3,.prose h4{margin:1.4em 0 .5em}
+.prose blockquote{margin:0 0 1em;padding-left:1em;border-left:4px solid var(--gold);color:var(--muted)}
+.prose a{color:var(--navy);font-weight:600}
 .card .date{color:var(--muted);font-weight:500;margin:0 0 .3rem}
 .stack{display:grid;gap:14px;align-content:start}
 
@@ -270,7 +278,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 45';
+const BUILD = 'build 46';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -280,7 +288,7 @@ const pairs = (list, k1, k2) => (list || []).filter(x => x && x[k1] && x[k2]).ma
 const asList = d => Array.isArray(d) ? d : (d && Object.values(d).find(Array.isArray)) || [];
 function loadNews(list){
   NEWS = list.filter(n => n && n.title && /^\d{4}-\d{2}-\d{2}$/.test(String(n.date || '').trim()))
-    .map(n => Object.assign({}, n, { date:String(n.date).trim() }))
+    .map(n => Object.assign({}, n, { date:String(n.date).trim(), id:n.id || (String(n.date).trim() + '-' + String(n.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')) }))
     .sort((a, b) => parseDate(b.date) - parseDate(a.date));
 }
 function loadData(areas, events){
@@ -479,14 +487,69 @@ function resultRow(e){
 }
 /* Picture paths come from Pages CMS (e.g. /images/x.jpg); make them relative so they work under /suffoc-site/ too. */
 const imgSrc = p => /^https?:/i.test(p) ? p : String(p).replace(/^\/+/, '');
+
+/* News text comes from the Pages CMS rich-text editor (HTML), or plain text with blank lines between paragraphs.
+   Only a short list of safe tags is kept. */
+const SAFE_TAGS = { P:1, BR:1, STRONG:1, B:1, EM:1, I:1, U:1, A:1, UL:1, OL:1, LI:1, H2:1, H3:1, H4:1, BLOCKQUOTE:1 };
+function richHTML(src){
+  src = String(src || '').trim();
+  if (!src) return '';
+  if (!/<\w+[^>]*>/.test(src)) {
+    const inline = t => esc(t).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    return src.split(/\n\s*\n/).map(p => '<p>' + inline(p.trim()).replace(/\n/g, '<br>') + '</p>').join('');
+  }
+  const doc = new DOMParser().parseFromString('<body>' + src + '</body>', 'text/html');
+  const walk = node => {
+    let out = '';
+    node.childNodes.forEach(c => {
+      if (c.nodeType === 3) out += esc(c.textContent);
+      else if (c.nodeType === 1) {
+        if (/^(SCRIPT|STYLE|IFRAME|OBJECT)$/.test(c.tagName)) return;
+        const inner = walk(c);
+        if (!SAFE_TAGS[c.tagName]) out += inner;
+        else if (c.tagName === 'A') {
+          const href = c.getAttribute('href') || '';
+          out += /^(https?:|mailto:|#|\/|[\w.-]+\/)/i.test(href) ? '<a href="' + esc(href) + '" target="_blank" rel="noopener">' + inner + '</a>' : inner;
+        }
+        else out += '<' + c.tagName.toLowerCase() + '>' + inner + '</' + c.tagName.toLowerCase() + '>';
+      }
+    });
+    return out;
+  };
+  return walk(doc.body);
+}
+function plainText(src){
+  const html = richHTML(src).replace(/<\/(p|li|h\d|blockquote)>/gi, ' ').replace(/<br>/gi, ' ');
+  const t = document.createElement('div'); t.innerHTML = html;
+  return (t.textContent || '').replace(/\s+/g, ' ').trim();
+}
+const EXCERPT_WORDS = 35;
+function excerpt(src){
+  const w = plainText(src).split(' ').filter(Boolean);
+  return w.length > EXCERPT_WORDS ? w.slice(0, EXCERPT_WORDS).join(' ') + '…' : w.join(' ');
+}
 function newsCard(n){
   return `<article class="card newscard">
-    ${n.image ? `<img class="newsimg" src="${esc(imgSrc(n.image))}" alt="${esc(n.imageAlt || '')}" loading="lazy">` : ''}
+    ${n.image ? `<a href="#news-${esc(n.id)}"><img class="newsimg" src="${esc(imgSrc(n.image))}" alt="${esc(n.imageAlt || '')}" loading="lazy"></a>` : ''}
     <p class="date">${fmtShort.format(parseDate(n.date))}</p>
-    <h3>${esc(n.title)}</h3>
-    ${n.text ? `<p style="margin-top:.5rem">${esc(n.text)}</p>` : ''}
-    ${n.link ? `<a href="${esc(n.link)}" ${ext}><strong>Read more</strong></a>` : ''}
+    <h3><a class="title-link" href="#news-${esc(n.id)}">${esc(n.title)}</a></h3>
+    ${n.text ? `<p style="margin-top:.5rem">${esc(excerpt(n.text))}</p>` : ''}
+    <a href="#news-${esc(n.id)}"><strong>Read more</strong></a>
   </article>`;
+}
+function newsPage(id){
+  const n = NEWS.find(x => x.id === id);
+  if (!n) return VIEWS.news();
+  return `<section class="pagehead"><div class="wrap">
+      <a class="back" href="#news">&larr; Back to News</a>
+      <p class="date" style="margin:0 0 .3rem;color:var(--muted)">${fmtLong.format(parseDate(n.date))}</p>
+      <h1 class="event-title">${esc(n.title)}</h1>
+    </div></section>
+    <div class="wrap"><section class="section"><article class="newsfull">
+      ${n.image ? `<img class="newsimg-full" src="${esc(imgSrc(n.image))}" alt="${esc(n.imageAlt || '')}">` : ''}
+      <div class="prose">${richHTML(n.text)}</div>
+      ${n.link ? `<p><a class="btn small line" href="${esc(n.link)}" ${ext}>Original news page</a></p>` : ''}
+    </article></section></div>`;
 }
 
 /* Map: equirectangular projection with a cos(latitude) correction. */
@@ -805,6 +868,7 @@ function route(){
   const h = (location.hash || '#home').slice(1);
   let key = 'home', html;
   if (h.startsWith('club-')) { key = 'club'; html = clubPage(h.slice(5)); }
+  else if (h.startsWith('news-')) { key = 'news'; html = newsPage(h.slice(5)); }
   else if (h.startsWith('event-')) { key = 'events'; html = eventPage(h.slice(6)); }
   else if (VIEWS[h]) { key = h === 'mapped' ? 'events' : h; html = VIEWS[h](); }
   else { html = VIEWS.home(); }
