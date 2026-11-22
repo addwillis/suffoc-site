@@ -149,21 +149,18 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 .year[open]>summary::before{transform:rotate(90deg)}
 .year>summary .count{font:500 1rem var(--body);color:var(--muted);text-transform:none;letter-spacing:0}
 .rlist{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin-top:.5rem;overflow:hidden}
-.rrow{display:grid;grid-template-columns:5rem 1fr;gap:.35rem 1rem;align-items:start;padding:.85rem 1rem;border-top:1px solid var(--line)}
+.rrow{display:grid;grid-template-columns:72px 1fr;gap:.35rem 16px;align-items:start;padding:.85rem 1rem;border-top:1px solid var(--line)}
 .rrow:first-child{border-top:0}
-.rrow .datebox{grid-row:span 2;padding:.4rem .2rem}
+.rrow .datebox{grid-row:span 2}
 .rrow .datebox{background:#E6EAF0;color:var(--navy)}
 .rrow .datebox .wd{color:#5B6B7F}
 .rrow .datebox .mon{color:#5B6B7F}
-.rrow .datebox .wd{font-size:.72rem}
-.rrow .datebox .day{font-size:1.7rem}
-.rrow .datebox .mon{font-size:.85rem}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .rrow h3{font-size:1.1rem;margin:0}
 .rrow .pill{margin:0 0 0 .5rem;vertical-align:2px}
 .rrow .links{grid-column:2;margin-top:.35rem}
 .rrow .tbc{grid-column:2;margin:.1rem 0 0;color:var(--muted)}
-@media(min-width:760px){.rrow .datebox{grid-row:auto}.rrow{grid-template-columns:5rem minmax(0,1fr) minmax(0,1.6fr);align-items:center}.rrow .links,.rrow .tbc{grid-column:3;margin:0;justify-content:flex-end;text-align:right}}
+@media(min-width:760px){.rrow .datebox{grid-row:auto}.rrow{grid-template-columns:72px minmax(0,1fr) minmax(0,1.6fr);align-items:center}.rrow .links,.rrow .tbc{grid-column:3;margin:0;justify-content:flex-end;text-align:right}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
 .card .date{color:var(--muted);font-weight:500;margin:0 0 .3rem}
 .stack{display:grid;gap:14px;align-content:start}
@@ -273,7 +270,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 40';
+const BUILD = 'build 41';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
