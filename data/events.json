@@ -128,7 +128,10 @@
     "date": "2026-12-25",
     "time": "10:00",
     "type": "Regional event",
-    "area": "tunstall"
+    "area": "tunstall",
+    "detail": {
+      "nearestTown": "Tunstall"
+    }
   },
   {}
 ]
