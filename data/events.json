@@ -150,6 +150,7 @@
       "type": "Regional event",
       "area": "Kings Forest",
       "detail": {
+        "gridRef": "TL 821760",
         "organiser": "Rod Mansel",
         "planner": "Phil Halford",
         "controller": "Mike Bickle"
