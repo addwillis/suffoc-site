@@ -170,6 +170,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 .ctl .fin2{position:absolute;inset:3px;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box}
 .legend i.course{background:transparent;border-color:var(--course)}
 .leaflet-popup-content{font-size:15px;line-height:1.4;margin:12px 14px}
+.leaflet-popup-content .pop+.pop{margin-top:8px}
 .leaflet-popup-content a{color:var(--navy);font-weight:600}
 .legend{display:flex;flex-wrap:wrap;gap:8px 22px;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.95rem;align-items:center}
 .legend i{display:inline-block;width:16px;height:16px;border-radius:50%;border:3px solid var(--navy);background:#fff;vertical-align:-3px;margin-right:6px}
@@ -250,7 +251,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 31';
+const BUILD = 'build 32';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -548,11 +549,12 @@ function initMaps(){
           icon = L.divIcon({ className:'', html:'<span class="lpin"></span>', iconSize:[22,22], iconAnchor:[11,11], popupAnchor:[0,-12] });
         }
         const evs = EVENTS.filter(e => e.area === k && (key !== 'upcoming' || !isPast(e))).sort((x, y) => parseDate(y.date) - parseDate(x.date));
-        const list = evs.map(e => {
-          const label = esc(e.title) + ' (' + fmtShort.format(parseDate(e.date)) + ')';
-          return '<br>' + (e.detail ? '<a href="#event-' + esc(e.id) + '">' + label + '</a>' : label);
-        }).join('');
-        L.marker([a.lat, a.lon], { icon:icon, title:a.name }).addTo(map).bindPopup('<strong>' + esc(a.name) + '</strong>' + list);
+        const html = evs.length ? evs.map(e => {
+          const t = timeRange(e), when = fmtShort.format(parseDate(e.date)) + (t ? ', ' + t : '');
+          const name = '<strong>' + esc(e.title) + '</strong>';
+          return '<div class="pop">' + (e.detail ? '<a href="#event-' + esc(e.id) + '">' + name + '</a>' : name) + '<br>' + esc(when) + '</div>';
+        }).join('') : '<strong>' + esc(a.name) + '</strong>';
+        L.marker([a.lat, a.lon], { icon:icon, title:a.name }).addTo(map).bindPopup(html);
         pts.push([a.lat, a.lon]);
       });
       if (key !== 'all' && key !== 'upcoming' && pts.length) map.setView(pts[0], evKey && evKey.loc ? 16 : 14);
