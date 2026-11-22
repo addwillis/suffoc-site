@@ -1,0 +1,10 @@
+[
+  {
+    "id": "test-event",
+    "title": "Test Event",
+    "date": "2025-12-25",
+    "time": "10:00",
+    "type": "Regional event",
+    "area": "tunnstall"
+  }
+]
