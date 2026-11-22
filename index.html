@@ -145,6 +145,9 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 .ctl{position:relative;width:30px;height:30px}
 .ctl .ring{position:absolute;inset:0;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box}
 .ctl .num{position:absolute;left:25px;top:-12px;font:700 20px/1 var(--display);color:var(--course);white-space:nowrap;text-shadow:-1.5px -1.5px 0 #fff,1.5px -1.5px 0 #fff,-1.5px 1.5px 0 #fff,1.5px 1.5px 0 #fff,0 0 4px #fff}
+.ctl .tri{position:absolute;left:0;top:0;width:30px;height:30px;overflow:visible}
+.ctl .fin{position:absolute;inset:-4px;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box}
+.ctl .fin2{position:absolute;inset:3px;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box}
 .legend i.course{background:transparent;border-color:var(--course)}
 .leaflet-popup-content{font-size:15px;line-height:1.4;margin:12px 14px}
 .leaflet-popup-content a{color:var(--navy);font-weight:600}
@@ -227,13 +230,14 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 8';
+const BUILD = 'build 10';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
 let AREAS = {}, EVENTS = [], SKIPPED = [];
 /* Event and area data live in data/*.json (edited through Pages CMS). */
 const pairs = (list, k1, k2) => (list || []).filter(x => x && x[k1] && x[k2]).map(x => [x[k1], x[k2]]);
+const asList = d => Array.isArray(d) ? d : (d && Object.values(d).find(Array.isArray)) || [];
 function loadData(areas, events){
   AREAS = {};
   areas.forEach(a => { AREAS[a.id] = { name:a.name, lat:+a.lat, lon:+a.lon, dx:+(a.label_dx||14), dy:+(a.label_dy||0), anchor:a.label_anchor||'start' }; });
@@ -371,7 +375,7 @@ function mapBlock(mode){
     const ids = [...new Set(upcoming().map(e => e.area))].filter(k => AREAS[k]);
     if (!ids.length) return '';
     return `<div class="map"><div class="leafmap" data-map="upcoming">${mapSVG(ids)}${FALLBACK_NOTE}</div>
-      <div class="legend"><span><i class="course"></i>Upcoming events, numbered in date order (1 is the next)</span></div></div>`;
+      <div class="legend"><span><i class="course"></i>Upcoming events in date order: triangle (first), numbered circles, double circle (last)</span></div></div>`;
   }
   return `<div class="map"><div class="leafmap" data-map="all">${mapSVG()}${FALLBACK_NOTE}</div>
     <div class="legend"><span><i class="course"></i>Upcoming event</span><span><i></i>Previously mapped area</span></div>
@@ -397,14 +401,35 @@ function initMaps(){
         attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
       const pts = [];
       const seq = key === 'upcoming' ? upcoming() : [];
-      const numbersByArea = {};
-      seq.forEach((e, i) => { (numbersByArea[e.area] = numbersByArea[e.area] || []).push(i + 1); });
+      /* Course roles by date order: first = start triangle, last = finish (double circle), the rest numbered controls. */
+      const nSeq = seq.length, roleOf = i => i === 0 ? 'start' : (i === nSeq - 1 ? 'finish' : 'ctl');
+      const info = {};
+      seq.forEach((e, i) => {
+        const o = info[e.area] || (info[e.area] = { role: roleOf(i), nums: [] });
+        if (roleOf(i) === 'ctl') o.nums.push(i);
+      });
+      let startRot = 0;
+      if (nSeq > 1 && AREAS[seq[0].area] && AREAS[seq[1].area] && seq[0].area !== seq[1].area) {
+        const A = AREAS[seq[0].area], B = AREAS[seq[1].area];
+        const my = la => Math.log(Math.tan(Math.PI / 4 + la * Math.PI / 360));
+        startRot = Math.atan2(B.lon - A.lon, (my(B.lat) - my(A.lat)) * 180 / Math.PI) * 180 / Math.PI;
+      }
       Object.entries(AREAS).filter(([k]) => key === 'all' || (key === 'upcoming' ? up.has(k) : k === key)).forEach(([k, a]) => {
         if (isNaN(a.lat) || isNaN(a.lon)) return;
-        const nums = numbersByArea[k] ? numbersByArea[k].join(', ') : '';
-        const icon = up.has(k)
-          ? L.divIcon({ className:'', html:'<div class="ctl"><span class="ring"></span>' + (key === 'upcoming' && nums ? '<span class="num">' + nums + '</span>' : '') + '</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-16] })
-          : L.divIcon({ className:'', html:'<span class="lpin"></span>', iconSize:[22,22], iconAnchor:[11,11], popupAnchor:[0,-12] });
+        let icon;
+        if (key === 'upcoming' && info[k]) {
+          const o = info[k], num = o.nums.length ? '<span class="num">' + o.nums.join(', ') + '</span>' : '';
+          const shape = o.role === 'start'
+            ? '<svg class="tri" viewBox="0 0 30 30" style="transform:rotate(' + startRot.toFixed(1) + 'deg);transform-origin:15px 17px"><polygon points="15,2.5 28,25.5 2,25.5" fill="none" stroke="#A3238E" stroke-width="3.5" stroke-linejoin="miter"/></svg>'
+            : o.role === 'finish'
+              ? '<span class="fin"></span><span class="fin2"></span>'
+              : '<span class="ring"></span>';
+          icon = L.divIcon({ className:'', html:'<div class="ctl">' + shape + num + '</div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-18] });
+        } else if (up.has(k)) {
+          icon = L.divIcon({ className:'', html:'<div class="ctl"><span class="ring"></span></div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-16] });
+        } else {
+          icon = L.divIcon({ className:'', html:'<span class="lpin"></span>', iconSize:[22,22], iconAnchor:[11,11], popupAnchor:[0,-12] });
+        }
         const evs = EVENTS.filter(e => e.area === k && (key !== 'upcoming' || parseDate(e.date) >= today)).sort((x, y) => parseDate(y.date) - parseDate(x.date));
         const list = evs.map(e => {
           const label = esc(e.title) + ' (' + fmtShort.format(parseDate(e.date)) + ')';
@@ -625,7 +650,7 @@ status('loading data...');
 Promise.all([
   fetch('data/areas.json').then(r => { if(!r.ok) throw new Error('areas.json HTTP ' + r.status); return r.json(); }),
   fetch('data/events.json').then(r => { if(!r.ok) throw new Error('events.json HTTP ' + r.status); return r.json(); })
-]).then(([a, e]) => { loadData(a, e); route(); status('loaded ' + EVENTS.length + ' events, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+]).then(([a, e]) => { loadData(asList(a), asList(e)); route(); status('loaded ' + EVENTS.length + ' events, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>
