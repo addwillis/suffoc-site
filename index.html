@@ -230,7 +230,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 15';
+const BUILD = 'build 16';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -310,7 +310,7 @@ function endsAt(e){
   if (m) { d.setHours(+m[1], +m[2] + GRACE_MINUTES, 0, 0); return d; }
   d.setHours(23, 59, 59, 999); return d;
 }
-const timeRange = e => e.time && e.courseClose ? e.time + ' to ' + e.courseClose : e.time ? e.time : e.courseClose ? 'closes ' + e.courseClose : '';
+const timeRange = e => e.time && e.courseClose ? e.time + '\u2013' + e.courseClose : e.time ? e.time : e.courseClose ? 'closes ' + e.courseClose : '';
 const isPast = e => new Date() >= endsAt(e);
 const upcoming = () => EVENTS.filter(e => !isPast(e)).sort((a,b) => parseDate(a.date) - parseDate(b.date));
 const past = () => EVENTS.filter(e => isPast(e)).sort((a,b) => parseDate(b.date) - parseDate(a.date));
