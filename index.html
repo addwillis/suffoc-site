@@ -230,7 +230,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 13';
+const BUILD = 'build 15';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -301,8 +301,19 @@ const fmtShort = new Intl.DateTimeFormat('en-GB', { day:'numeric', month:'short'
 const fmtLong = new Intl.DateTimeFormat('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 const ext = 'target="_blank" rel="noopener"';
 
-const upcoming = () => EVENTS.filter(e => parseDate(e.date) >= today).sort((a,b) => parseDate(a.date) - parseDate(b.date));
-const past = () => EVENTS.filter(e => parseDate(e.date) < today).sort((a,b) => parseDate(b.date) - parseDate(a.date));
+/* An event moves from Events to Results this many minutes after its course close time
+   (or at the end of the day if no close time is set). Change the number to adjust. */
+const GRACE_MINUTES = 60;
+function endsAt(e){
+  const d = parseDate(e.date);
+  const m = /^(\d{1,2})[:.](\d{2})/.exec(String(e.courseClose || '').trim());
+  if (m) { d.setHours(+m[1], +m[2] + GRACE_MINUTES, 0, 0); return d; }
+  d.setHours(23, 59, 59, 999); return d;
+}
+const timeRange = e => e.time && e.courseClose ? e.time + ' to ' + e.courseClose : e.time ? e.time : e.courseClose ? 'closes ' + e.courseClose : '';
+const isPast = e => new Date() >= endsAt(e);
+const upcoming = () => EVENTS.filter(e => !isPast(e)).sort((a,b) => parseDate(a.date) - parseDate(b.date));
+const past = () => EVENTS.filter(e => isPast(e)).sort((a,b) => parseDate(b.date) - parseDate(a.date));
 
 function eventCard(e){
   const d = parseDate(e.date);
@@ -314,7 +325,7 @@ function eventCard(e){
     <div>
       <span class="pill">${esc(e.type)}</span>
       <h3>${e.detail ? `<a class="title-link" href="#event-${esc(e.id)}">${esc(e.title)}</a>` : esc(e.title)}</h3>
-      <p class="meta">${e.time ? esc(e.time) + ' &middot; ' : ''}${esc(place)}</p>
+      <p class="meta">${timeRange(e) ? esc(timeRange(e)) + ' &middot; ' : ''}${esc(place)}</p>
       <div class="links">
         ${e.detail ? `<a class="btn small gold" href="#event-${esc(e.id)}">Event page</a>` : (e.link ? `<a class="btn small line" href="${esc(e.link)}" ${ext}>Event details</a>` : '')}
         ${e.pdf ? `<a class="btn small line" href="${esc(e.pdf)}" ${ext}>Preliminary details (PDF)</a>` : ''}
@@ -430,7 +441,7 @@ function initMaps(){
         } else {
           icon = L.divIcon({ className:'', html:'<span class="lpin"></span>', iconSize:[22,22], iconAnchor:[11,11], popupAnchor:[0,-12] });
         }
-        const evs = EVENTS.filter(e => e.area === k && (key !== 'upcoming' || parseDate(e.date) >= today)).sort((x, y) => parseDate(y.date) - parseDate(x.date));
+        const evs = EVENTS.filter(e => e.area === k && (key !== 'upcoming' || !isPast(e))).sort((x, y) => parseDate(y.date) - parseDate(x.date));
         const list = evs.map(e => {
           const label = esc(e.title) + ' (' + fmtShort.format(parseDate(e.date)) + ')';
           return '<br>' + (e.detail ? '<a href="#event-' + esc(e.id) + '">' + label + '</a>' : label);
@@ -577,7 +588,7 @@ function eventPage(id){
       <a class="back" href="#events">&larr; Back to Events</a><br>
       <span class="pill">${esc(e.type || 'Event')}</span>
       <h1 class="event-title">${esc(e.title)}</h1>
-      <p class="lead">${esc(fmtLong.format(date))}${e.time ? ' &middot; ' + esc(e.time) : ''}</p>
+      <p class="lead">${esc(fmtLong.format(date))}${timeRange(e) ? ' &middot; ' + esc(timeRange(e)) : ''}</p>
     </div></section>
     <div class="wrap"><div class="detail-grid">
       <aside class="stack">
@@ -590,7 +601,7 @@ function eventPage(id){
       </aside>
       <div class="stack">
         ${e.results && e.results.length ? `<section class="card"><h3>Results</h3><div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small gold" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div></section>`
-          : (parseDate(e.date) < today ? `<section class="card todo"><h3>Results</h3><p style="margin:.6rem 0 0">Results to follow.</p></section>` : '')}
+          : (isPast(e) ? `<section class="card todo"><h3>Results</h3><p style="margin:.6rem 0 0">Results to follow.</p></section>` : '')}
         ${d.about ? `<section class="card"><h3>About the area</h3><p style="margin-top:.6rem">${esc(d.about)}</p></section>` : ''}
         <section class="card"><h3>Getting there</h3>
           ${(d.address.length || d.postcode) ? `<p style="margin:.6rem 0">${[...d.address.map(esc), esc(d.postcode)].filter(Boolean).join('<br>')}</p>` : ''}
