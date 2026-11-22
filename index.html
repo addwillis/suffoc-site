@@ -6,6 +6,7 @@
 <title>SUFFOC Website Prototype</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -135,6 +136,14 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 .pin .ring{fill:#fff;stroke:var(--navy);stroke-width:3}
 .pin .dot{fill:var(--navy)}
 .pin.up .ring{fill:var(--gold)}
+.leafmap{height:440px;width:100%;background:var(--tint);position:relative;isolation:isolate}
+.leafmap.single{height:320px}
+@media(max-width:520px){.leafmap{height:340px}.leafmap.single{height:280px}}
+.leaflet-container{font-family:var(--body)}
+.lpin{display:block;width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid var(--navy);box-sizing:border-box;box-shadow:0 1px 5px rgba(0,0,0,.45)}
+.lpin.up{background:var(--gold)}
+.leaflet-popup-content{font-size:15px;line-height:1.4;margin:12px 14px}
+.leaflet-popup-content a{color:var(--navy);font-weight:600}
 .legend{display:flex;flex-wrap:wrap;gap:8px 22px;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.95rem;align-items:center}
 .legend i{display:inline-block;width:16px;height:16px;border-radius:50%;border:3px solid var(--navy);background:#fff;vertical-align:-3px;margin-right:6px}
 .legend i.up{background:var(--gold)}
@@ -207,13 +216,14 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
   </div>
 </footer>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* =====================================================================
    EDIT HERE: the site's content lives in these lists.
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 3';
+const BUILD = 'build 4';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -350,11 +360,47 @@ function mapSVG(onlyId){
     ${towns}${pins}
   </svg>`;
 }
+const FALLBACK_NOTE = '<p class="note" style="margin:0;padding:8px 16px">Schematic outline, for layout only</p>';
 function mapBlock(){
-  return `<div class="map">${mapSVG()}
-    <div class="legend"><span><i class="up"></i>Upcoming event</span><span><i></i>Previously mapped area</span><span class="note">Schematic outline, for layout only</span></div>
+  return `<div class="map"><div class="leafmap" data-map="all">${mapSVG()}${FALLBACK_NOTE}</div>
+    <div class="legend"><span><i class="up"></i>Upcoming event</span><span><i></i>Previously mapped area</span></div>
   </div>
   <ul class="chips">${Object.values(AREAS).map(a => `<li>${esc(a.name)}</li>`).join('')}</ul>`;
+}
+
+/* Real map (Leaflet + OpenStreetMap). If Leaflet cannot load, the schematic SVG above stays as a fallback. */
+let LMAPS = [];
+function initMaps(){
+  LMAPS.forEach(m => { try { m.remove(); } catch(e){} });
+  LMAPS = [];
+  if (!window.L) return;
+  const up = new Set(upcoming().map(e => e.area));
+  document.querySelectorAll('.leafmap').forEach(el => {
+    const fallback = el.innerHTML;
+    try {
+      const key = el.dataset.map;
+      el.innerHTML = '';
+      const map = L.map(el, { scrollWheelZoom:false });
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19,
+        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
+      const pts = [];
+      Object.entries(AREAS).filter(([k]) => key === 'all' || k === key).forEach(([k, a]) => {
+        if (isNaN(a.lat) || isNaN(a.lon)) return;
+        const icon = L.divIcon({ className:'', html:'<span class="lpin' + (up.has(k) ? ' up' : '') + '"></span>', iconSize:[22,22], iconAnchor:[11,11], popupAnchor:[0,-12] });
+        const evs = EVENTS.filter(e => e.area === k).sort((x, y) => parseDate(y.date) - parseDate(x.date));
+        const list = evs.map(e => {
+          const label = esc(e.title) + ' (' + fmtShort.format(parseDate(e.date)) + ')';
+          return '<br>' + (e.detail ? '<a href="#event-' + esc(e.id) + '">' + label + '</a>' : label);
+        }).join('');
+        L.marker([a.lat, a.lon], { icon:icon, title:a.name }).addTo(map).bindPopup('<strong>' + esc(a.name) + '</strong>' + list);
+        pts.push([a.lat, a.lon]);
+      });
+      if (key !== 'all' && pts.length) map.setView(pts[0], 14);
+      else if (pts.length) map.fitBounds(pts, { padding:[40,40], maxZoom:11 });
+      else map.setView([52.2, 1.0], 9);
+      LMAPS.push(map);
+    } catch (err) { el.innerHTML = fallback; }
+  });
 }
 
 function pageHead(title, intro){
@@ -482,7 +528,7 @@ function eventPage(id){
             <a class="btn small line" href="https://www.openstreetmap.org/?mlat=${area.lat}&mlon=${area.lon}#map=15/${area.lat}/${area.lon}" ${ext}>OpenStreetMap</a>
             <a class="btn small line" href="https://what3words.com/${esc(d.w3w)}" ${ext}>what3words</a>
           </div>
-          <div class="map">${mapSVG(e.area)}<div class="legend"><span class="note">Schematic outline, for layout only</span></div></div>
+          <div class="map"><div class="leafmap single" data-map="${esc(e.area)}">${mapSVG(e.area)}${FALLBACK_NOTE}</div></div>
         </section>
         <section class="card todo"><h3>Courses, fees and entry</h3>
           <p style="margin:.6rem 0 0">To add: courses and lengths, entry fees, how to enter, start times and parking. These come from the preliminary details once confirmed.</p></section>
@@ -513,6 +559,7 @@ function route(){
   else if (VIEWS[h]) { key = h; html = VIEWS[h](); }
   else { html = VIEWS.home(); }
   view.innerHTML = html;
+  initMaps();
   document.querySelectorAll('.nav a[data-route]').forEach(a => {
     if (a.dataset.route === key) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
