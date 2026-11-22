@@ -213,16 +213,20 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 2';
+const BUILD = 'build 3';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
-let AREAS = {}, EVENTS = [];
+let AREAS = {}, EVENTS = [], SKIPPED = [];
 /* Event and area data live in data/*.json (edited through Pages CMS). */
 const pairs = (list, k1, k2) => (list || []).filter(x => x && x[k1] && x[k2]).map(x => [x[k1], x[k2]]);
 function loadData(areas, events){
   AREAS = {};
   areas.forEach(a => { AREAS[a.id] = { name:a.name, lat:+a.lat, lon:+a.lon, dx:+(a.label_dx||14), dy:+(a.label_dy||0), anchor:a.label_anchor||'start' }; });
+  const ok = e => e && e.title && /^\d{4}-\d{2}-\d{2}$/.test(String(e.date || '').trim());
+  SKIPPED = events.filter(e => !ok(e)).map(e => (e && e.title) || '(no name)');
+  events = events.filter(ok);
+  events.forEach(e => { e.date = String(e.date).trim(); });
   EVENTS = events.map(e => {
     const o = Object.assign({}, e);
     o.results = pairs(e.results, 'label', 'url');
@@ -271,7 +275,7 @@ const TOWNS = [
 /* =====================================================================
    Everything below builds the pages from the lists above.
    ===================================================================== */
-const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const parseDate = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
 const now = new Date();
 const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -524,7 +528,7 @@ status('loading data...');
 Promise.all([
   fetch('data/areas.json').then(r => { if(!r.ok) throw new Error('areas.json HTTP ' + r.status); return r.json(); }),
   fetch('data/events.json').then(r => { if(!r.ok) throw new Error('events.json HTTP ' + r.status); return r.json(); })
-]).then(([a, e]) => { loadData(a, e); route(); status('loaded ' + EVENTS.length + ' events, ' + Object.keys(AREAS).length + ' areas'); })
+]).then(([a, e]) => { loadData(a, e); route(); status('loaded ' + EVENTS.length + ' events, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>
