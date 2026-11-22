@@ -104,7 +104,9 @@ p{margin:0 0 1rem;max-width:65ch}
 .section{padding:2.4rem 0 .6rem}
 .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:1.1rem}
 .more{font-weight:600;white-space:nowrap}
-.pagehead{padding:2.2rem 0 1.2rem;border-bottom:1px solid var(--line);background:var(--card)}
+.pagehead{position:relative;overflow:hidden;padding:2.2rem 0 1.2rem;border-bottom:1px solid var(--line);background:var(--card)}
+.pagehead::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400' preserveAspectRatio='xMaxYMid slice'%3E%3Cg fill='none' stroke='%234DA3E0' stroke-width='1.2'%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(0.35) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(0.55) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(0.75) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(1) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(1.25) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(1.5) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3Cpath vector-effect='non-scaling-stroke' transform='translate(600 210) scale(1.8) translate(-300 -260)' d='M120,260 C100,180 170,110 260,120 C350,130 400,60 480,110 C560,160 540,260 470,300 C400,340 380,420 280,410 C190,400 140,340 120,260Z'/%3E%3C/g%3E%3C/svg%3E") no-repeat right center/cover;opacity:.22;pointer-events:none}
+.pagehead>.wrap{position:relative}
 .pagehead h1{font-size:clamp(2.2rem,6vw,3.4rem);text-transform:uppercase;font-weight:700}
 .pagehead .hi{width:.8em;height:.8em;fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.04em;margin-right:.3em}
 .pagehead .lead{margin:.7rem 0 0;color:var(--muted);font-size:1.1rem}
@@ -285,7 +287,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 56';
+const BUILD = 'build 57';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
