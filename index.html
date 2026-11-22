@@ -270,7 +270,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 41';
+const BUILD = 'build 42';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -289,7 +289,11 @@ function loadData(areas, events){
   events.forEach(e => { e.date = String(e.date).trim(); });
   EVENTS = events.map(e => {
     const o = Object.assign({}, e);
-    o.results = pairs(e.results, 'label', 'url');
+    /* Result links: fixed fields first (in this order), then any extra links added as a list. */
+    const rl = e.resultLinks || {};
+    o.results = [['Results and split times', rl.results], ['Winsplits', rl.winsplits], ['Routegadget', rl.routegadget], ['Comments', rl.comments]]
+      .filter(x => x[1] && String(x[1]).trim()).map(x => [x[0], String(x[1]).trim()])
+      .concat(pairs(e.results, 'label', 'url'));
     const d = e.detail;
     if (d && (d.about || d.postcode || d.w3w || d.organiser || d.planner || d.controller)) {
       o.detail = Object.assign({}, d, { address: (d.address || []).filter(Boolean), officials: [['Organiser', d.organiser], ['Planner', d.planner], ['Controller', d.controller]].filter(x => x[1]).concat(pairs(d.officials, 'role', 'name')), docs: pairs(d.docs, 'label', 'url') });

@@ -54,20 +54,11 @@
       "date": "2026-07-05",
       "type": "Local event",
       "area": "needham",
-      "results": [
-        {
-          "label": "Results and split times",
-          "url": "http://www.suffoc.co.uk/results/2026/Needham/index.html"
-        },
-        {
-          "label": "Winsplits",
-          "url": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113907"
-        },
-        {
-          "label": "Routegadget",
-          "url": "https://www.suffoc.routegadget.co.uk/rg2/#140"
-        }
-      ]
+      "resultLinks": {
+        "results": "http://www.suffoc.co.uk/results/2026/Needham/index.html",
+        "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113907",
+        "routegadget": "https://www.suffoc.routegadget.co.uk/rg2/#140"
+      }
     },
     {
       "id": "clare-2026",
@@ -75,20 +66,11 @@
       "date": "2026-06-21",
       "type": "Local event",
       "area": "clare",
-      "results": [
-        {
-          "label": "Results and split times",
-          "url": "http://www.suffoc.co.uk/results/2026/Clare/index.html"
-        },
-        {
-          "label": "Winsplits",
-          "url": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113649"
-        },
-        {
-          "label": "Routegadget",
-          "url": "https://www.suffoc.routegadget.co.uk/rg2/#139"
-        }
-      ]
+      "resultLinks": {
+        "results": "http://www.suffoc.co.uk/results/2026/Clare/index.html",
+        "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113649",
+        "routegadget": "https://www.suffoc.routegadget.co.uk/rg2/#139"
+      }
     },
     {
       "id": "sudbury-2026",
@@ -98,26 +80,19 @@
       "area": "sudbury",
       "results": [
         {
-          "label": "Results and split times",
-          "url": "http://www.suffoc.co.uk/results/2026/Sudbury/index.html"
-        },
-        {
-          "label": "Winsplits",
-          "url": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=112544"
-        },
-        {
           "label": "Routegadget courses 1 to 3",
           "url": "https://www.suffoc.routegadget.co.uk/rg2/#138"
         },
         {
           "label": "Routegadget courses 4 to 7",
           "url": "https://www.suffoc.routegadget.co.uk/rg2/#137"
-        },
-        {
-          "label": "Comments",
-          "url": "https://www.suffoc.co.uk/resources/event_comments/suffoc-sudbury-urban-2026-comments"
         }
-      ]
+      ],
+      "resultLinks": {
+        "results": "http://www.suffoc.co.uk/results/2026/Sudbury/index.html",
+        "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=112544",
+        "comments": "https://www.suffoc.co.uk/resources/event_comments/suffoc-sudbury-urban-2026-comments"
+      }
     },
     {
       "id": "street-o-claydon",

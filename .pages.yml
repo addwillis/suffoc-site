@@ -124,13 +124,31 @@ content:
         - name: url
           label: Web address
           type: string
-    - name: results
+    - name: resultLinks
       label: Results (add after the event)
       type: object
+      description: Paste the web address for each one you have. Leave the others blank.
+      fields:
+      - name: results
+        label: Results and split times
+        type: string
+      - name: winsplits
+        label: Winsplits
+        type: string
+      - name: routegadget
+        label: Routegadget
+        type: string
+      - name: comments
+        label: Comments
+        type: string
+    - name: results
+      label: Other result links (optional)
+      type: object
       list: true
+      description: Only for extra links that don't fit above, e.g. a second Routegadget map.
       fields:
       - name: label
-        label: Link text (e.g. Results and split times)
+        label: Link text
         type: string
       - name: url
         label: Web address
