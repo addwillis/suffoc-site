@@ -269,7 +269,7 @@ dl.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 43';
+const BUILD = 'build 44';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -593,9 +593,9 @@ function initMaps(){
         const svg = document.createElementNS(NS, 'svg');
         svg.setAttribute('class', 'legs');
         svg.style.cssText = 'position:absolute;pointer-events:none;overflow:visible';
-        /* Own map pane: sits above the tiles but below the markers and pop-ups. */
+        /* Own map pane: above the tiles and markers, but below the pop-ups (marker pane is 600, pop-up pane 700). */
         const legPane = map.createPane('legs');
-        legPane.style.zIndex = 450; legPane.style.pointerEvents = 'none';
+        legPane.style.zIndex = 650; legPane.style.pointerEvents = 'none';
         legPane.appendChild(svg);
         const drawLegs = () => {
           let n = 0, html = '';
