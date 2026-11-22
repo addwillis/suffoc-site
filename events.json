@@ -1,0 +1,125 @@
+[
+  {
+    "id": "tunstall",
+    "title": "Tunstall Forest, Barnes Carr and The Birches",
+    "date": "2026-11-29",
+    "time": "10:30",
+    "type": "Regional event",
+    "area": "tunstall",
+    "link": "https://www.suffoc.co.uk/tunstall-2026",
+    "pdf": "https://www.suffoc.co.uk/events/Preliminary_details_Tunstall.pdf",
+    "detail": {
+      "level": "Regional",
+      "about": "Barnes Carr and The Birches is in the south-east portion of Tunstall Forest, in the East Suffolk Sandlings. The area has interesting terrain, with a variety of water and relief features and some nice areas of deciduous woodland.",
+      "address": [
+        "Tunstall Forest",
+        "B1078 Orford Road, FR22",
+        "Tunstall"
+      ],
+      "postcode": "IP12 2AP",
+      "gridRef": "TM 39950 52750",
+      "w3w": "economies.winter.windmills",
+      "nearestTown": "Woodbridge",
+      "officials": [
+        {
+          "role": "Organiser",
+          "name": "Louise Walker"
+        },
+        {
+          "role": "Planner",
+          "name": "Gareth Radcliffe"
+        },
+        {
+          "role": "Controller",
+          "name": "Paul Beckett"
+        }
+      ],
+      "docs": [
+        {
+          "label": "Area overview: Tunstall Forest",
+          "url": "http://www.suffoc.co.uk/area-overview/tunstall-forest"
+        }
+      ]
+    }
+  },
+  {
+    "id": "hardwick-street-o-2",
+    "title": "Mid-Week Street-O 2, Hardwick",
+    "date": "2026-12-08",
+    "time": "19:00",
+    "type": "Street-O",
+    "area": "hardwick",
+    "link": "https://www.suffoc.co.uk/events/street-o-hardwick"
+  },
+  {
+    "id": "needham-2026",
+    "title": "Needham Lakes",
+    "date": "2026-07-05",
+    "type": "Local event",
+    "area": "needham",
+    "results": [
+      {
+        "label": "Results and split times",
+        "url": "http://www.suffoc.co.uk/results/2026/Needham/index.html"
+      },
+      {
+        "label": "Winsplits",
+        "url": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113907"
+      },
+      {
+        "label": "Routegadget",
+        "url": "https://www.suffoc.routegadget.co.uk/rg2/#140"
+      }
+    ]
+  },
+  {
+    "id": "clare-2026",
+    "title": "Clare Country Park",
+    "date": "2026-06-21",
+    "type": "Local event",
+    "area": "clare",
+    "results": [
+      {
+        "label": "Results and split times",
+        "url": "http://www.suffoc.co.uk/results/2026/Clare/index.html"
+      },
+      {
+        "label": "Winsplits",
+        "url": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113649"
+      },
+      {
+        "label": "Routegadget",
+        "url": "https://www.suffoc.routegadget.co.uk/rg2/#139"
+      }
+    ]
+  },
+  {
+    "id": "sudbury-2026",
+    "title": "Sudbury Urban",
+    "date": "2026-05-17",
+    "type": "Regional event",
+    "area": "sudbury",
+    "results": [
+      {
+        "label": "Results and split times",
+        "url": "http://www.suffoc.co.uk/results/2026/Sudbury/index.html"
+      },
+      {
+        "label": "Winsplits",
+        "url": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=112544"
+      },
+      {
+        "label": "Routegadget courses 1 to 3",
+        "url": "https://www.suffoc.routegadget.co.uk/rg2/#138"
+      },
+      {
+        "label": "Routegadget courses 4 to 7",
+        "url": "https://www.suffoc.routegadget.co.uk/rg2/#137"
+      },
+      {
+        "label": "Comments",
+        "url": "https://www.suffoc.co.uk/resources/event_comments/suffoc-sudbury-urban-2026-comments"
+      }
+    ]
+  }
+]
