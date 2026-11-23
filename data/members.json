@@ -1,6 +1,20 @@
 {
   "members": [
     {
+      "name": "Andrew Elliott",
+      "roles": [
+        {
+          "role": "Treasurer",
+          "email": "treasurer@suffoc.co.uk"
+        },
+        {
+          "role": "Regional Repreresentative",
+          "email": "eaoarep@suffoco.uk"
+        }
+      ],
+      "id": "andrew-elliott"
+    },
+    {
       "name": "Gareth Radcliffe",
       "roles": [
         {
