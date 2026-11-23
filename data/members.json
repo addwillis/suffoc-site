@@ -38,6 +38,12 @@
     },
     {
       "name": "Sarah Mansel",
+      "roles": [
+        "Chair",
+        "Entries Coordinator",
+        "MapRun Coordinator",
+        "Membership Secretary"
+      ],
       "email": "chair@suffoc.uk",
       "photo": "/images/sarah-mansel.jpg",
       "committee": true,
