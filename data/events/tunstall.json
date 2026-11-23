@@ -38,6 +38,7 @@
     }
   ],
   "fees": {
+    "earlyDeadline": "22 November",
     "rows": [
       {
         "category": "Senior member",
