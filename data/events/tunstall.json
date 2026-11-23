@@ -37,6 +37,26 @@
       "colour": "Brown"
     }
   ],
+  "fees": {
+    "rows": [
+      {
+        "category": "Senior member",
+        "early": "10",
+        "late": "12"
+      },
+      {
+        "category": "Senior non-member",
+        "early": "12",
+        "late": "14"
+      },
+      {
+        "category": "Junior",
+        "early": "3",
+        "late": "4"
+      }
+    ],
+    "hire": "£1"
+  },
   "officials": {
     "organiser": "Louise Walker",
     "planner": "Gareth Radcliffe",
