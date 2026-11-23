@@ -108,51 +108,130 @@ content:
   - name: courses
     label: COURSES
     type: object
-    list: true
-    description: One row per course. Leave empty until the courses are confirmed.
+    description: Fill in length, controls or climb for each course you are using and leave the others blank. The Courses table only appears once something is filled in.
     fields:
-    - name: colour
-      label: Course colour
-      type: select
-      options:
-        values:
-        - White
-        - Yellow
-        - Orange
-        - Light Green
-        - Short Green
-        - Green
-        - Blue
-        - Brown
-        - Black
-        - Other
-    - name: name
-      label: Course name (optional)
-      type: string
-      description: Only if you want something other than the colour, e.g. Short Green or Course 1.
-    - name: length
-      label: Length (km)
-      type: string
-      description: e.g. 3.2
-    - name: controls
-      label: Number of controls
-      type: string
-    - name: climb
-      label: Climb (m, optional)
-      type: string
-    - name: note
-      label: Note (optional)
-      type: string
-      description: e.g. Good for beginners
+    - name: white
+      label: White
+      type: object
+      fields:
+      - name: length
+        label: Length (km)
+        type: string
+      - name: controls
+        label: Controls
+        type: string
+      - name: climb
+        label: Climb (m)
+        type: string
+    - name: yellow
+      label: Yellow
+      type: object
+      fields:
+      - name: length
+        label: Length (km)
+        type: string
+      - name: controls
+        label: Controls
+        type: string
+      - name: climb
+        label: Climb (m)
+        type: string
+    - name: orange
+      label: Orange
+      type: object
+      fields:
+      - name: length
+        label: Length (km)
+        type: string
+      - name: controls
+        label: Controls
+        type: string
+      - name: climb
+        label: Climb (m)
+        type: string
+    - name: lightGreen
+      label: Light Green
+      type: object
+      fields:
+      - name: length
+        label: Length (km)
+        type: string
+      - name: controls
+        label: Controls
+        type: string
+      - name: climb
+        label: Climb (m)
+        type: string
+    - name: shortGreen
+      label: Short Green
+      type: object
+      fields:
+      - name: length
+        label: Length (km)
+        type: string
+      - name: controls
+        label: Controls
+        type: string
+      - name: climb
+        label: Climb (m)
+        type: string
+    - name: green
+      label: Green
+      type: object
+      fields:
+      - name: length
+        label: Length (km)
+        type: string
+      - name: controls
+        label: Controls
+        type: string
+      - name: climb
+        label: Climb (m)
+        type: string
+    - name: blue
+      label: Blue
+      type: object
+      fields:
+      - name: length
+        label: Length (km)
+        type: string
+      - name: controls
+        label: Controls
+        type: string
+      - name: climb
+        label: Climb (m)
+        type: string
+    - name: brown
+      label: Brown
+      type: object
+      fields:
+      - name: length
+        label: Length (km)
+        type: string
+      - name: controls
+        label: Controls
+        type: string
+      - name: climb
+        label: Climb (m)
+        type: string
+    - name: black
+      label: Black
+      type: object
+      fields:
+      - name: length
+        label: Length (km)
+        type: string
+      - name: controls
+        label: Controls
+        type: string
+      - name: climb
+        label: Climb (m)
+        type: string
   - name: fees
     label: ENTRY FEES
     type: object
     description: Leave empty until the fees are confirmed. Prices can be typed as 8 or £8.
     fields:
-    - name: earlyDeadline
-      label: Early booking closes (optional)
-      type: string
-      description: e.g. 22 November. Leave empty if there is only one price.
     - name: rows
       label: Prices
       type: object
@@ -163,15 +242,31 @@ content:
         label: Who
         type: string
       - name: early
-        label: Early booking price
+        label: Standard price
         type: string
       - name: late
         label: Late / on the day price
         type: string
-    - name: hire
-      label: Dibber (SI card) hire
+    - name: earlyDeadline
+      label: Standard price online entry closes (optional)
+      type: date
+      options:
+        format: yyyy-MM-dd
+      description: Online entries up to this date get the standard price.
+    - name: lateDeadline
+      label: Late online entry closes (optional)
+      type: date
+      options:
+        format: yyyy-MM-dd
+      description: Late online entries are taken up to this date.
+    - name: chipHire
+      label: Chip hire
       type: string
-      description: e.g. £1, or Free
+      default: "£1"
+    - name: siacHire
+      label: SIAC chip hire
+      type: string
+      default: "£3"
     - name: note
       label: Note (optional)
       type: text

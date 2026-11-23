@@ -294,7 +294,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 69';
+const BUILD = 'build 72';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -877,9 +877,12 @@ function personPage(id){
         ${old.length ? `<div class="rlist">${old.map(row).join('')}</div>` : '<div class="empty">No events are listed for this person yet.</div>'}</section>
     </div>`;
 }
-const COURSE_COLOURS = { white:'#ffffff', yellow:'#f6d51b', orange:'#f28c28', lightgreen:'#a6dc86', shortgreen:'#2f8f46', green:'#2f8f46', blue:'#2c64c8', brown:'#7b4b2a', black:'#1c1c1c' };
+const COURSE_COLOURS = { white:'#ffffff', yellow:'#f6d51b', orange:'#f28c28', lightgreen:'#a6dc86', shortgreen:'#6bb666', green:'#2f8f46', blue:'#2c64c8', brown:'#7b4b2a', black:'#1c1c1c' };
 function coursesCard(e){
-  const list = (Array.isArray(e.courses) ? e.courses : []).filter(c => c && (c.colour || c.name || c.length || c.controls));
+  const NAMES = [['white', 'White'], ['yellow', 'Yellow'], ['orange', 'Orange'], ['lightGreen', 'Light Green'], ['shortGreen', 'Short Green'], ['green', 'Green'], ['blue', 'Blue'], ['brown', 'Brown'], ['black', 'Black']];
+  const cs = e.courses || {};
+  const list = Array.isArray(cs) ? cs.filter(c => c && (c.colour || c.name || c.length || c.controls))  /* older list layout */
+    : NAMES.map(n => Object.assign({ colour: n[1] }, cs[n[0]] || {})).filter(c => ['length', 'controls', 'climb'].some(k => String(c[k] == null ? '' : c[k]).trim()));
   if (!list.length) return '';
   const col = c => COURSE_COLOURS[String(c.colour || '').toLowerCase().replace(/[^a-z]/g, '')] || '';
   const has = k => list.some(c => String(c[k] || '').trim());
@@ -892,16 +895,25 @@ function coursesCard(e){
 function feesCard(e){
   const f = e.fees || {};
   const rows = (Array.isArray(f.rows) ? f.rows : []).filter(r => r && r.category && (r.early || r.late));
-  const hire = String(f.hire || '').trim(), note = String(f.note || '').trim(), dl = String(f.earlyDeadline || '').trim();
-  if (!rows.length && !hire) return '';
+  const t = k => String(f[k] == null ? '' : f[k]).trim();
+  const chip = t('chipHire'), siac = t('siacHire'), note = t('note');
+  if (!rows.length) return '';
   const gbp = v => { v = String(v == null ? '' : v).trim(); return /^\d+(\.\d+)?$/.test(v) ? '\u00a3' + v : v; };
+  const day = v => { const d = /^\d{4}-\d{2}-\d{2}$/.test(v) ? parseDate(v) : null; return d ? fmtLong.format(d).replace(/,/g, '').replace(/ \d{4}$/, '') : v; };
   const hasEarly = rows.some(r => String(r.early || '').trim()), hasLate = rows.some(r => String(r.late || '').trim());
   const both = hasEarly && hasLate;
-  const hEarly = 'Early booking' + (dl ? ' (by ' + esc(dl) + ')' : ''), hLate = both ? 'Late / on the day' : (hasLate ? 'Price' : '');
+  let site = ''; try { site = new URL(e.entryUrl).hostname.replace(/^www\./, ''); } catch (x) {}
+  const via = /racesignup/i.test(site) ? ' via RaceSignup' : '';
+  const lines = [];
+  if (t('earlyDeadline')) lines.push(`Enter online${via} by <b>${esc(day(t('earlyDeadline')))}</b> for the standard price.`);
+  if (t('lateDeadline')) lines.push(`Late online entry is open until <b>${esc(day(t('lateDeadline')))}</b>.`);
+  if (hasLate) lines.push('Entry on the day is available, subject to map availability.');
   return `<section class="card"><h3>Entry fees</h3>
-    ${rows.length ? `<div class="cwrap"><table class="ctable"><thead><tr><th>Who</th>${hasEarly ? `<th>${both ? hEarly : (dl ? 'Book by ' + esc(dl) : 'Price')}</th>` : ''}${both ? `<th>${hLate}</th>` : (!hasEarly && hasLate ? '<th>Price</th>' : '')}</tr></thead>
-      <tbody>${rows.map(r => `<tr><td><b>${esc(r.category)}</b></td>${hasEarly ? `<td class="num">${esc(gbp(r.early))}</td>` : ''}${hasLate && (both || !hasEarly) ? `<td class="num">${esc(gbp(r.late))}</td>` : ''}</tr>`).join('')}</tbody></table></div>` : ''}
-    ${hire ? `<p style="margin:.8rem 0 0"><b>Dibber (SI card) hire:</b> ${esc(gbp(hire))}</p>` : ''}
+    <div class="cwrap"><table class="ctable"><thead><tr><th>Who</th>${hasEarly ? `<th>${both ? 'Standard' : 'Price'}</th>` : ''}${both ? '<th>Late / on the day</th>' : (!hasEarly ? '<th>Price</th>' : '')}</tr></thead>
+      <tbody>${rows.map(r => `<tr><td><b>${esc(r.category)}</b></td>${hasEarly ? `<td class="num">${esc(gbp(r.early))}</td>` : ''}${hasLate && (both || !hasEarly) ? `<td class="num">${esc(gbp(r.late))}</td>` : ''}</tr>`).join('')}</tbody></table></div>
+    ${lines.length ? `<p style="margin:.8rem 0 0">${lines.join(' ')}</p>` : ''}
+    ${chip ? `<p style="margin:.6rem 0 0"><b>Chip hire:</b> ${esc(gbp(chip))}</p>` : ''}
+    ${siac ? `<p style="margin:.3rem 0 0"><b>SIAC chip hire:</b> ${esc(gbp(siac))}</p>` : ''}
     ${note ? `<p class="cnote" style="margin:.5rem 0 0">${esc(note)}</p>` : ''}</section>`;
 }
 function eventPage(id){
