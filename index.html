@@ -190,6 +190,7 @@ dl.facts dd a:hover{color:var(--sky)}
 .newsfull{max-width:46rem}
 .newsimg-full{display:block;width:100%;height:auto;border-radius:var(--radius);margin:0 0 1.2rem}
 .prose{font-size:1.08rem;line-height:1.65}
+.pageintro{max-width:46rem;padding:1.6rem 0 .2rem}
 .prose p{margin:0 0 1em}
 .prose ul,.prose ol{margin:0 0 1em;padding-left:1.4em}
 .prose h2,.prose h3,.prose h4{margin:1.4em 0 .5em}
@@ -323,7 +324,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 106';
+const BUILD = 'build 108';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -396,7 +397,7 @@ function loadData(areas, events){
     if (id) o.area = id;
   });
 }
-let NEWS = [], MEMBERS = {}, PERM = [];
+let NEWS = [], MEMBERS = {}, PERM = [], PAGETEXT = {};
 const personKey = v => String(v == null ? '' : v).replace(/^.*\//, '').replace(/\.json$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
 function loadPermanent(list){
   PERM = list.filter(p => p && p.name).map(p => {
@@ -868,7 +869,7 @@ const VIEWS = {
     const dots = p => p.courses.length ? `<p class="cdots">${p.courses.map(c => { const col = courseColour(c), len = String(c.length || '').trim(); return `<span><i style="background:${col || 'transparent'}"></i>${esc(c.name || c.colour || 'Course')}${len ? ' ' + esc(/^[\d.]+$/.test(len) ? len + ' km' : len) : ''}</span>`; }).join('')}</p>` : '';
     const card = p => { const ak = areaKey(p.area), an = ak ? AREAS[ak].name : (p.area || ''); return `<a class="tile" href="#permanent-${esc(p.id)}"><h3>${esc(p.name)}</h3>${an ? `<p>${esc(an)}</p>` : ''}${dots(p)}</a>`; };
     const withPin = PERM.some(p => isFinite(p.lat) && isFinite(p.lon));
-    return `${pageHead('Permanent Orienteering Courses', 'Courses you can follow at any time, with a map to download.', 'anytime')}
+    return `${pageHead('Permanent Orienteering Courses', 'Courses you can follow at any time, with a map to download.', 'post')}
     <div class="wrap"><section class="section">
       <a class="back" href="#anytime">&larr; Back to Anytime O</a>
       ${PERM.length ? `${withPin ? `<div class="map" style="margin-top:1rem"><div class="leafmap" data-map="perm-all">${FALLBACK_NOTE}</div></div>` : ''}
@@ -1213,6 +1214,14 @@ function cleanLinks(root){
     if (isRoute(n)) { a.dataset.h = n; a.setAttribute('href', BASE + nameToPath(n)); }
   });
 }
+/* Text the webmaster types under "Page text" in Pages CMS is shown right under the page title. */
+function introText(name, html){
+  const t = PAGETEXT[name], plain = String(t == null ? '' : t).replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+  if (!plain) return html;
+  const box = '<div class="wrap"><div class="prose pageintro">' + richHTML(t) + '</div></div>';
+  const i = html.indexOf('</section>');
+  return i < 0 ? html : html.slice(0, i + 10) + box + html.slice(i + 10);
+}
 function route(){
   const h = currentName();
   let key = 'home', html;
@@ -1224,7 +1233,7 @@ function route(){
   else if (h.startsWith('permanent-')) { key = 'anytime'; html = permanentPage(h.slice(10)); }
   else if (h.startsWith('comments-')) { key = 'results'; html = commentsPage(h.slice(9)); }
   else if (h.startsWith('event-')) { key = 'events'; html = eventPage(h.slice(6)); }
-  else if (VIEWS[h]) { key = h === 'mapped' ? 'events' : (h === 'permanent' ? 'anytime' : h); html = VIEWS[h](); }
+  else if (VIEWS[h]) { key = h === 'mapped' ? 'events' : (h === 'permanent' ? 'anytime' : h); html = introText(h, VIEWS[h]()); }
   else { html = VIEWS.home(); }
   view.innerHTML = html;
   cleanLinks(view);
@@ -1247,8 +1256,9 @@ Promise.all([
   fetch('data/events.json', { cache:'no-cache' }).then(r => { if(!r.ok) throw new Error('events.json HTTP ' + r.status); return r.json(); }),
   fetch('data/news.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/members.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-  fetch('data/permanent.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-]).then(([a, e, n, m, pm]) => { loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+  fetch('data/permanent.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  fetch('data/pagetext.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([a, e, n, m, pm, pt]) => { PAGETEXT = (pt && typeof pt === 'object' && !Array.isArray(pt)) ? pt : {}; loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>

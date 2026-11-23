@@ -568,6 +568,60 @@ content:
     label: Photo (optional)
     type: image
     description: Only add this if the person is happy for it to be public.
+- name: pagetext
+  label: Page text
+  type: file
+  path: data/pagetext.json
+  format: json
+  fields:
+  - name: events
+    label: EVENTS PAGE
+    type: rich-text
+    options:
+      format: html
+    description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: results
+    label: RESULTS PAGE
+    type: rich-text
+    options:
+      format: html
+    description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: news
+    label: NEWS PAGE
+    type: rich-text
+    options:
+      format: html
+    description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: anytime
+    label: ANYTIME O PAGE
+    type: rich-text
+    options:
+      format: html
+    description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: permanent
+    label: PERMANENT ORIENTEERING COURSES PAGE
+    type: rich-text
+    options:
+      format: html
+    description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: mapped
+    label: MAPPED AREAS PAGE
+    type: rich-text
+    options:
+      format: html
+    description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: club
+    label: CLUB PAGE
+    type: rich-text
+    options:
+      format: html
+    description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: newcomers
+    label: NEWCOMERS PAGE
+    type: rich-text
+    options:
+      format: html
+    description: Text shown at the top of the page, under the title. Leave empty for none.
 - name: news
   label: News
   type: file
