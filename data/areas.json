@@ -28,6 +28,12 @@
       "label_anchor": "start"
     },
     {
+      "name": "Elmswell",
+      "lat": 52.237019,
+      "lon": 0.912547,
+      "id": "elmswell"
+    },
+    {
       "id": "hardwick",
       "name": "Hardwick",
       "lat": 52.222,
