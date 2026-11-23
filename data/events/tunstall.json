@@ -11,58 +11,7 @@
     "startsTo": "13:00",
     "courseClose": "14:00"
   },
-  "courses": [
-    {
-      "colour": "White",
-      "length": "1.9",
-      "controls": "13",
-      "climb": "15"
-    },
-    {
-      "colour": "Yellow",
-      "length": "2.2",
-      "controls": "12",
-      "climb": "20"
-    },
-    {
-      "colour": "Orange",
-      "length": "3.3",
-      "controls": "11",
-      "climb": "15"
-    },
-    {
-      "colour": "Light Green",
-      "length": "4",
-      "controls": "14",
-      "climb": "25"
-    },
-    {
-      "colour": "Short Green",
-      "length": "4",
-      "controls": "13",
-      "climb": "29"
-    },
-    {
-      "colour": "Green",
-      "length": "4.7",
-      "controls": "17",
-      "climb": "35"
-    },
-    {
-      "colour": "Blue",
-      "length": "7.1",
-      "controls": "26",
-      "climb": "45"
-    },
-    {
-      "colour": "Brown",
-      "length": "8.9",
-      "controls": "29",
-      "climb": "55"
-    }
-  ],
   "fees": {
-    "earlyDeadline": "22 November",
     "rows": [
       {
         "category": "Senior member",
@@ -80,7 +29,10 @@
         "late": "4"
       }
     ],
-    "hire": "£1"
+    "earlyDeadline": "2026-11-22",
+    "lateDeadline": "2026-11-27",
+    "chipHire": "£1",
+    "siacHire": "£3"
   },
   "officials": {
     "organiser": "Louise Walker",
