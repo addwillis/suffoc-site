@@ -37,12 +37,12 @@ content:
       values:
       # BEGIN types
       - "Local"
+      - "Mid-Week Street-O"
       - "National"
       - "Other"
       - "Regional"
       - "Score event"
       - "Simon Peck Summer Series"
-      - "Street-O"
       - "Training"
       # END types
   - name: area
