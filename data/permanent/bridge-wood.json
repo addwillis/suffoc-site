@@ -1,0 +1,29 @@
+{
+  "name": "Bridge Wood",
+  "description": "<p></p>",
+  "courses": [
+    {
+      "name": "Short",
+      "controls": "6"
+    },
+    {
+      "name": "Easy",
+      "controls": "9"
+    },
+    {
+      "name": "Medium",
+      "controls": "8"
+    },
+    {
+      "name": "Difficult",
+      "controls": "15"
+    }
+  ],
+  "mapUrl": "https://www.ipswich.gov.uk/sites/ipswich/files/m-files/Orwell_Country_Park_Bridge_Wood_Orienteering_Course__b_.pdf",
+  "gridRef": "TM 18736 40762",
+  "lat": 52.022126,
+  "lon": 1.866928,
+  "postcode": "IP10 0JR",
+  "w3w": "amended.journey.cuddled",
+  "notes": "<p></p>"
+}
