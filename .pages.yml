@@ -7,9 +7,7 @@ content:
   type: collection
   path: data/events
   format: json
-  filename:
-    template: '{primary}.json'
-    field: create
+  filename: '{primary}.json'
   view:
     fields: [date, title, level, series, area]
     primary: title
@@ -391,20 +389,6 @@ content:
     label: Longitude (optional)
     type: number
     description: Only needed if there is no grid reference.
-  - name: label_dx
-    label: Map label shift across
-    type: number
-  - name: label_dy
-    label: Map label shift down
-    type: number
-  - name: label_anchor
-    label: Map label side
-    type: select
-    options:
-      values:
-      - start
-      - middle
-      - end
 - name: members
   label: Club members
   type: collection

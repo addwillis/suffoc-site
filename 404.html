@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="utf-8"><title>SUFFOC</title>
+<script>
+/* GitHub Pages shows this for any address that is not a real file, e.g. /events/tunstall.
+   It hands the address to index.html, which then shows the right page. */
+(function(){
+  var base = /^\/suffoc-site(\/|$)/.test(location.pathname) ? '/suffoc-site/' : '/';
+  var rest = location.pathname.slice(base.length);
+  location.replace(base + '?p=/' + encodeURIComponent(rest) + location.hash);
+})();
+</script></head><body>Loading&hellip;</body></html>
