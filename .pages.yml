@@ -37,6 +37,7 @@ content:
       values:
       # BEGIN types
       - "Local"
+      - "National"
       - "Other"
       - "Regional"
       - "Score event"
