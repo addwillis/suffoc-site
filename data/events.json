@@ -254,6 +254,28 @@
       "id": "sudbury-2026"
     },
     {
+      "title": "Tunstall Forest - North",
+      "date": "2026-01-18",
+      "level": "Regional",
+      "area": "Tunstall Forest",
+      "about": "<p></p>",
+      "fees": {
+        "chipHire": "£1",
+        "siacHire": "£3"
+      },
+      "resultLinks": {
+        "results": "https://suffoc.co.uk/results/2026/Tunstall/index.html",
+        "winsplits": "https://obasen.orientering.se/winsplits/online/en/default.asp?page=classes&databaseId=110078",
+        "routegadget": "https://www.suffoc.routegadget.co.uk/rg2/#135"
+      },
+      "comments": {
+        "planner": "<p></p>",
+        "organiser": "<p></p>",
+        "controller": "<p></p>"
+      },
+      "id": "tunstall-forest-north"
+    },
+    {
       "title": "Tunstall Forest Barnes Carr and The Birches",
       "date": "2026-11-29",
       "level": "Regional",
