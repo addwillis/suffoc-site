@@ -4,6 +4,29 @@
   "level": "Local",
   "series": "Mid-Week Street-O",
   "area": "Claydon",
+  "about": "<p></p>",
+  "location": {
+    "address": [
+      "The Crown",
+      "9 Ipswich Road",
+      "Claydon",
+      "Suffolk"
+    ],
+    "postcode": "IP60AA",
+    "gridRef": "TM 13200 49839",
+    "w3w": "reward.vest.island"
+  },
+  "courses": [
+    {
+      "name": "45 min Score Course",
+      "colour": "White"
+    }
+  ],
+  "fees": {
+    "entryUrl": "https://racesignup.co.uk/2026-street-O-3",
+    "chipHire": "£1",
+    "siacHire": "£3"
+  },
   "timings": {
     "startsFrom": "18:00"
   },
@@ -11,12 +34,5 @@
     "organiser": "Gareth Radcliffe",
     "planner": "Gareth Radcliffe",
     "riskAssessor": "Sarah Mansel"
-  },
-  "location": {
-    "gridRef": "TL858628",
-    "w3w": "only.pint.form"
-  },
-  "fees": {
-    "entryUrl": "https://racesignup.co.uk/2026-street-O-3"
   }
 }
