@@ -1,0 +1,38 @@
+{
+  "name": "Rendlesham Forest Tangham",
+  "description": "<p></p>",
+  "courses": [
+    {
+      "name": "Course A",
+      "length": "1.7",
+      "controls": "9"
+    },
+    {
+      "name": "Course B",
+      "length": "3.2",
+      "controls": "14"
+    },
+    {
+      "name": "Course C",
+      "length": "4.3",
+      "controls": "18"
+    },
+    {
+      "name": "Course D",
+      "length": "3.9",
+      "controls": "8"
+    },
+    {
+      "name": "Course E",
+      "length": "4.5",
+      "controls": "11"
+    }
+  ],
+  "mapUrl": "https://www.suffoc.co.uk/articles/Tangham_Permanent_Orienteering_Course_2024.pdf",
+  "gridRef": "TM 35273 48383",
+  "lat": 52.083766,
+  "lon": 1.432512,
+  "postcode": "IP123NF",
+  "w3w": "rekindle.statue.field",
+  "notes": "<p></p>"
+}
