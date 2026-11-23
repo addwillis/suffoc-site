@@ -1,8 +1,6 @@
 {
   "name": "Sarah Mansel",
-  "roles": [
-    "Chair"
-  ],
   "email": "chair@suffoc.uk",
+  "photo": "/images/sarah-mansel.jpg",
   "committee": true
 }
