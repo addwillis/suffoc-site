@@ -3,6 +3,11 @@
   "date": "2026-05-17",
   "level": "Regional",
   "area": "Sudbury",
+  "about": "<p></p>",
+  "fees": {
+    "chipHire": "£1",
+    "siacHire": "£3"
+  },
   "resultLinks": {
     "results": "http://www.suffoc.co.uk/results/2026/Sudbury/index.html",
     "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=112544",
@@ -16,5 +21,10 @@
         "url": "https://www.suffoc.routegadget.co.uk/rg2/#137"
       }
     ]
+  },
+  "comments": {
+    "planner": "<p>As a novice planner in the 'urban environment', I had a relatively steep learning curve. However, that was made much easier with the help and guidance of Richard and Clive to whom I owe a massive thanks.&nbsp;</p><p>As far as Sudbury goes, the intent was to try and get the courses to the northern part of Sudbury which offers a slightly different challenge. Unfortunately, only the longer 3 courses where able to venture that far and still remain within the distance guidelines. Maybe a treat next time for those that missed out.</p><p>Thank you for all the positive comments received and even more so to those who kindly offered me a few observations for future planning consideration.&nbsp;</p><p>Finally thank you to you all for making the trip to Sudbury and to those who helped with control collecting at the end.</p><p>Next stop Canterbury.....&nbsp;</p><p>Gareth Radcliffe</p>",
+    "organiser": "<p>I hope you all enjoyed your courses today. I was impressed by the leisure centre and thank them for use of their facilities including the cafe. Thank you to Gareth for the excellent courses and Richard for the calm controlling.&nbsp; Thank you to all the SUFFOC helpers who made my life easy.</p><p>See a lot of you at Canterbury next weekend!</p><p>Clive Wilkinson</p>",
+    "controller": "<p>My task as Controller was made easy by the efficient organisation by all the helpers. And many thanks to Gareth for his excellent courses. Hope you all enjoyed your courses on a sunny afternoon in Sudbury. We received lots of positive comments about the courses, it caught a few runners out.</p><p>Richard Bonnett</p>"
   }
 }
