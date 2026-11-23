@@ -1,6 +1,17 @@
 {
   "members": [
     {
+      "name": "Adam Willis",
+      "roles": [
+        {
+          "role": "Webmaster",
+          "email": "web+ada"
+        }
+      ],
+      "photo": "/images/IMG_3258 - Copy.jpg",
+      "id": "adam-willis"
+    },
+    {
       "name": "Andrew Elliott",
       "roles": [
         {
