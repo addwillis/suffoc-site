@@ -142,6 +142,20 @@ content:
           - "Rod Mansel"
           - "Sarah Mansel"
           # END members
+      - name: riskAssessor
+        label: Risk Assessor
+        type: select
+        options:
+          values:
+          # BEGIN members
+          - "Gareth Radcliffe"
+          - "Louise Walker"
+          - "Mike Bickle"
+          - "Paul Beckett"
+          - "Phil Halford"
+          - "Rod Mansel"
+          - "Sarah Mansel"
+          # END members
       - name: others
         label: Other officials (optional)
         type: object

@@ -285,7 +285,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 60';
+const BUILD = 'build 61';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -308,7 +308,7 @@ function upgradeEvent(e){
   if (doc.oldPage && !o.link) o.link = doc.oldPage;
   if (doc.pdf && !o.pdf) o.pdf = doc.pdf;
   const d = Object.assign({}, e.detail || {});
-  ['organiser', 'planner', 'controller'].forEach(k => { if (off[k] && !d[k]) d[k] = off[k]; });
+  ['organiser', 'planner', 'controller', 'riskAssessor'].forEach(k => { if (off[k] && !d[k]) d[k] = off[k]; });
   if (off.others && !d.officials) d.officials = off.others;
   ['address', 'postcode', 'gridRef', 'w3w'].forEach(k => { if (loc[k] && !(d[k] && d[k].length)) d[k] = loc[k]; });
   if (e.about && !d.about) d.about = e.about;
@@ -332,8 +332,8 @@ function loadData(areas, events){
   EVENTS = events.map(e => {
     const o = upgradeEvent(e);
     const d = o.detail;
-    if (d && (d.about || d.postcode || d.w3w || d.organiser || d.planner || d.controller)) {
-      o.detail = Object.assign({}, d, { address: (d.address || []).filter(Boolean), officials: [['Organiser', d.organiser], ['Planner', d.planner], ['Controller', d.controller]].filter(x => x[1]).map(x => { const id = memberId(x[1]); return [x[0], id ? MEMBERS[id].name : personKey(x[1]) ? String(x[1]).replace(/^.*\//, '').replace(/\.json$/i, '') : x[1], id ? '#person-' + id : '']; }).concat(pairs(d.officials, 'role', 'name').map(x => { const id = memberId(x[1]); return [x[0], x[1], id ? '#person-' + id : '']; })), docs: pairs(d.docs, 'label', 'url') });
+    if (d && (d.about || d.postcode || d.w3w || d.organiser || d.planner || d.controller || d.riskAssessor)) {
+      o.detail = Object.assign({}, d, { address: (d.address || []).filter(Boolean), officials: [['Organiser', d.organiser], ['Planner', d.planner], ['Controller', d.controller], ['Risk Assessor', d.riskAssessor]].filter(x => x[1]).map(x => { const id = memberId(x[1]); return [x[0], id ? MEMBERS[id].name : personKey(x[1]) ? String(x[1]).replace(/^.*\//, '').replace(/\.json$/i, '') : x[1], id ? '#person-' + id : '']; }).concat(pairs(d.officials, 'role', 'name').map(x => { const id = memberId(x[1]); return [x[0], x[1], id ? '#person-' + id : '']; })), docs: pairs(d.docs, 'label', 'url') });
     } else delete o.detail;
     o.loc = o.detail && o.detail.gridRef ? gridToLatLon(o.detail.gridRef) : null;
     return o;
@@ -823,7 +823,7 @@ function areaPage(id){
 function personPage(id){
   const m = MEMBERS[id];
   if (!m) return VIEWS.club();
-  const roles = ev => { const d = ev.detail || {}, r = []; [['Organiser', d.organiser], ['Planner', d.planner], ['Controller', d.controller]].forEach(x => { if (x[1] && memberId(x[1]) === id) r.push(x[0]); }); (d.officials || []).forEach(x => { if (x[1] && memberId(x[1]) === id && !r.includes(x[0])) r.push(x[0]); }); return r; };
+  const roles = ev => { const d = ev.detail || {}, r = []; [['Organiser', d.organiser], ['Planner', d.planner], ['Controller', d.controller], ['Risk Assessor', d.riskAssessor]].forEach(x => { if (x[1] && memberId(x[1]) === id) r.push(x[0]); }); (d.officials || []).forEach(x => { if (x[1] && memberId(x[1]) === id && !r.includes(x[0])) r.push(x[0]); }); return r; };
   const mine = EVENTS.map(ev => ({ ev: ev, r: roles(ev) })).filter(x => x.r.length).sort((a, b) => parseDate(b.ev.date) - parseDate(a.ev.date));
   const row = x => { const e = x.ev, d = parseDate(e.date); return `<div class="rrow">
       <div class="datebox" aria-hidden="true"><span class="wd">${d.toLocaleString('en-GB', { weekday:'short' })}</span><span class="day">${d.getDate()}</span><span class="mon">${d.toLocaleString('en-GB', { month:'short' })}</span></div>
