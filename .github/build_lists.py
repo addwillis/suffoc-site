@@ -22,7 +22,14 @@ for folder in ('areas', 'members', 'events', 'levels', 'series'):
 # dropdown choices in the CMS form: between "# BEGIN x" and "# END x" markers
 yml = open('.pages.yml', encoding='utf-8').read()
 for name in ('areas', 'members', 'levels', 'series'):
-    names = sorted({str(i.get('name', '')).strip() for i in lists[name] if str(i.get('name', '')).strip()}, key=str.lower)
+    def key(i):
+        try: o = float(i.get('order'))
+        except (TypeError, ValueError): o = 1e9
+        return (o, str(i.get('name', '')).lower())
+    names = []
+    for i in sorted(lists[name], key=key):
+        n = str(i.get('name', '')).strip()
+        if n and n not in names: names.append(n)
     def fill(m, names=names, name=name):
         ind = m.group(1)
         body = ''.join('%s- %s\n' % (ind, json.dumps(n, ensure_ascii=False)) for n in names)

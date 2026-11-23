@@ -36,9 +36,9 @@ content:
     options:
       values:
       # BEGIN levels
-      - "Local"
       - "National"
       - "Regional"
+      - "Local"
       # END levels
   - name: series
     label: Event series
@@ -329,12 +329,16 @@ content:
   filename: '{primary}.json'
   view:
     primary: name
-    fields: [name]
+    fields: [name, order]
   fields:
   - name: name
     label: Name
     type: string
     required: true
+  - name: order
+    label: Order in the dropdown
+    type: number
+    description: 1 comes first. National 1, Regional 2, Local 3.
 - name: series
   label: Event series
   type: collection

@@ -121,7 +121,8 @@ p{margin:0 0 1rem;max-width:65ch}
 .datebox .wd{display:block;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:#BFD3EA}
 .datebox .day{display:block;font-size:2.2rem;font-weight:700;line-height:1}
 .datebox .mon{display:block;font-size:1rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
-.pill{display:inline-block;font:600 .75rem/1 var(--body);letter-spacing:.06em;text-transform:uppercase;background:var(--tint);color:var(--navy);padding:.3rem .55rem;border-radius:999px;margin-bottom:.45rem}
+.pill{text-decoration:none;display:inline-block;font:600 .75rem/1 var(--body);letter-spacing:.06em;text-transform:uppercase;background:var(--tint);color:var(--navy);padding:.3rem .55rem;border-radius:999px;margin-bottom:.45rem}
+a.pill:hover{background:var(--navy);color:#fff}
 .meta{color:var(--muted);margin:.3rem 0 .7rem;font-weight:500}
 .links{display:flex;flex-wrap:wrap;gap:8px}
 
@@ -293,7 +294,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 66';
+const BUILD = 'build 67';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -308,7 +309,9 @@ function loadNews(list){
 }
 /* Events are stored in sections (entry, officials, location, documents...) for easy editing in Pages CMS.
    This flattens them into the shape the rest of the site uses. The older flat layout is still understood. */
-const pills = (e, showLocal) => (e.level && (showLocal || e.level !== 'Local') ? `<span class="pill">${esc(e.level)}</span> ` : '') + (e.series ? `<span class="pill">${esc(e.series)}</span>` : '');
+const tagSlug = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const tagPill = (kind, v) => `<a class="pill" href="#tag-${kind}-${tagSlug(v)}" title="See all ${esc(v)} events">${esc(v)}</a>`;
+const pills = (e, showLocal) => (e.level && (showLocal || e.level !== 'Local') ? tagPill('level', e.level) + ' ' : '') + (e.series ? tagPill('series', e.series) : '');
 function upgradeEvent(e){
   const o = Object.assign({}, e);
   if (!o.level && o.type) o.level = o.type;  /* older entries used a single Event type */
@@ -829,6 +832,23 @@ function areaPage(id){
       <section class="section"><div class="section-head"><h2>Previous events</h2></div>${old.length ? pastByYear(old) : '<div class="empty">No previous events are listed for this area yet.</div>'}</section>
     </div>`;
 }
+/* A tag page: every event of one level or series, upcoming and previous. */
+function tagPage(kind, slug){
+  const key = kind === 'series' ? 'series' : 'level';
+  const here = EVENTS.filter(e => e[key] && tagSlug(e[key]) === slug);
+  if (!here.length) return VIEWS.events();
+  const name = here[0][key];
+  const up = here.filter(e => !isPast(e)).sort((x, y) => parseDate(x.date) - parseDate(y.date)), old = here.filter(isPast).sort((x, y) => parseDate(y.date) - parseDate(x.date));
+  return `<section class="pagehead"><div class="wrap">
+      <a class="back" href="#events">&larr; Back to Events</a>
+      <p class="meta" style="margin:.8rem 0 0">${kind === 'series' ? 'Event series' : 'Event level'}</p>
+      <h1 class="event-title">${esc(name)}</h1>
+    </div></section>
+    <div class="wrap">
+      ${up.length ? `<section class="section"><div class="section-head"><h2>Coming up</h2></div><div class="events">${up.map(eventCard).join('')}</div></section>` : ''}
+      <section class="section"><div class="section-head"><h2>Previous events</h2></div>${old.length ? pastByYear(old) : '<div class="empty">No previous events are listed yet.</div>'}</section>
+    </div>`;
+}
 /* One page per club member: their details and every event they have organised, planned or controlled. */
 function personPage(id){
   const m = MEMBERS[id];
@@ -951,6 +971,7 @@ function route(){
   let key = 'home', html;
   if (h.startsWith('club-')) { key = 'club'; html = clubPage(h.slice(5)); }
   else if (h.startsWith('person-')) { key = 'club'; html = personPage(h.slice(7)); }
+  else if (/^tag-(level|series)-/.test(h)) { key = 'events'; html = tagPage(h.split('-')[1], h.replace(/^tag-(level|series)-/, '')); }
   else if (h.startsWith('area-')) { key = 'events'; html = areaPage(h.slice(5)); }
   else if (h.startsWith('news-')) { key = 'news'; html = newsPage(h.slice(5)); }
   else if (h.startsWith('event-')) { key = 'events'; html = eventPage(h.slice(6)); }
