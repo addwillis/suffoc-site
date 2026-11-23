@@ -177,6 +177,9 @@ dl.facts dd a:hover{color:var(--sky)}
 .rrow .datebox{background:#E6EAF0;color:var(--navy)}
 .rrow .datebox .wd{color:#5B6B7F}
 .rrow .datebox .mon{color:#5B6B7F}
+.rrow.up .datebox{background:var(--navy);color:#fff}
+.rrow.up .datebox .wd{color:#BFD3EA}
+.rrow.up .datebox .mon{color:var(--gold)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .rrow h3{font-size:1.1rem;margin:0}
 .rrow .links{grid-column:2;margin-top:.35rem}
@@ -226,8 +229,8 @@ dl.facts dd a:hover{color:var(--sky)}
 .legend i{display:inline-block;width:16px;height:16px;border-radius:50%;border:3px solid var(--navy);background:#fff;vertical-align:-3px;margin-right:6px}
 .legend i.up{background:var(--gold)}
 .committee{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.1rem;margin-top:1.2rem}
-.mcard{text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column;align-items:center;text-align:center;background:#fff;border:1px solid var(--line,#e3e8ef);border-top:6px solid var(--navy);border-radius:12px;padding:1.4rem 1.1rem 1.3rem}
-.mcard:hover,.mcard:focus-visible{transform:translateY(-3px);box-shadow:0 8px 22px rgba(11,42,85,.16)}
+.mcard{text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s,border-top-color .15s;display:flex;flex-direction:column;align-items:center;text-align:center;background:#fff;border:1px solid var(--line,#e3e8ef);border-top:6px solid var(--navy);border-radius:12px;padding:1.4rem 1.1rem 1.3rem}
+.mcard:hover,.mcard:focus-visible{border-top-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 22px rgba(11,42,85,.16)}
 .mcard:hover h3{text-decoration:underline;text-underline-offset:3px}
 .mcard .mimg{width:120px;height:120px;border-radius:50%;object-fit:cover;flex:none;border:4px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 6px 16px rgba(11,42,85,.2)}
 .mcard .minit{width:120px;height:120px;border-radius:50%;flex:none;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font:700 2.2rem var(--body);border:4px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 6px 16px rgba(11,42,85,.2)}
@@ -318,7 +321,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 96';
+const BUILD = 'build 99';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -924,13 +927,13 @@ function personPage(id){
   if (!m) return VIEWS.club();
   const roles = ev => { const d = ev.detail || {}, r = []; [['Organiser', d.organiser], ['Planner', d.planner], ['Controller', d.controller], ['Risk Assessor', d.riskAssessor]].forEach(x => { if (x[1] && memberId(x[1]) === id) r.push(x[0]); }); (d.officials || []).forEach(x => { if (x[1] && memberId(x[1]) === id && !r.includes(x[0])) r.push(x[0]); }); return r; };
   const mine = EVENTS.map(ev => ({ ev: ev, r: roles(ev) })).filter(x => x.r.length).sort((a, b) => parseDate(b.ev.date) - parseDate(a.ev.date));
-  const row = x => { const e = x.ev, d = parseDate(e.date); return `<div class="rrow">
+  const row = x => { const e = x.ev, d = parseDate(e.date); return `<div class="rrow${isPast(e) ? '' : ' up'}">
       <div class="datebox" aria-hidden="true"><span class="wd">${d.toLocaleString('en-GB', { weekday:'short' })}</span><span class="day">${d.getDate()}</span><span class="mon">${d.toLocaleString('en-GB', { month:'short' })}</span></div>
       <span class="sr">${fmtShort.format(d)}</span>
       <div>${pills(e, true)}<h3>${e.detail ? `<a class="title-link" href="#event-${esc(e.id)}">${esc(e.title)}</a>` : esc(e.title)}</h3></div>
       <p class="tbc">${esc(x.r.join(', '))}</p></div>`; };
   return `<section class="pagehead"><div class="wrap">
-      <a class="back" href="#club">&larr; Back to Club</a>
+      ${m.roles.length ? '<a class="back" href="#club-committee">&larr; Back to Committee</a>' : '<a class="back" href="#club">&larr; Back to Club</a>'}
       <div class="person">
         ${m.photo ? `<img class="personimg" src="${esc(imgSrc(m.photo))}" alt="${esc(m.name)}">` : ''}
         <div><h1 class="event-title">${esc(m.name)}</h1></div>
