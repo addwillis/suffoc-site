@@ -294,7 +294,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 72';
+const BUILD = 'build 73';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -909,9 +909,9 @@ function feesCard(e){
   if (t('lateDeadline')) lines.push(`Late online entry is open until <b>${esc(day(t('lateDeadline')))}</b>.`);
   if (hasLate) lines.push('Entry on the day is available, subject to map availability.');
   return `<section class="card"><h3>Entry fees</h3>
+    ${lines.map(l => `<p style="margin:.5rem 0 0">${l}</p>`).join('')}
     <div class="cwrap"><table class="ctable"><thead><tr><th>Who</th>${hasEarly ? `<th>${both ? 'Standard' : 'Price'}</th>` : ''}${both ? '<th>Late / on the day</th>' : (!hasEarly ? '<th>Price</th>' : '')}</tr></thead>
       <tbody>${rows.map(r => `<tr><td><b>${esc(r.category)}</b></td>${hasEarly ? `<td class="num">${esc(gbp(r.early))}</td>` : ''}${hasLate && (both || !hasEarly) ? `<td class="num">${esc(gbp(r.late))}</td>` : ''}</tr>`).join('')}</tbody></table></div>
-    ${lines.length ? `<p style="margin:.8rem 0 0">${lines.join(' ')}</p>` : ''}
     ${chip ? `<p style="margin:.6rem 0 0"><b>Chip hire:</b> ${esc(gbp(chip))}</p>` : ''}
     ${siac ? `<p style="margin:.3rem 0 0"><b>SIAC chip hire:</b> ${esc(gbp(siac))}</p>` : ''}
     ${note ? `<p class="cnote" style="margin:.5rem 0 0">${esc(note)}</p>` : ''}</section>`;
