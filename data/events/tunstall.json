@@ -3,13 +3,60 @@
   "date": "2026-11-29",
   "level": "Regional",
   "area": "Tunstall Forest",
-  "timings": {
-    "startsFrom": "10:30",
-    "startsTo": "13:00",
-    "courseClose": "14:00"
+  "about": "Barnes Carr and The Birches is in the south-east portion of Tunstall Forest, in the East Suffolk Sandlings. The area has interesting terrain, with a variety of water and relief features and some nice areas of deciduous woodland.",
+  "location": {
+    "address": [
+      "Tunstall Forest",
+      "B1078 Orford Road, FR22",
+      "Tunstall"
+    ],
+    "postcode": "IP12 2AP",
+    "gridRef": "TM 39950 52750",
+    "w3w": "economies.winter.windmills"
+  },
+  "courses": {
+    "white": {
+      "length": "1.9",
+      "controls": "13",
+      "climb": "15"
+    },
+    "yellow": {
+      "length": "2.2",
+      "controls": "12",
+      "climb": "20"
+    },
+    "orange": {
+      "length": "3.3",
+      "controls": "11",
+      "climb": "15"
+    },
+    "lightGreen": {
+      "length": "4.0",
+      "controls": "14",
+      "climb": "25"
+    },
+    "shortGreen": {
+      "length": "4.0",
+      "controls": "13",
+      "climb": "29"
+    },
+    "green": {
+      "length": "4.4",
+      "controls": "17",
+      "climb": "35"
+    },
+    "blue": {
+      "length": "7.1",
+      "controls": "26",
+      "climb": "45"
+    },
+    "brown": {
+      "length": "8.9",
+      "controls": "29",
+      "climb": "55"
+    }
   },
   "fees": {
-    "entryUrl": "https://racesignup.co.uk/tunstall-forest-2026",
     "rows": [
       {
         "category": "Senior member",
@@ -32,20 +79,14 @@
     "chipHire": "£1",
     "siacHire": "£3"
   },
+  "timings": {
+    "startsFrom": "10:30",
+    "startsTo": "13:00",
+    "courseClose": "14:00"
+  },
   "officials": {
     "organiser": "Louise Walker",
     "planner": "Gareth Radcliffe",
     "controller": "Paul Beckett"
-  },
-  "location": {
-    "address": [
-      "Tunstall Forest",
-      "B1078 Orford Road, FR22",
-      "Tunstall"
-    ],
-    "postcode": "IP12 2AP",
-    "gridRef": "TM 39950 52750",
-    "w3w": "economies.winter.windmills"
-  },
-  "about": "Barnes Carr and The Birches is in the south-east portion of Tunstall Forest, in the East Suffolk Sandlings. The area has interesting terrain, with a variety of water and relief features and some nice areas of deciduous woodland."
+  }
 }
