@@ -120,6 +120,7 @@ content:
         - Yellow
         - Orange
         - Light Green
+        - Short Green
         - Green
         - Blue
         - Brown
@@ -278,6 +279,10 @@ content:
     - name: pdf
       label: Preliminary details PDF link
       type: string
+    - name: britishOrienteering
+      label: British Orienteering event page link
+      type: string
+      description: The event's page on britishorienteering.org.uk
     - name: oldPage
       label: Link to existing event page
       type: string

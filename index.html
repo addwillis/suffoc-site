@@ -294,7 +294,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 67';
+const BUILD = 'build 69';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -320,6 +320,7 @@ function upgradeEvent(e){
   if (en.note && !o.entryNote) o.entryNote = en.note;
   if (doc.oldPage && !o.link) o.link = doc.oldPage;
   if (doc.pdf && !o.pdf) o.pdf = doc.pdf;
+  if (doc.britishOrienteering && !o.boUrl) o.boUrl = String(doc.britishOrienteering).trim();
   const d = Object.assign({}, e.detail || {});
   ['organiser', 'planner', 'controller', 'riskAssessor'].forEach(k => { if (off[k] && !d[k]) d[k] = off[k]; });
   if (off.others && !d.officials) d.officials = off.others;
@@ -876,7 +877,7 @@ function personPage(id){
         ${old.length ? `<div class="rlist">${old.map(row).join('')}</div>` : '<div class="empty">No events are listed for this person yet.</div>'}</section>
     </div>`;
 }
-const COURSE_COLOURS = { white:'#ffffff', yellow:'#f6d51b', orange:'#f28c28', lightgreen:'#a6dc86', green:'#2f8f46', blue:'#2c64c8', brown:'#7b4b2a', black:'#1c1c1c' };
+const COURSE_COLOURS = { white:'#ffffff', yellow:'#f6d51b', orange:'#f28c28', lightgreen:'#a6dc86', shortgreen:'#2f8f46', green:'#2f8f46', blue:'#2c64c8', brown:'#7b4b2a', black:'#1c1c1c' };
 function coursesCard(e){
   const list = (Array.isArray(e.courses) ? e.courses : []).filter(c => c && (c.colour || c.name || c.length || c.controls));
   if (!list.length) return '';
@@ -911,6 +912,7 @@ function eventPage(id){
   const areaName = area ? area.name : e.area, areaLink = area && !area.auto ? '#area-' + e.area : '';
   const docs = [];
   if (e.pdf) docs.push(['Preliminary details (PDF)', e.pdf]);
+  if (e.boUrl) docs.push(['British Orienteering event page', e.boUrl]);
   (d.docs || []).forEach(x => docs.push(x));
   return `<section class="pagehead"><div class="wrap">
       <a class="back" href="#events">&larr; Back to Events</a><br>
