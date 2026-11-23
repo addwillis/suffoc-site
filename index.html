@@ -305,7 +305,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 85';
+const BUILD = 'build 86';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -999,7 +999,7 @@ function eventPage(id){
           <div class="links" style="margin-top:.8rem">${docs.map(x => `<a class="btn small line" href="${esc(x[1])}" ${ext}>${esc(x[0])}</a>`).join('')}</div></div>` : ''}
       </aside>
       <div class="stack">
-        ${d.about ? `<section class="card"><h3>${ct('about', 'Event Overview')}</h3><div class="prose" style="margin-top:.6rem">${richHTML(d.about)}</div></section>` : ''}
+        ${String(d.about || '').replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim() ? `<section class="card"><h3>${ct('about', 'Event Overview')}</h3><div class="prose" style="margin-top:.6rem">${richHTML(d.about)}</div></section>` : ''}
         ${e.results && e.results.length ? `<section class="card"><h3>${ct('results', 'Results')}</h3><div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small gold" href="${esc(l[1])}" ${linkExt(l[1])}>${esc(l[0])}</a>`).join('')}</div></section>`
           : (isPast(e) ? `<section class="card todo"><h3>${ct('results', 'Results')}</h3><p style="margin:.6rem 0 0">Results to follow.</p></section>` : '')}
         ${(loc || areaName || d.address.length || d.postcode || d.gridRef || d.w3w) ? `<section class="card"><h3>${ct('newcomers', 'Event Location')}</h3>
@@ -1015,8 +1015,7 @@ function eventPage(id){
           </div>
           ${loc ? `<div class="map"><div class="leafmap single" data-map="event:${esc(e.id)}">${mapSVG(e.area)}${FALLBACK_NOTE}</div></div>` : ''}
         </section>` : ''}
-        ${coursesCard(e)}${feesCard(e)}${(coursesCard(e) || feesCard(e)) ? '' : `<section class="card todo"><h3>${ct('coin', 'Courses, Fees and Entry')}</h3>
-          <p style="margin:.6rem 0 0">To add: courses and lengths, entry fees, how to enter, start times and parking. These come from the preliminary details once confirmed.</p></section>`}
+        ${coursesCard(e)}${feesCard(e)}
       </div>
     </div></div>`;
 }
