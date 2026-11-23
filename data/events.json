@@ -21,6 +21,60 @@
       "id": "clare-2026"
     },
     {
+      "title": "SUFFOC Mid-Week Street-O 4 Elmswell",
+      "date": "2026-11-23",
+      "level": "Local",
+      "series": "Mid-Week Street-O",
+      "area": "Elmswell",
+      "about": "<p></p>",
+      "location": {
+        "address": [
+          "The Tavern",
+          "School Road",
+          "Elmswell",
+          "Suffolk"
+        ],
+        "postcode": "IP30 9EE",
+        "gridRef": "TL 98760 63859",
+        "w3w": "diner.sock.meatball"
+      },
+      "courses": [
+        {
+          "name": "45 min Score Course",
+          "colour": "White"
+        }
+      ],
+      "fees": {
+        "entryUrl": "https://racesignup.co.uk/2026-street-O-4",
+        "rows": [
+          {
+            "category": "Senior member",
+            "early": "4"
+          },
+          {
+            "category": "Se",
+            "early": "4"
+          },
+          {
+            "category": "Junior",
+            "early": "3"
+          }
+        ],
+        "earlyDeadline": "7 February"
+      },
+      "timings": {
+        "startsFrom": "18:00",
+        "startsTo": "18:30",
+        "courseClose": "19:15"
+      },
+      "officials": {
+        "organiser": "Gareth Radcliffe",
+        "planner": "Gareth Radcliffe",
+        "riskAssessor": "Sarah Mansel"
+      },
+      "id": "elmswell-street-o-4"
+    },
+    {
       "title": "SUFFOC Mid-Week Street-O 2 Hardwick",
       "date": "2026-12-08",
       "level": "Local",
