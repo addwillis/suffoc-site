@@ -69,7 +69,9 @@ content:
       # END areas
   - name: about
     label: EVENT OVERVIEW
-    type: text
+    type: rich-text
+    options:
+      format: html
     description: A short summary of the event, e.g. what to expect, the terrain and who it suits.
   - name: location
     label: EVENT LOCATION
@@ -94,125 +96,42 @@ content:
   - name: courses
     label: COURSES
     type: object
-    description: Fill in length, controls or climb for each course you are using and leave the others blank. The Courses table only appears once something is filled in.
+    list: true
+    description: Add one entry per course. Leave empty until the courses are confirmed.
     fields:
-    - name: white
-      label: White
-      type: object
-      fields:
-      - name: length
-        label: Length (km)
-        type: string
-      - name: controls
-        label: Controls
-        type: string
-      - name: climb
-        label: Climb (m)
-        type: string
-    - name: yellow
-      label: Yellow
-      type: object
-      fields:
-      - name: length
-        label: Length (km)
-        type: string
-      - name: controls
-        label: Controls
-        type: string
-      - name: climb
-        label: Climb (m)
-        type: string
-    - name: orange
-      label: Orange
-      type: object
-      fields:
-      - name: length
-        label: Length (km)
-        type: string
-      - name: controls
-        label: Controls
-        type: string
-      - name: climb
-        label: Climb (m)
-        type: string
-    - name: lightGreen
-      label: Light Green
-      type: object
-      fields:
-      - name: length
-        label: Length (km)
-        type: string
-      - name: controls
-        label: Controls
-        type: string
-      - name: climb
-        label: Climb (m)
-        type: string
-    - name: shortGreen
-      label: Short Green
-      type: object
-      fields:
-      - name: length
-        label: Length (km)
-        type: string
-      - name: controls
-        label: Controls
-        type: string
-      - name: climb
-        label: Climb (m)
-        type: string
-    - name: green
-      label: Green
-      type: object
-      fields:
-      - name: length
-        label: Length (km)
-        type: string
-      - name: controls
-        label: Controls
-        type: string
-      - name: climb
-        label: Climb (m)
-        type: string
-    - name: blue
-      label: Blue
-      type: object
-      fields:
-      - name: length
-        label: Length (km)
-        type: string
-      - name: controls
-        label: Controls
-        type: string
-      - name: climb
-        label: Climb (m)
-        type: string
-    - name: brown
-      label: Brown
-      type: object
-      fields:
-      - name: length
-        label: Length (km)
-        type: string
-      - name: controls
-        label: Controls
-        type: string
-      - name: climb
-        label: Climb (m)
-        type: string
-    - name: black
-      label: Black
-      type: object
-      fields:
-      - name: length
-        label: Length (km)
-        type: string
-      - name: controls
-        label: Controls
-        type: string
-      - name: climb
-        label: Climb (m)
-        type: string
+    - name: name
+      label: Course name
+      type: string
+      description: e.g. Green, Short Green, Course 1, Short, Medium, Long
+    - name: colour
+      label: Colour dot (optional)
+      type: select
+      description: Only needed if the name isn't already a colour, e.g. a coloured Short course.
+      options:
+        values:
+        - White
+        - Yellow
+        - Orange
+        - Light Green
+        - Short Green
+        - Green
+        - Blue
+        - Brown
+        - Black
+    - name: length
+      label: Length (km)
+      type: string
+      description: e.g. 3.2
+    - name: controls
+      label: Number of controls
+      type: string
+    - name: climb
+      label: Climb (m, optional)
+      type: string
+    - name: note
+      label: Note (optional)
+      type: string
+      description: e.g. Good for beginners
   - name: fees
     label: ENTRY FEES
     type: object

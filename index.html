@@ -296,7 +296,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 78';
+const BUILD = 'build 80';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -897,7 +897,8 @@ function coursesCard(e){
   const list = Array.isArray(cs) ? cs.filter(c => c && (c.colour || c.name || c.length || c.controls))  /* older list layout */
     : NAMES.map(n => Object.assign({ colour: n[1] }, cs[n[0]] || {})).filter(c => ['length', 'controls', 'climb'].some(k => String(c[k] == null ? '' : c[k]).trim()));
   if (!list.length) return '';
-  const col = c => COURSE_COLOURS[String(c.colour || '').toLowerCase().replace(/[^a-z]/g, '')] || '';
+  const norm = s => String(s || '').toLowerCase().replace(/[^a-z]/g, '');
+  const col = c => COURSE_COLOURS[norm(c.colour)] || COURSE_COLOURS[norm(c.name)] || '';
   const has = k => list.some(c => String(c[k] || '').trim());
   const km = v => { v = String(v || '').trim(); return v ? (/^[\d.]+$/.test(v) ? v + ' km' : v) : ''; };
   const m = v => { v = String(v || '').trim(); return v ? (/^[\d.]+$/.test(v) ? v + ' m' : v) : ''; };
@@ -960,7 +961,7 @@ function eventPage(id){
           <div class="links" style="margin-top:.8rem">${docs.map(x => `<a class="btn small line" href="${esc(x[1])}" ${ext}>${esc(x[0])}</a>`).join('')}</div></div>` : ''}
       </aside>
       <div class="stack">
-        ${d.about ? `<section class="card"><h3>${ct('about', 'Event Overview')}</h3><p style="margin-top:.6rem">${esc(d.about)}</p></section>` : ''}
+        ${d.about ? `<section class="card"><h3>${ct('about', 'Event Overview')}</h3><div class="prose" style="margin-top:.6rem">${richHTML(d.about)}</div></section>` : ''}
         ${e.results && e.results.length ? `<section class="card"><h3>${ct('results', 'Results')}</h3><div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small gold" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div></section>`
           : (isPast(e) ? `<section class="card todo"><h3>${ct('results', 'Results')}</h3><p style="margin:.6rem 0 0">Results to follow.</p></section>` : '')}
         ${(loc || areaName || d.address.length || d.postcode || d.gridRef || d.w3w) ? `<section class="card"><h3>${ct('newcomers', 'Event Location')}</h3>
