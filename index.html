@@ -312,7 +312,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 88';
+const BUILD = 'build 89';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -389,7 +389,7 @@ let NEWS = [], MEMBERS = {};
 const personKey = v => String(v == null ? '' : v).replace(/^.*\//, '').replace(/\.json$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
 function loadMembers(list){
   MEMBERS = {};
-  list.forEach(m => { if (m && m.name) MEMBERS[m.id || personKey(m.name)] = m; });
+  list.forEach(m => { if (m && m.name) { m.roles = (Array.isArray(m.roles) ? m.roles : (m.roles ? [m.roles] : (m.role ? [m.role] : []))).map(r => String(r).trim()).filter(Boolean); MEMBERS[m.id || personKey(m.name)] = m; } });
 }
 /* Which member does a name (or the file path Pages CMS may store) refer to? */
 function memberId(v){
@@ -925,7 +925,7 @@ function personPage(id){
       <div class="person">
         ${m.photo ? `<img class="personimg" src="${esc(imgSrc(m.photo))}" alt="${esc(m.name)}">` : ''}
         <div><h1 class="event-title">${esc(m.name)}</h1>
-          ${m.role ? `<p class="lead" style="margin:.5rem 0 0">${esc(m.role)}</p>` : ''}
+          ${m.roles.length ? `<p class="lead" style="margin:.5rem 0 0">${esc(m.roles.join(' · '))}</p>` : ''}
           ${m.email ? `<p style="margin:.8rem 0 0"><a class="btn small gold" href="mailto:${esc(m.email)}">Email ${esc(String(m.name).split(' ')[0])}</a></p>` : ''}</div>
       </div>
     </div></section>
@@ -1029,14 +1029,15 @@ function eventPage(id){
 
 /* The committee: every club member ticked "Show on the committee page", chairs and officers first. */
 function committeePage(){
-  const rank = r => { r = String(r || '').toLowerCase(); const i = ['chair', 'vice', 'secretary', 'treasurer'].findIndex(k => r.indexOf(k) === 0 || r.indexOf(' ' + k) > -1); return i < 0 ? 9 : i; };
+  const rank = r => { r = String(r || '').toLowerCase(); const i = ['chair', 'vice', 'secretary', 'treasurer'].findIndex(k => r.indexOf(k) === 0); return i < 0 ? 9 : i; };
+  const best = m => Math.min(9, ...m.roles.map(rank));
   const list = Object.keys(MEMBERS).map(k => Object.assign({ id: k }, MEMBERS[k])).filter(m => m.committee === true || String(m.committee).toLowerCase() === 'true')
-    .sort((a, b) => rank(a.role) - rank(b.role) || String(a.role || '').localeCompare(String(b.role || '')) || String(a.name).localeCompare(String(b.name)));
+    .sort((a, b) => best(a) - best(b) || a.roles.join().localeCompare(b.roles.join()) || String(a.name).localeCompare(String(b.name)));
   const initials = n => String(n).split(/\s+/).filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
   const card = m => `<article class="mcard">
       ${m.photo ? `<img class="mimg" src="${esc(imgSrc(m.photo))}" alt="${esc(m.name)}" loading="lazy">` : `<span class="minit" aria-hidden="true">${esc(initials(m.name))}</span>`}
       <div><h3><a class="title-link" href="#person-${esc(m.id)}">${esc(m.name)}</a></h3>
-        ${m.role ? `<p class="mrole">${esc(m.role)}</p>` : ''}
+        ${m.roles.length ? `<p class="mrole">${esc(m.roles.join(' · '))}</p>` : ''}
         ${m.email ? `<a class="mmail" href="mailto:${esc(m.email)}">${esc(m.email)}</a>` : ''}</div></article>`;
   return `${pageHead('Committee', 'The people who run the club.', 'club')}
   <div class="wrap"><section class="section">

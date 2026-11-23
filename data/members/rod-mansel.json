@@ -1,6 +1,8 @@
 {
   "name": "Rod Mansel",
-  "role": "Secretary",
+  "roles": [
+    "Secretary"
+  ],
   "email": "secretary@suffoc.uk",
   "photo": "/images/rod-mansel.jpg",
   "committee": true

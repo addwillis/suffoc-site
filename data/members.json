@@ -2,7 +2,9 @@
   "members": [
     {
       "name": "Gareth Radcliffe",
-      "role": "Captain",
+      "roles": [
+        "Captain"
+      ],
       "email": "captain@suffoc.co.uk",
       "photo": "/images/Gareth Radcliffe-1.jpg",
       "committee": true,
@@ -26,7 +28,9 @@
     },
     {
       "name": "Rod Mansel",
-      "role": "Secretary",
+      "roles": [
+        "Secretary"
+      ],
       "email": "secretary@suffoc.uk",
       "photo": "/images/rod-mansel.jpg",
       "committee": true,
@@ -34,7 +38,9 @@
     },
     {
       "name": "Sarah Mansel",
-      "role": "Chair",
+      "roles": [
+        "Chair"
+      ],
       "email": "chair@suffoc.uk",
       "committee": true,
       "id": "sarah-mansel"

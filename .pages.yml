@@ -414,16 +414,18 @@ content:
   filename: '{primary}.json'
   view:
     primary: name
-    fields: [name, role]
+    fields: [name, roles]
   fields:
   - name: name
     label: Name
     type: string
     required: true
-  - name: role
-    label: Club role (optional)
+  - name: roles
+    label: Club roles (optional, up to 4)
     type: string
-    description: e.g. Chair, Treasurer, Fixtures Secretary.
+    list:
+      max: 4
+    description: e.g. Chair, Treasurer, Fixtures Secretary. Add one per box.
   - name: email
     label: Email (optional)
     type: string
