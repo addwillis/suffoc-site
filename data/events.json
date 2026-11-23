@@ -53,11 +53,15 @@
             "early": "3"
           }
         ],
-        "earlyDeadline": "2026-12-07"
+        "earlyDeadline": "2026-12-07",
+        "lateDeadline": "2026-11-23",
+        "chipHire": "£1",
+        "siacHire": "£3"
       },
       "timings": {
         "startsFrom": "18:00",
-        "startsTo": "18:30"
+        "startsTo": "18:30",
+        "courseClose": "19:15"
       },
       "officials": {
         "organiser": "Gareth Radcliffe",
