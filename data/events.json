@@ -32,10 +32,10 @@
           "The Macebearer",
           "Home Farm Lane",
           "Hardwick, Bury St Edmunds",
-          "Suffolk",
-          "IP33 2RH"
+          "Suffolk"
         ],
-        "gridRef": "TL858628",
+        "postcode": "IP33 2RH",
+        "gridRef": "TL 85870 62863",
         "w3w": "mixers.special.poorly"
       },
       "courses": [
@@ -60,10 +60,7 @@
             "early": "3"
           }
         ],
-        "earlyDeadline": "2026-12-07",
-        "lateDeadline": "2026-11-23",
-        "chipHire": "£1",
-        "siacHire": "£3"
+        "earlyDeadline": "2026-12-07"
       },
       "timings": {
         "startsFrom": "18:00",
