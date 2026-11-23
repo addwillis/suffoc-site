@@ -35,7 +35,7 @@
     {
       "name": "Sarah Mansel",
       "role": "Chair",
-      "committee": false,
+      "committee": true,
       "id": "sarah-mansel"
     }
   ]
