@@ -47,7 +47,6 @@ content:
     required: true
     options:
       collection: areas
-      search: name
       label: '{primary}'
       value: '{primary}'
   - name: entry
@@ -98,7 +97,6 @@ content:
         type: reference
         options:
           collection: members
-          search: name
           label: '{primary}'
           value: '{primary}'
       - name: planner
@@ -106,7 +104,6 @@ content:
         type: reference
         options:
           collection: members
-          search: name
           label: '{primary}'
           value: '{primary}'
       - name: controller
@@ -114,7 +111,6 @@ content:
         type: reference
         options:
           collection: members
-          search: name
           label: '{primary}'
           value: '{primary}'
       - name: others
