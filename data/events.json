@@ -1,8 +1,9 @@
 {
   "events": [
     {
-      "title": "Brandon Country park",
+      "title": "Brandon Country Park",
       "date": "2026-02-22",
+      "type": "Other",
       "area": "Brandon Country Park",
       "id": "brandon-country-park"
     },
