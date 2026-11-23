@@ -1,4 +1,5 @@
-# Rebuilds data/areas.json, data/members.json and data/events.json (the lists the website reads) from the
+# Rebuilds data/areas.json, data/members.json and data/events.json (the lists the website reads) and the
+# Area / Organiser dropdown choices in .pages.yml from the
 # one-file-per-item folders data/areas/, data/members/ and data/events/ whenever one is added, edited or deleted in Pages CMS.
 name: Build areas, members and events lists
 on:
@@ -13,23 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build data/areas.json, data/members.json and data/events.json
-        run: |
-          python3 - <<'PY'
-          import glob, json, os
-          for folder, key in (('areas', 'areas'), ('members', 'members'), ('events', 'events')):
-              items = []
-              for f in sorted(glob.glob('data/%s/*.json' % folder)):
-                  a = json.load(open(f, encoding='utf-8'))
-                  a['id'] = os.path.basename(f)[:-5]
-                  items.append(a)
-              with open('data/%s.json' % folder, 'w', encoding='utf-8') as out:
-                  json.dump({key: items}, out, indent=2, ensure_ascii=False)
-                  out.write('\n')
-          PY
+      - name: Rebuild lists and form dropdowns
+        run: python3 .github/build_lists.py
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/areas.json data/members.json data/events.json
+          git add data/areas.json data/members.json data/events.json .pages.yml
           git diff --cached --quiet || (git commit -m "Rebuild areas, members and events lists" && git push)

@@ -42,13 +42,21 @@ content:
       - Other
   - name: area
     label: Area
-    type: reference
+    type: select
     description: Pick from the Mapped areas list. If the place isn't there yet, add it under Mapped areas first.
     required: true
     options:
-      collection: areas
-      label: '{primary}'
-      value: '{primary}'
+      values:
+      # BEGIN areas
+      - "Brandon Country Park"
+      - "Clare Country Park"
+      - "Claydon"
+      - "Hardwick"
+      - "Kings Forest"
+      - "Needham Lakes"
+      - "Sudbury"
+      - "Tunstall Forest"
+      # END areas
   - name: entry
     label: ENTRY
     type: object
@@ -94,25 +102,43 @@ content:
     fields:
       - name: organiser
         label: Organiser
-        type: reference
+        type: select
         options:
-          collection: members
-          label: '{primary}'
-          value: '{primary}'
+          values:
+          # BEGIN members
+          - "Gareth Radcliffe"
+          - "Louise Walker"
+          - "Mike Bickle"
+          - "Paul Beckett"
+          - "Phil Halford"
+          - "Rod Mansel"
+          # END members
       - name: planner
         label: Planner
-        type: reference
+        type: select
         options:
-          collection: members
-          label: '{primary}'
-          value: '{primary}'
+          values:
+          # BEGIN members
+          - "Gareth Radcliffe"
+          - "Louise Walker"
+          - "Mike Bickle"
+          - "Paul Beckett"
+          - "Phil Halford"
+          - "Rod Mansel"
+          # END members
       - name: controller
         label: Controller
-        type: reference
+        type: select
         options:
-          collection: members
-          label: '{primary}'
-          value: '{primary}'
+          values:
+          # BEGIN members
+          - "Gareth Radcliffe"
+          - "Louise Walker"
+          - "Mike Bickle"
+          - "Paul Beckett"
+          - "Phil Halford"
+          - "Rod Mansel"
+          # END members
       - name: others
         label: Other officials (optional)
         type: object
