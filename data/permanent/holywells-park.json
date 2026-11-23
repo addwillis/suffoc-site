@@ -1,0 +1,28 @@
+{
+  "name": "Holywells Park",
+  "description": "<p></p>",
+  "courses": [
+    {
+      "name": "Course A",
+      "length": "0.7",
+      "controls": "7"
+    },
+    {
+      "name": "Course B",
+      "length": "1.1",
+      "controls": "7"
+    },
+    {
+      "name": "Course C",
+      "length": "1.3",
+      "controls": "9"
+    }
+  ],
+  "mapUrl": "https://www.ipswich.gov.uk/sites/ipswich/files/m-files/orienteering_leaflet.pdf",
+  "gridRef": "TM 17650 43410",
+  "lat": 52.046324,
+  "lon": 1.172567,
+  "postcode": "IP3 0PG",
+  "w3w": "sums.parade.shadow",
+  "notes": "<p></p>"
+}
