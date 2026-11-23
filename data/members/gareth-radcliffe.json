@@ -1,9 +1,10 @@
 {
   "name": "Gareth Radcliffe",
   "roles": [
-    "Captain"
+    {
+      "role": "Captain",
+      "email": "captain@suffoc.co.uk"
+    }
   ],
-  "email": "captain@suffoc.co.uk",
-  "photo": "/images/Gareth Radcliffe-1.jpg",
-  "committee": true
+  "photo": "/images/gareth-radcliffe.jpg"
 }

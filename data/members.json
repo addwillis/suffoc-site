@@ -3,11 +3,12 @@
     {
       "name": "Gareth Radcliffe",
       "roles": [
-        "Captain"
+        {
+          "role": "Captain",
+          "email": "captain@suffoc.co.uk"
+        }
       ],
-      "email": "captain@suffoc.co.uk",
-      "photo": "/images/Gareth Radcliffe-1.jpg",
-      "committee": true,
+      "photo": "/images/gareth-radcliffe.jpg",
       "id": "gareth-radcliffe"
     },
     {
@@ -29,24 +30,32 @@
     {
       "name": "Rod Mansel",
       "roles": [
-        "Secretary"
+        {
+          "role": "Secretary",
+          "email": "secretary@suffoc.uk"
+        }
       ],
-      "email": "secretary@suffoc.uk",
       "photo": "/images/rod-mansel.jpg",
-      "committee": true,
       "id": "rod-mansel"
     },
     {
       "name": "Sarah Mansel",
       "roles": [
-        "Chair",
-        "Entries Coordinator",
-        "MapRun Coordinator",
-        "Membership Secretary"
+        {
+          "role": "Chair",
+          "email": "chair@suffoc.uk"
+        },
+        {
+          "role": "Entries Coordinator"
+        },
+        {
+          "role": "MapRun Coordinator"
+        },
+        {
+          "role": "Membership Secretary"
+        }
       ],
-      "email": "chair@suffoc.uk",
       "photo": "/images/sarah-mansel.jpg",
-      "committee": true,
       "id": "sarah-mansel"
     }
   ]

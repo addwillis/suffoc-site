@@ -422,21 +422,23 @@ content:
     required: true
   - name: roles
     label: Club roles (optional, up to 4)
-    type: string
+    type: object
     list:
       max: 4
-    description: e.g. Chair, Treasurer, Fixtures Secretary. Add one per box.
-  - name: email
-    label: Email (optional)
-    type: string
-    description: Only add this if the person is happy for it to be public. A role address such as chair@ is usually better than a personal one.
+    description: Anyone with a role is shown on the Committee page. Each role has its own email address.
+    fields:
+    - name: role
+      label: Role
+      type: string
+      description: e.g. Chair, Treasurer, Fixtures Secretary.
+    - name: email
+      label: Email for this role
+      type: string
+      description: e.g. chair@suffoc.co.uk. Only add it if it's happy to be public.
   - name: photo
     label: Photo (optional)
     type: image
     description: Only add this if the person is happy for it to be public.
-  - name: committee
-    label: Show on the committee page
-    type: boolean
 - name: news
   label: News
   type: file

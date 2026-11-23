@@ -1,12 +1,19 @@
 {
   "name": "Sarah Mansel",
   "roles": [
-    "Chair",
-    "Entries Coordinator",
-    "MapRun Coordinator",
-    "Membership Secretary"
+    {
+      "role": "Chair",
+      "email": "chair@suffoc.uk"
+    },
+    {
+      "role": "Entries Coordinator"
+    },
+    {
+      "role": "MapRun Coordinator"
+    },
+    {
+      "role": "Membership Secretary"
+    }
   ],
-  "email": "chair@suffoc.uk",
-  "photo": "/images/sarah-mansel.jpg",
-  "committee": true
+  "photo": "/images/sarah-mansel.jpg"
 }
