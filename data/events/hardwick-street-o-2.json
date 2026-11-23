@@ -4,6 +4,24 @@
   "level": "Local",
   "series": "Mid-Week Street-O",
   "area": "Hardwick",
+  "location": {
+    "address": [
+      "The Macebearer",
+      "Home Farm Lane",
+      "Hardwick, Bury St Edmunds",
+      "Suffolk",
+      "IP33 2RH"
+    ],
+    "gridRef": "TL858628",
+    "w3w": "mixers.special.poorly"
+  },
+  "fees": {
+    "entryUrl": "https://racesignup.co.uk/2026-street-O-2",
+    "earlyDeadline": "2026-11-23",
+    "lateDeadline": "2026-11-23",
+    "chipHire": "£1",
+    "siacHire": "£3"
+  },
   "timings": {
     "startsFrom": "18:00"
   },
@@ -11,11 +29,5 @@
     "organiser": "Gareth Radcliffe",
     "planner": "Gareth Radcliffe",
     "riskAssessor": "Sarah Mansel"
-  },
-  "location": {
-    "gridRef": "TL858628"
-  },
-  "fees": {
-    "entryUrl": "https://racesignup.co.uk/2026-street-O-2"
   }
 }
