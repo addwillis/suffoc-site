@@ -27,6 +27,17 @@
       "id": "andrew-elliott"
     },
     {
+      "name": "Clive Wilkinson",
+      "roles": [
+        {
+          "role": "Coach",
+          "email": "coach_clive@suffoc.co.uk"
+        }
+      ],
+      "photo": "/images/Clive Wilkinson.png",
+      "id": "clive-wilkinson"
+    },
+    {
       "name": "Gareth Radcliffe",
       "roles": [
         {
