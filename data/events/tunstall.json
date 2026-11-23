@@ -13,28 +13,52 @@
   },
   "courses": [
     {
-      "colour": "White"
+      "colour": "White",
+      "length": "1.9",
+      "controls": "13",
+      "climb": "15"
     },
     {
-      "colour": "Yellow"
+      "colour": "Yellow",
+      "length": "2.2",
+      "controls": "12",
+      "climb": "20"
     },
     {
-      "colour": "Orange"
+      "colour": "Orange",
+      "length": "3.3",
+      "controls": "11",
+      "climb": "15"
     },
     {
-      "colour": "Light Green"
+      "colour": "Light Green",
+      "length": "4",
+      "controls": "14",
+      "climb": "25"
     },
     {
-      "colour": "Short Green"
+      "colour": "Short Green",
+      "length": "4",
+      "controls": "13",
+      "climb": "29"
     },
     {
-      "colour": "Green"
+      "colour": "Green",
+      "length": "4.7",
+      "controls": "17",
+      "climb": "35"
     },
     {
-      "colour": "Blue"
+      "colour": "Blue",
+      "length": "7.1",
+      "controls": "26",
+      "climb": "45"
     },
     {
-      "colour": "Brown"
+      "colour": "Brown",
+      "length": "8.9",
+      "controls": "29",
+      "climb": "55"
     }
   ],
   "fees": {
