@@ -1,9 +1,5 @@
 {
-  "id": "clare",
-  "name": "Clare Country Park",
+  "name": "Clare",
   "lat": 52.08,
-  "lon": 0.583,
-  "label_dx": 14,
-  "label_dy": -4,
-  "label_anchor": "start"
+  "lon": 0.583
 }
