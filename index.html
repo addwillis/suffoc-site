@@ -315,7 +315,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 90';
+const BUILD = 'build 91';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -926,7 +926,6 @@ function personPage(id){
       <span class="sr">${fmtShort.format(d)}</span>
       <div>${pills(e, true)}<h3>${e.detail ? `<a class="title-link" href="#event-${esc(e.id)}">${esc(e.title)}</a>` : esc(e.title)}</h3></div>
       <p class="tbc">${esc(x.r.join(', '))}</p></div>`; };
-  const upc = mine.filter(x => !isPast(x.ev)).reverse(), old = mine.filter(x => isPast(x.ev));
   return `<section class="pagehead"><div class="wrap">
       <a class="back" href="#club">&larr; Back to Club</a>
       <div class="person">
@@ -936,9 +935,8 @@ function personPage(id){
       </div>
     </div></section>
     <div class="wrap">
-      ${upc.length ? `<section class="section"><div class="section-head"><h2>Coming up</h2></div><div class="rlist">${upc.map(row).join('')}</div></section>` : ''}
-      <section class="section"><div class="section-head"><h2>Events they have helped with</h2></div>
-        ${old.length ? `<div class="rlist">${old.map(row).join('')}</div>` : '<div class="empty">No events are listed for this person yet.</div>'}</section>
+      <section class="section"><div class="section-head"><h2>Event Official History</h2></div>
+        ${mine.length ? `<div class="rlist">${mine.map(row).join('')}</div>` : '<div class="empty">No events are listed for this person yet.</div>'}</section>
     </div>`;
 }
 const COURSE_COLOURS = { white:'#ffffff', yellow:'#f6d51b', orange:'#f28c28', lightgreen:'#a6dc86', shortgreen:'#6bb666', green:'#2f8f46', blue:'#2c64c8', brown:'#7b4b2a', black:'#1c1c1c' };
