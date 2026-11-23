@@ -112,6 +112,7 @@ content:
           - "Paul Beckett"
           - "Phil Halford"
           - "Rod Mansel"
+          - "Sarah Mansel"
           # END members
       - name: planner
         label: Planner
@@ -125,6 +126,7 @@ content:
           - "Paul Beckett"
           - "Phil Halford"
           - "Rod Mansel"
+          - "Sarah Mansel"
           # END members
       - name: controller
         label: Controller
@@ -138,6 +140,7 @@ content:
           - "Paul Beckett"
           - "Phil Halford"
           - "Rod Mansel"
+          - "Sarah Mansel"
           # END members
       - name: others
         label: Other officials (optional)

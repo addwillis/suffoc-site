@@ -25,6 +25,12 @@
       "role": "Secretary",
       "committee": true,
       "id": "rod-mansel"
+    },
+    {
+      "name": "Sarah Mansel",
+      "role": "Chair",
+      "committee": false,
+      "id": "sarah-mansel"
     }
   ]
 }
