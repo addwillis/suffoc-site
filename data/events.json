@@ -39,18 +39,36 @@
       },
       "fees": {
         "entryUrl": "https://racesignup.co.uk/2026-street-O-2",
+        "rows": [
+          {
+            "category": "Senior member",
+            "early": "4"
+          },
+          {
+            "category": "Senior non-member",
+            "early": "5"
+          },
+          {
+            "category": "Junior",
+            "early": "3"
+          }
+        ],
         "earlyDeadline": "2026-11-23",
         "lateDeadline": "2026-11-23",
         "chipHire": "£1",
         "siacHire": "£3"
       },
       "timings": {
-        "startsFrom": "18:00"
+        "startsFrom": "18:00",
+        "startsTo": "18:30"
       },
       "officials": {
         "organiser": "Gareth Radcliffe",
         "planner": "Gareth Radcliffe",
         "riskAssessor": "Sarah Mansel"
+      },
+      "documents": {
+        "britishOrienteering": "https://www.britishorienteering.org.uk/event?page=&event=89054"
       },
       "id": "hardwick-street-o-2"
     },
