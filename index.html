@@ -228,6 +228,8 @@ dl.facts dd a:hover{color:var(--sky)}
 .legend{display:flex;flex-wrap:wrap;gap:8px 22px;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.95rem;align-items:center}
 .legend i{display:inline-block;width:16px;height:16px;border-radius:50%;border:3px solid var(--navy);background:#fff;vertical-align:-3px;margin-right:6px}
 .legend i.up{background:var(--gold)}
+.cdots{display:flex;flex-wrap:wrap;gap:.3rem 1rem;margin:.7rem 0 0;font-size:.92rem;font-weight:600;color:var(--navy)}
+.cdots i{display:inline-block;width:.8rem;height:.8rem;border-radius:50%;margin-right:.4rem;vertical-align:-.05em;border:1px solid rgba(0,0,0,.25)}
 .committee{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.1rem;margin-top:1.2rem}
 .mcard{text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s,border-top-color .15s;display:flex;flex-direction:column;align-items:center;text-align:center;background:#fff;border:1px solid var(--line,#e3e8ef);border-top:6px solid var(--navy);border-radius:12px;padding:1.4rem 1.1rem 1.3rem}
 .mcard:hover,.mcard:focus-visible{border-top-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 22px rgba(11,42,85,.16)}
@@ -321,7 +323,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 99';
+const BUILD = 'build 100';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -394,8 +396,15 @@ function loadData(areas, events){
     if (id) o.area = id;
   });
 }
-let NEWS = [], MEMBERS = {};
+let NEWS = [], MEMBERS = {}, PERM = [];
 const personKey = v => String(v == null ? '' : v).replace(/^.*\//, '').replace(/\.json$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+function loadPermanent(list){
+  PERM = list.filter(p => p && p.name).map(p => {
+    let lat = parseFloat(p.lat), lon = parseFloat(p.lon);
+    if (!isFinite(lat) || !isFinite(lon)) { const g = gridToLatLon(p.gridRef); lat = g ? g.lat : NaN; lon = g ? g.lon : NaN; }
+    return Object.assign({}, p, { id: p.id || tagSlug(p.name), lat: lat, lon: lon, courses: Array.isArray(p.courses) ? p.courses : [] });
+  }).sort((a, b) => String(a.name).localeCompare(String(b.name)));
+}
 function loadMembers(list){
   MEMBERS = {};
   list.forEach(m => { if (m && m.name) {
@@ -676,12 +685,41 @@ function mapBlock(mode){
 
 /* Real map (Leaflet + OpenStreetMap). If Leaflet cannot load, the schematic SVG above stays as a fallback. */
 let LMAPS = [];
+/* Maps for the permanent orienteering courses: one with every course, or a single pin on a course's own page. */
+function initPermMaps(){
+  if (!window.L) return;
+  document.querySelectorAll('.leafmap[data-map^="perm"]').forEach(el => {
+    const fallback = el.innerHTML;
+    try {
+      const key = el.dataset.map, all = key === 'perm-all';
+      const items = all ? PERM : PERM.filter(p => p.id === key.slice(5));
+      el.innerHTML = '';
+      const map = L.map(el, { scrollWheelZoom:false });
+      map.attributionControl.setPrefix(false);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19,
+        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
+      const pts = [];
+      items.forEach(p => {
+        if (!isFinite(p.lat) || !isFinite(p.lon)) return;
+        const icon = L.divIcon({ className:'', html:'<div class="ctl"><span class="ring"></span></div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-16] });
+        const pop = all ? '<a href="#permanent-' + esc(p.id) + '"><strong>' + esc(p.name) + '</strong></a>' : '<strong>' + esc(p.name) + '</strong>';
+        L.marker([p.lat, p.lon], { icon:icon, title:p.name }).addTo(map).bindPopup(pop);
+        pts.push([p.lat, p.lon]);
+      });
+      if (all && pts.length > 1) map.fitBounds(pts, { padding:[40,40], maxZoom:12 });
+      else if (pts.length) map.setView(pts[0], all ? 11 : 16);
+      else map.setView([52.2, 1.0], 9);
+      LMAPS.push(map);
+    } catch (err) { el.innerHTML = fallback; }
+  });
+}
 function initMaps(){
   LMAPS.forEach(m => { try { m.remove(); } catch(e){} });
   LMAPS = [];
   if (!window.L) return;
   const up = new Set(upcoming().map(e => e.area));
   document.querySelectorAll('.leafmap').forEach(el => {
+    if (/^perm/.test(el.dataset.map || '')) return;  /* permanent courses are drawn by initPermMaps */
     const fallback = el.innerHTML;
     try {
       const key = el.dataset.map;
@@ -818,12 +856,23 @@ const VIEWS = {
     return `${pageHead('Anytime O', 'Orienteer whenever you like, no event needed.', 'anytime')}
     <div class="wrap">
       <section class="section"><div class="grid">
-        <article class="card"><h3>Permanent courses</h3><p style="margin-top:.5rem">Courses set up in parks and woods that you can follow at any time with a downloadable map.</p></article>
+        <a class="tile" href="#permanent"><h3>Permanent Orienteering Courses</h3><p>Courses set up in parks and woods that you can follow at any time with a downloadable map.</p></a>
         <article class="card"><h3>MapRun</h3><p style="margin-top:.5rem">Use the MapRun app on your phone to find virtual controls and get timed, wherever you are.</p></article>
       </div></section>
-      <section class="section"><div class="empty"><strong>Next step:</strong> a map of every permanent and MapRun course, each with its location, difficulty and map download. This is a placeholder for it.</div></section>
     </div>`;
   },
+  permanent(){
+    const dots = p => p.courses.length ? `<p class="cdots">${p.courses.map(c => { const col = courseColour(c), len = String(c.length || '').trim(); return `<span><i style="background:${col || 'transparent'}"></i>${esc(c.name || c.colour || 'Course')}${len ? ' ' + esc(/^[\d.]+$/.test(len) ? len + ' km' : len) : ''}</span>`; }).join('')}</p>` : '';
+    const card = p => { const ak = areaKey(p.area), an = ak ? AREAS[ak].name : (p.area || ''); return `<a class="tile" href="#permanent-${esc(p.id)}"><h3>${esc(p.name)}</h3>${an ? `<p>${esc(an)}</p>` : ''}${dots(p)}</a>`; };
+    const withPin = PERM.some(p => isFinite(p.lat) && isFinite(p.lon));
+    return `${pageHead('Permanent Orienteering Courses', 'Courses you can follow at any time, with a map to download.', 'anytime')}
+    <div class="wrap"><section class="section">
+      <a class="back" href="#anytime">&larr; Back to Anytime O</a>
+      ${PERM.length ? `${withPin ? `<div class="map" style="margin-top:1rem"><div class="leafmap" data-map="perm-all">${FALLBACK_NOTE}</div></div>` : ''}
+        <div class="grid" style="margin-top:1.2rem">${PERM.map(card).join('')}</div>` : '<div class="empty" style="margin-top:1rem">The permanent courses will be listed here soon.</div>'}
+    </section></div>`;
+  },
+
   club(){
     return `${pageHead('Club', 'Everything about SUFFOC in one place.', 'club')}
     <div class="wrap"><section class="section"><div class="tiles">
@@ -855,7 +904,7 @@ function exploreTiles(){
   const t = [
     ['#mapped', 'Mapped areas', 'Every place the club has made a map for.'],
     ['#anytime', 'MapRun', 'Virtual controls on your phone, any time.'],
-    ['#anytime', 'Permanent orienteering courses', 'Courses to follow whenever you like.']
+    ['#permanent', 'Permanent Orienteering Courses', 'Courses to follow whenever you like.']
   ];
   return `<section class="section"><div class="section-head"><h2>More to explore</h2></div><div class="tiles">
     ${t.map(x => `<a class="tile" href="${x[0]}"><h3>${esc(x[1])}</h3><p>${esc(x[2])}</p></a>`).join('')}
@@ -990,6 +1039,41 @@ function feesCard(e){
     ${siac ? `<p style="margin:.3rem 0 0"><b>SIAC chip hire:</b> ${esc(gbp(siac))}</p>` : ''}
     ${note ? `<p class="cnote" style="margin:.5rem 0 0">${esc(note)}</p>` : ''}</section>`;
 }
+const courseColour = c => { const n = s => String(s || '').toLowerCase().replace(/[^a-z]/g, ''); return COURSE_COLOURS[n(c.colour)] || COURSE_COLOURS[n(c.name)] || ''; };
+const areaKey = v => { const s = x => String(x == null ? '' : x).toLowerCase().replace(/[^a-z0-9]/g, ''), t = s(String(v == null ? '' : v).replace(/^.*\//, '').replace(/\.json$/i, '')); return t ? (Object.keys(AREAS).find(k => s(k) === t || s(AREAS[k].name) === t) || '') : ''; };
+function permanentPage(id){
+  const p = PERM.find(x => x.id === id);
+  if (!p) return VIEWS.permanent();
+  const ak = areaKey(p.area), an = ak ? AREAS[ak].name : (p.area || '');
+  const has = v => String(v == null ? '' : v).replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+  const pin = isFinite(p.lat) && isFinite(p.lon), q = pin ? p.lat + ',' + p.lon : '';
+  const showLoc = pin || p.gridRef || p.postcode || p.w3w;
+  return `<section class="pagehead"><div class="wrap">
+      <a class="back" href="#permanent">&larr; Back to Permanent Orienteering Courses</a>
+      <h1 class="event-title">${esc(p.name)}</h1>
+      ${an ? `<p class="lead">${ak && !AREAS[ak].auto ? `<a href="#area-${esc(ak)}">${esc(an)}</a>` : esc(an)}</p>` : ''}
+    </div></section>
+    <div class="wrap"><div class="detail-grid">
+      <aside class="stack">
+        ${p.mapUrl ? `<div class="card entrycard"><a class="btn big gold" href="${esc(p.mapUrl)}" ${ext}>Download the Map</a>${p.mapNote ? `<p class="note-line">${esc(p.mapNote)}</p>` : ''}</div>` : ''}
+      </aside>
+      <div class="stack">
+        ${has(p.description) ? `<section class="card"><h3>${ct('about', 'About the Course')}</h3><div class="prose" style="margin-top:.6rem">${richHTML(p.description)}</div></section>` : ''}
+        ${coursesCard(p)}
+        ${showLoc ? `<section class="card"><h3>${ct('newcomers', 'Location')}</h3>
+          ${p.postcode ? `<p style="margin:.6rem 0">${esc(p.postcode)}</p>` : ''}
+          <dl class="facts" style="margin-bottom:1rem">
+            ${p.gridRef ? `<dt>Start grid reference</dt><dd class="code">${esc(p.gridRef)}</dd>` : ''}
+            ${p.w3w ? `<dt>what3words</dt><dd class="code"><a href="https://what3words.com/${encodeURIComponent(p.w3w)}" ${ext}>///${esc(p.w3w)}</a></dd>` : ''}
+          </dl>
+          ${pin ? `<div class="links" style="margin-bottom:1rem"><a class="btn small gold" href="https://www.google.com/maps/search/?api=1&query=${q}" ${ext}>Open in Google Maps</a>
+            <a class="btn small line" href="https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=16/${p.lat}/${p.lon}" ${ext}>OpenStreetMap</a></div>
+            <div class="map"><div class="leafmap single" data-map="perm:${esc(p.id)}">${FALLBACK_NOTE}</div></div>` : ''}
+        </section>` : ''}
+        ${has(p.notes) ? `<section class="card"><h3>${ct('docs', 'Getting There and Notes')}</h3><div class="prose" style="margin-top:.6rem">${richHTML(p.notes)}</div></section>` : ''}
+      </div>
+    </div></div>`;
+}
 function eventPage(id){
   const e = EVENTS.find(x => x.id === id && x.detail);
   if (!e) return VIEWS.events();
@@ -1077,11 +1161,12 @@ const view = document.getElementById('view');
 const nav = document.getElementById('nav');
 const menuBtn = document.getElementById('menuBtn');
 /* Clean URLs. Internally pages are still named like 'event-tunstall'; these turn that into /events/tunstall and back. */
-const isRoute = n => n === 'home' || !!VIEWS[n] || /^(club|person|tag|area|news|event|comments)-./.test(n);
+const isRoute = n => n === 'home' || !!VIEWS[n] || /^(club|person|tag|area|news|event|comments|permanent)-./.test(n);
 function nameToPath(n){
   let m;
   if (!n || n === 'home') return '';
   if ((m = n.match(/^event-(.+)$/))) return 'events/' + m[1];
+  if ((m = n.match(/^permanent-(.+)$/))) return 'permanent/' + m[1];
   if ((m = n.match(/^comments-(.+)$/))) return 'events/' + m[1] + '/comments';
   if ((m = n.match(/^area-(.+)$/))) return 'mapped/' + m[1];
   if ((m = n.match(/^news-(.+)$/))) return 'news/' + m[1];
@@ -1100,6 +1185,7 @@ function pathToName(p){
   if (s[0] === 'news' && s.length > 1) return 'news-' + rest;
   if (s[0] === 'club' && s.length > 1) return 'club-' + rest;
   if (s[0] === 'people' && s.length > 1) return 'person-' + rest;
+  if (s[0] === 'permanent' && s.length > 1) return 'permanent-' + rest;
   return s[0];
 }
 function currentName(){
@@ -1132,13 +1218,15 @@ function route(){
   else if (/^tag-(level|series)-/.test(h)) { key = 'events'; html = tagPage(h.split('-')[1], h.replace(/^tag-(level|series)-/, '')); }
   else if (h.startsWith('area-')) { key = 'events'; html = areaPage(h.slice(5)); }
   else if (h.startsWith('news-')) { key = 'news'; html = newsPage(h.slice(5)); }
+  else if (h.startsWith('permanent-')) { key = 'anytime'; html = permanentPage(h.slice(10)); }
   else if (h.startsWith('comments-')) { key = 'results'; html = commentsPage(h.slice(9)); }
   else if (h.startsWith('event-')) { key = 'events'; html = eventPage(h.slice(6)); }
-  else if (VIEWS[h]) { key = h === 'mapped' ? 'events' : h; html = VIEWS[h](); }
+  else if (VIEWS[h]) { key = h === 'mapped' ? 'events' : (h === 'permanent' ? 'anytime' : h); html = VIEWS[h](); }
   else { html = VIEWS.home(); }
   view.innerHTML = html;
   cleanLinks(view);
   initMaps();
+  initPermMaps();
   document.querySelectorAll('.nav a[data-route]').forEach(a => {
     if (a.dataset.route === key) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
@@ -1155,8 +1243,9 @@ Promise.all([
   fetch('data/areas.json', { cache:'no-cache' }).then(r => { if(!r.ok) throw new Error('areas.json HTTP ' + r.status); return r.json(); }),
   fetch('data/events.json', { cache:'no-cache' }).then(r => { if(!r.ok) throw new Error('events.json HTTP ' + r.status); return r.json(); }),
   fetch('data/news.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-  fetch('data/members.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-]).then(([a, e, n, m]) => { loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+  fetch('data/members.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  fetch('data/permanent.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([a, e, n, m, pm]) => { loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>

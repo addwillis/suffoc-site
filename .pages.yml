@@ -427,6 +427,114 @@ content:
     label: Longitude (optional)
     type: number
     description: Only needed if there is no grid reference.
+- name: permanent
+  label: Permanent orienteering courses
+  type: collection
+  path: data/permanent
+  format: json
+  filename: '{primary}.json'
+  view:
+    primary: name
+    fields: [name, area]
+    search: [name, area]
+  fields:
+  - name: name
+    label: Name
+    type: string
+    required: true
+  - name: area
+    label: Mapped area (optional)
+    type: select
+    description: Pick from the Mapped areas list if the course is in one of the areas the club has mapped.
+    options:
+      values:
+      # BEGIN areas
+      - "Brandon Country Park"
+      - "Clare"
+      - "Claydon"
+      - "Elmswell"
+      - "Hardwick"
+      - "Kings Forest"
+      - "Needham Lakes"
+      - "Sudbury"
+      - "Tunstall Forest"
+      # END areas
+  - name: description
+    label: ABOUT THE COURSE
+    type: rich-text
+    options:
+      format: html
+    description: A short description of what the course is like and who it suits.
+  - name: courses
+    label: COURSES
+    type: object
+    list: true
+    description: One entry per course, e.g. Orange, 3.0 km, 14 controls.
+    fields:
+    - name: name
+      label: Course name
+      type: string
+      description: e.g. Orange, Short Green, Course 1
+    - name: colour
+      label: Colour dot (optional)
+      type: select
+      description: Only needed if the name isn't already a colour.
+      options:
+        values:
+        - White
+        - Yellow
+        - Orange
+        - Light Green
+        - Short Green
+        - Green
+        - Blue
+        - Brown
+        - Black
+    - name: length
+      label: Length (km)
+      type: string
+    - name: controls
+      label: Number of controls
+      type: string
+    - name: climb
+      label: Climb (m, optional)
+      type: string
+    - name: note
+      label: Note (optional)
+      type: string
+  - name: mapUrl
+    label: Map download link
+    type: string
+    description: The web address of the map PDF (or the page it is on).
+  - name: mapNote
+    label: Map note (optional)
+    type: string
+    description: Short line under the download button, e.g. Print at A4. Last updated March 2025.
+  - name: gridRef
+    label: Start grid reference (OS)
+    type: string
+    description: e.g. TM 39950 52750. The map pin is placed from this.
+  - name: lat
+    label: Latitude (optional)
+    type: number
+    description: Only needed if there is no grid reference.
+  - name: lon
+    label: Longitude (optional)
+    type: number
+    description: Only needed if there is no grid reference.
+  - name: postcode
+    label: Postcode (optional)
+    type: string
+  - name: w3w
+    label: what3words (optional)
+    type: string
+    description: e.g. only.pint.form
+  - name: notes
+    label: GETTING THERE AND NOTES
+    type: rich-text
+    options:
+      format: html
+    description: Parking, access, dogs, anything people should know.
 - name: members
   label: Club members
   type: collection
