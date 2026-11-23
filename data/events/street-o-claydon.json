@@ -1,7 +1,8 @@
 {
   "title": "SUFFOC Mid-Week Street-O 3 Claydon",
   "date": "2027-01-12",
-  "type": "Street-O",
+  "level": "Local",
+  "series": "Mid-Week Street-O",
   "area": "Claydon",
   "entry": {
     "url": "https://racesignup.co.uk/2026-street-O-3"

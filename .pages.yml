@@ -11,7 +11,7 @@ content:
     template: '{primary}.json'
     field: create
   view:
-    fields: [date, title, type, area]
+    fields: [date, title, level, series, area]
     primary: title
     sort: [date, title]
     search: [title, area]
@@ -29,22 +29,29 @@ content:
     options:
       format: yyyy-MM-dd
     required: true
-  - name: type
-    label: Event type
+  - name: level
+    label: Event level
     type: select
-    description: Pick from the Event types list. To add or rename a type, use Event types in the menu.
+    description: National, Regional or Local. To change the list, use Event levels in the menu.
     options:
       values:
-      # BEGIN types
+      # BEGIN levels
       - "Local"
-      - "Mid-Week Street-O"
       - "National"
-      - "Other"
       - "Regional"
+      # END levels
+  - name: series
+    label: Event series
+    type: select
+    description: Optional. Pick from the Event series list, e.g. Mid-Week Street-O.
+    options:
+      values:
+      # BEGIN series
+      - "Mid-Week Street-O"
       - "Score event"
       - "Simon Peck Summer Series"
       - "Training"
-      # END types
+      # END series
   - name: area
     label: Area
     type: select
@@ -316,10 +323,24 @@ content:
       - name: url
         label: Web address
         type: string
-- name: types
-  label: Event types
+- name: levels
+  label: Event levels
   type: collection
-  path: data/types
+  path: data/levels
+  format: json
+  filename: '{primary}.json'
+  view:
+    primary: name
+    fields: [name]
+  fields:
+  - name: name
+    label: Name
+    type: string
+    required: true
+- name: series
+  label: Event series
+  type: collection
+  path: data/series
   format: json
   filename: '{primary}.json'
   view:

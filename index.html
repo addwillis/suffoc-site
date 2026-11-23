@@ -293,7 +293,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 65';
+const BUILD = 'build 66';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -308,8 +308,10 @@ function loadNews(list){
 }
 /* Events are stored in sections (entry, officials, location, documents...) for easy editing in Pages CMS.
    This flattens them into the shape the rest of the site uses. The older flat layout is still understood. */
+const pills = (e, showLocal) => (e.level && (showLocal || e.level !== 'Local') ? `<span class="pill">${esc(e.level)}</span> ` : '') + (e.series ? `<span class="pill">${esc(e.series)}</span>` : '');
 function upgradeEvent(e){
   const o = Object.assign({}, e);
+  if (!o.level && o.type) o.level = o.type;  /* older entries used a single Event type */
   const en = e.entry || {}, off = e.officials || {}, loc = e.location || {}, doc = e.documents || {}, rl = e.resultLinks || {};
   if (en.url && !o.entryUrl) o.entryUrl = en.url;
   if (en.note && !o.entryNote) o.entryNote = en.note;
@@ -483,7 +485,7 @@ function eventCard(e){
   return `<article class="event">
     <div class="datebox" aria-hidden="true"><span class="wd">${wd}</span><span class="day">${d.getDate()}</span><span class="mon">${mon}</span></div>
     <div>
-      <span class="pill">${esc(e.type)}</span>
+      ${pills(e, true)}
       <h3>${e.detail ? `<a class="title-link" href="#event-${esc(e.id)}">${esc(e.title)}</a>` : esc(e.title)}</h3>
       <p class="meta">${timeRange(e) ? esc(timeRange(e)) + ' &middot; ' : ''}${esc(place)}</p>
       <div class="links">
@@ -503,7 +505,7 @@ function resultCard(e){
   const has = e.results && e.results.length;
   return `<article class="card">
     <p class="date">${fmtShort.format(parseDate(e.date))}</p>
-    ${e.type && e.type !== 'Local event' ? `<span class="pill">${esc(e.type)}</span>` : ''}
+    ${pills(e, false)}
     <h3>${titleLink(e)}</h3>
     ${has
       ? `<div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small line" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div>`
@@ -522,7 +524,7 @@ function resultRow(e){
     <div class="datebox" aria-hidden="true"><span class="wd">${d.toLocaleString('en-GB', { weekday:'short' })}</span><span class="day">${d.getDate()}</span><span class="mon">${d.toLocaleString('en-GB', { month:'short' })}</span></div>
     <span class="sr">${fmtShort.format(d)}</span>
     <div>
-      ${e.type ? `<span class="pill">${esc(e.type)}</span>` : ''}
+      ${pills(e, true)}
       <h3>${titleLink(e)}</h3>
     </div>
     ${has ? `<div class="links">${e.results.map(l => `<a class="btn small line" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div>` : `<p class="tbc">Results to follow</p>`}
@@ -836,7 +838,7 @@ function personPage(id){
   const row = x => { const e = x.ev, d = parseDate(e.date); return `<div class="rrow">
       <div class="datebox" aria-hidden="true"><span class="wd">${d.toLocaleString('en-GB', { weekday:'short' })}</span><span class="day">${d.getDate()}</span><span class="mon">${d.toLocaleString('en-GB', { month:'short' })}</span></div>
       <span class="sr">${fmtShort.format(d)}</span>
-      <div>${e.type ? `<span class="pill">${esc(e.type)}</span>` : ''}<h3>${e.detail ? `<a class="title-link" href="#event-${esc(e.id)}">${esc(e.title)}</a>` : esc(e.title)}</h3></div>
+      <div>${pills(e, true)}<h3>${e.detail ? `<a class="title-link" href="#event-${esc(e.id)}">${esc(e.title)}</a>` : esc(e.title)}</h3></div>
       <p class="tbc">${esc(x.r.join(', '))}</p></div>`; };
   const upc = mine.filter(x => !isPast(x.ev)).reverse(), old = mine.filter(x => isPast(x.ev));
   return `<section class="pagehead"><div class="wrap">
@@ -892,7 +894,7 @@ function eventPage(id){
   (d.docs || []).forEach(x => docs.push(x));
   return `<section class="pagehead"><div class="wrap">
       <a class="back" href="#events">&larr; Back to Events</a><br>
-      <span class="pill">${esc(e.type || 'Event')}</span>
+      ${pills(e, true) || '<span class="pill">Event</span>'}
       <h1 class="event-title">${esc(e.title)}</h1>
       <p class="lead">${esc(fmtLong.format(date))}${timeRange(e) ? ' &middot; ' + esc(timeRange(e)) : ''}</p>
     </div></section>
