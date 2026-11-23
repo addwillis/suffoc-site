@@ -2,6 +2,8 @@
   "members": [
     {
       "name": "Gareth Radcliffe",
+      "role": "Captain",
+      "committee": true,
       "id": "gareth-radcliffe"
     },
     {
