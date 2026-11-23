@@ -226,10 +226,12 @@ dl.facts dd a:hover{color:var(--sky)}
 .legend i{display:inline-block;width:16px;height:16px;border-radius:50%;border:3px solid var(--navy);background:#fff;vertical-align:-3px;margin-right:6px}
 .legend i.up{background:var(--gold)}
 .committee{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.1rem;margin-top:1.2rem}
-.mcard{display:flex;flex-direction:column;align-items:center;text-align:center;background:#fff;border:1px solid var(--line,#e3e8ef);border-top:6px solid var(--navy);border-radius:12px;padding:1.4rem 1.1rem 1.3rem}
+.mcard{text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column;align-items:center;text-align:center;background:#fff;border:1px solid var(--line,#e3e8ef);border-top:6px solid var(--navy);border-radius:12px;padding:1.4rem 1.1rem 1.3rem}
+.mcard:hover,.mcard:focus-visible{transform:translateY(-3px);box-shadow:0 8px 22px rgba(11,42,85,.16)}
+.mcard:hover h3{text-decoration:underline;text-underline-offset:3px}
 .mcard .mimg{width:120px;height:120px;border-radius:50%;object-fit:cover;flex:none;border:4px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 6px 16px rgba(11,42,85,.2)}
 .mcard .minit{width:120px;height:120px;border-radius:50%;flex:none;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font:700 2.2rem var(--body);border:4px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 6px 16px rgba(11,42,85,.2)}
-.mcard h3{margin:.9rem 0 .35rem;font-size:1.2rem}
+.mcard h3{margin:.9rem 0 .35rem;font-size:1.2rem;color:var(--navy)}
 .mcard .mroles{margin:0;color:var(--muted);font-weight:600;line-height:1.45}
 .mcard .mrole,.person .mrole{margin:0;color:var(--muted);font-weight:600}
 .mroleblk{margin-top:.45rem}
@@ -316,7 +318,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 94';
+const BUILD = 'build 96';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -931,11 +933,12 @@ function personPage(id){
       <a class="back" href="#club">&larr; Back to Club</a>
       <div class="person">
         ${m.photo ? `<img class="personimg" src="${esc(imgSrc(m.photo))}" alt="${esc(m.name)}">` : ''}
-        <div><h1 class="event-title">${esc(m.name)}</h1>
-          ${rolesHTML(m)}</div>
+        <div><h1 class="event-title">${esc(m.name)}</h1></div>
       </div>
     </div></section>
     <div class="wrap">
+      ${m.roles.length ? `<section class="section"><div class="section-head"><h2>Club Roles</h2></div>
+        <div class="card"><dl class="facts" style="margin:0">${m.roles.map(r => `<dt>${esc(r.role)}</dt><dd>${r.email ? `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ''}</dd>`).join('')}</dl></div></section>` : ''}
       <section class="section"><div class="section-head"><h2>Event Official History</h2></div>
         ${mine.length ? `<div class="rlist">${mine.map(row).join('')}</div>` : '<div class="empty">No events are listed for this person yet.</div>'}</section>
     </div>`;
@@ -1044,10 +1047,10 @@ function committeePage(){
     .sort((a, b) => best(a) - best(b) || a.roles.map(r => r.role).join().localeCompare(b.roles.map(r => r.role).join()) || String(a.name).localeCompare(String(b.name)));
   const initials = n => String(n).split(/\s+/).filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
   const sentence = m => { const parts = m.roles.map(r => esc(r.role)); return parts.length < 2 ? parts.join('') : parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1]; };
-  const card = m => `<article class="mcard">
-      ${m.photo ? `<img class="mimg" src="${esc(imgSrc(m.photo))}" alt="${esc(m.name)}" loading="lazy">` : `<span class="minit" aria-hidden="true">${esc(initials(m.name))}</span>`}
-      <h3><a class="title-link" href="#person-${esc(m.id)}">${esc(m.name)}</a></h3>
-      <p class="mroles">${sentence(m)}</p></article>`;
+  const card = m => `<a class="mcard" href="#person-${esc(m.id)}">
+      ${m.photo ? `<img class="mimg" src="${esc(imgSrc(m.photo))}" alt="" loading="lazy">` : `<span class="minit" aria-hidden="true">${esc(initials(m.name))}</span>`}
+      <h3>${esc(m.name)}</h3>
+      <p class="mroles">${sentence(m)}</p></a>`;
   return `${pageHead('Committee', 'The people who run the club.', 'club')}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
