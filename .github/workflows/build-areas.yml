@@ -1,11 +1,11 @@
 # Rebuilds data/areas.json, data/members.json and data/events.json (the lists the website reads) and the
 # Area / Organiser dropdown choices in .pages.yml from the
-# one-file-per-item folders data/areas/, data/members/ and data/events/ whenever one is added, edited or deleted in Pages CMS.
+# one-file-per-item folders data/areas/, data/members/, data/events/ and data/types/ whenever one is added, edited or deleted in Pages CMS.
 name: Build areas, members and events lists
 on:
   push:
     branches: [main]
-    paths: ['data/areas/**', 'data/members/**', 'data/events/**']
+    paths: ['data/areas/**', 'data/members/**', 'data/events/**', 'data/types/**']
   workflow_dispatch:
 permissions:
   contents: write

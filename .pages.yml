@@ -32,14 +32,17 @@ content:
   - name: type
     label: Event type
     type: select
+    description: Pick from the Event types list. To add or rename a type, use Event types in the menu.
     options:
       values:
-      - Regional
-      - Local event
-      - Street-O
-      - Score event
-      - Training
-      - Other
+      # BEGIN types
+      - "Local event"
+      - "Other"
+      - "Regional"
+      - "Score event"
+      - "Street-O"
+      - "Training"
+      # END types
   - name: area
     label: Area
     type: select
@@ -71,7 +74,7 @@ content:
       type: string
       description: Short line under the button, e.g. Entries close Friday 27 November
   - name: timings
-    label: TIMINGS
+    label: EVENT TIMES
     type: object
     description: Fill in what you know. The first Starts time and the last Course closes time are shown on the home page and Events page.
     fields:
@@ -95,6 +98,76 @@ content:
       label: Course closes
       type: string
       description: Final course close time, e.g. 14:00
+  - name: courses
+    label: COURSES
+    type: object
+    list: true
+    description: One row per course. Leave empty until the courses are confirmed.
+    fields:
+    - name: colour
+      label: Course colour
+      type: select
+      options:
+        values:
+        - White
+        - Yellow
+        - Orange
+        - Light Green
+        - Green
+        - Blue
+        - Brown
+        - Black
+        - Other
+    - name: name
+      label: Course name (optional)
+      type: string
+      description: Only if you want something other than the colour, e.g. Short Green or Course 1.
+    - name: length
+      label: Length (km)
+      type: string
+      description: e.g. 3.2
+    - name: controls
+      label: Number of controls
+      type: string
+    - name: climb
+      label: Climb (m, optional)
+      type: string
+    - name: note
+      label: Note (optional)
+      type: string
+      description: e.g. Good for beginners
+  - name: fees
+    label: ENTRY FEES
+    type: object
+    description: Leave empty until the fees are confirmed. Prices can be typed as 8 or £8.
+    fields:
+    - name: earlyDeadline
+      label: Early booking closes (optional)
+      type: string
+      description: e.g. 22 November. Leave empty if there is only one price.
+    - name: rows
+      label: Prices
+      type: object
+      list: true
+      description: One row per type of entrant, e.g. Senior member, Senior non-member, Junior.
+      fields:
+      - name: category
+        label: Who
+        type: string
+      - name: early
+        label: Early booking price
+        type: string
+      - name: late
+        label: Late / on the day price
+        type: string
+    - name: hire
+      label: Dibber (SI card) hire
+      type: string
+      description: e.g. £1, or Free
+    - name: note
+      label: Note (optional)
+      type: text
+      description: e.g. Cash or card on the day. Group discounts.
   - name: officials
     label: EVENT OFFICIALS
     type: object
@@ -241,6 +314,20 @@ content:
       - name: url
         label: Web address
         type: string
+- name: types
+  label: Event types
+  type: collection
+  path: data/types
+  format: json
+  filename: '{primary}.json'
+  view:
+    primary: name
+    fields: [name]
+  fields:
+  - name: name
+    label: Name
+    type: string
+    required: true
 - name: areas
   label: Mapped areas
   type: collection

@@ -12,15 +12,16 @@ def load(folder):
     return items
 
 lists = {}
-for folder in ('areas', 'members', 'events'):
+for folder in ('areas', 'members', 'events', 'types'):
     lists[folder] = load(folder)
+    if folder == 'types': continue  # only used for the form dropdown
     with open('data/%s.json' % folder, 'w', encoding='utf-8') as out:
         json.dump({folder: lists[folder]}, out, indent=2, ensure_ascii=False)
         out.write('\n')
 
 # dropdown choices in the CMS form: between "# BEGIN x" and "# END x" markers
 yml = open('.pages.yml', encoding='utf-8').read()
-for name in ('areas', 'members'):
+for name in ('areas', 'members', 'types'):
     names = sorted({str(i.get('name', '')).strip() for i in lists[name] if str(i.get('name', '')).strip()}, key=str.lower)
     def fill(m, names=names, name=name):
         ind = m.group(1)
