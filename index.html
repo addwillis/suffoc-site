@@ -296,7 +296,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 76';
+const BUILD = 'build 78';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -498,7 +498,7 @@ function eventCard(e){
       <h3>${e.detail ? `<a class="title-link" href="#event-${esc(e.id)}">${esc(e.title)}</a>` : esc(e.title)}</h3>
       <p class="meta">${timeRange(e) ? esc(timeRange(e)) + ' &middot; ' : ''}${esc(place)}</p>
       <div class="links">
-        ${e.entryUrl ? `<a class="btn small gold" href="${esc(e.entryUrl)}" ${ext}>${enterIcon}Enter now</a>` : ''}
+        ${e.entryUrl ? `<a class="btn small gold" href="${esc(e.entryUrl)}" ${ext}>${enterIcon}Enter Online</a>` : ''}
         ${e.detail ? `<a class="btn small ${e.entryUrl ? 'line' : 'gold'}" href="#event-${esc(e.id)}">Event page</a>` : (e.link ? `<a class="btn small line" href="${esc(e.link)}" ${ext}>Event details</a>` : '')}
         ${e.pdf ? `<a class="btn small line" href="${esc(e.pdf)}" ${ext}>Preliminary details (PDF)</a>` : ''}
       </div>
@@ -915,13 +915,17 @@ function feesCard(e){
   const day = v => { const d = /^\d{4}-\d{2}-\d{2}$/.test(v) ? parseDate(v) : null; return d ? fmtLong.format(d).replace(/,/g, '').replace(/ \d{4}$/, '') : v; };
   const hasEarly = rows.some(r => String(r.early || '').trim()), hasLate = rows.some(r => String(r.late || '').trim());
   const both = hasEarly && hasLate;
+  const upcoming = !isPast(e);
   let site = ''; try { site = new URL(e.entryUrl).hostname.replace(/^www\./, ''); } catch (x) {}
-  const via = /racesignup/i.test(site) ? ' via RaceSignup' : '';
+  const enter = e.entryUrl ? (/racesignup/i.test(site) ? `Enter online via <a href="${esc(e.entryUrl)}" ${ext}>RaceSignup</a>` : `Enter <a href="${esc(e.entryUrl)}" ${ext}>online</a>`) : '';
   const lines = [];
-  if (t('earlyDeadline')) lines.push(`Enter online${via} by <b>${esc(day(t('earlyDeadline')))}</b> for the standard price.`);
-  if (t('lateDeadline')) lines.push(`Late online entry is open until <b>${esc(day(t('lateDeadline')))}</b>.`);
-  if (hasLate) lines.push('Entry on the day is available, subject to map availability.');
-  return `<section class="card"><h3>${ct('coin', 'Entry fees')}</h3>
+  if (upcoming) {
+    if (t('earlyDeadline')) lines.push(`${enter || 'Enter online'} by <b>${esc(day(t('earlyDeadline')))}</b> for the standard price.`);
+    else if (enter) lines.push(enter + '.');
+    if (t('lateDeadline')) lines.push(`Late online entry is open until <b>${esc(day(t('lateDeadline')))}</b>.`);
+    if (hasLate) lines.push('Entry on the day is available, subject to map availability.');
+  }
+  return `<section class="card"><h3>${ct('coin', 'Entry Fees')}</h3>
     ${lines.map(l => `<p style="margin:.5rem 0 0">${l}</p>`).join('')}
     ${rows.length ? `    <div class="cwrap"><table class="ctable"><thead><tr><th>Who</th>${hasEarly ? `<th>${both ? 'Standard' : 'Price'}</th>` : ''}${both ? '<th>Late / on the day</th>' : (!hasEarly ? '<th>Price</th>' : '')}</tr></thead>
       <tbody>${rows.map(r => `<tr><td><b>${esc(r.category)}</b></td>${hasEarly ? `<td class="num">${esc(gbp(r.early))}</td>` : ''}${hasLate && (both || !hasEarly) ? `<td class="num">${esc(gbp(r.late))}</td>` : ''}</tr>`).join('')}</tbody></table></div>` : ''}
@@ -947,16 +951,16 @@ function eventPage(id){
     </div></section>
     <div class="wrap"><div class="detail-grid">
       <aside class="stack">
-        ${e.entryUrl && !isPast(e) ? `<div class="card entrycard"><a class="btn big gold" href="${esc(e.entryUrl)}" ${ext}>${enterIcon}Enter now</a>${e.entryNote ? `<p class="note-line">${esc(e.entryNote)}</p>` : ''}</div>` : ''}
-        ${timingsRows(e).length ? `<div class="card"><h3>${ct('clock', 'Event times')}</h3>
+        ${e.entryUrl && !isPast(e) ? `<div class="card entrycard"><a class="btn big gold" href="${esc(e.entryUrl)}" ${ext}>${enterIcon}Enter Online</a>${e.entryNote ? `<p class="note-line">${esc(e.entryNote)}</p>` : ''}</div>` : ''}
+        ${timingsRows(e).length ? `<div class="card"><h3>${ct('clock', 'Event Times')}</h3>
           <dl class="facts">${timingsRows(e).map(r => `<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join('')}</dl></div>` : ''}
         ${d.officials.length ? `<div class="card"><h3>${ct('club', 'Event Officials')}</h3>
           <dl class="facts">${d.officials.map(o => `<dt>${esc(o[0])}</dt><dd>${o[2] ? `<a href="${esc(o[2])}">${esc(o[1])}</a>` : esc(o[1])}</dd>`).join('')}</dl></div>` : ''}
-        ${docs.length ? `<div class="card"><h3>${ct('docs', 'Documents and links')}</h3>
+        ${docs.length ? `<div class="card"><h3>${ct('docs', 'Documents and Links')}</h3>
           <div class="links" style="margin-top:.8rem">${docs.map(x => `<a class="btn small line" href="${esc(x[1])}" ${ext}>${esc(x[0])}</a>`).join('')}</div></div>` : ''}
       </aside>
       <div class="stack">
-        ${d.about ? `<section class="card"><h3>${ct('about', 'Event overview')}</h3><p style="margin-top:.6rem">${esc(d.about)}</p></section>` : ''}
+        ${d.about ? `<section class="card"><h3>${ct('about', 'Event Overview')}</h3><p style="margin-top:.6rem">${esc(d.about)}</p></section>` : ''}
         ${e.results && e.results.length ? `<section class="card"><h3>${ct('results', 'Results')}</h3><div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small gold" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div></section>`
           : (isPast(e) ? `<section class="card todo"><h3>${ct('results', 'Results')}</h3><p style="margin:.6rem 0 0">Results to follow.</p></section>` : '')}
         ${(loc || areaName || d.address.length || d.postcode || d.gridRef || d.w3w) ? `<section class="card"><h3>${ct('newcomers', 'Event Location')}</h3>
@@ -972,7 +976,7 @@ function eventPage(id){
           </div>
           ${loc ? `<div class="map"><div class="leafmap single" data-map="event:${esc(e.id)}">${mapSVG(e.area)}${FALLBACK_NOTE}</div></div>` : ''}
         </section>` : ''}
-        ${coursesCard(e)}${feesCard(e)}${(coursesCard(e) || feesCard(e)) ? '' : `<section class="card todo"><h3>${ct('coin', 'Courses, fees and entry')}</h3>
+        ${coursesCard(e)}${feesCard(e)}${(coursesCard(e) || feesCard(e)) ? '' : `<section class="card todo"><h3>${ct('coin', 'Courses, Fees and Entry')}</h3>
           <p style="margin:.6rem 0 0">To add: courses and lengths, entry fees, how to enter, start times and parking. These come from the preliminary details once confirmed.</p></section>`}
       </div>
     </div></div>`;
