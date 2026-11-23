@@ -106,6 +106,7 @@ p{margin:0 0 1rem;max-width:65ch}
 .more{font-weight:600;white-space:nowrap}
 .pagehead{padding:2.2rem 0 1.2rem;border-bottom:1px solid var(--line);background:var(--card)}
 .pagehead h1{font-size:clamp(2.2rem,6vw,3.4rem);text-transform:uppercase;font-weight:700}
+.card h3 .ci{width:1.1em;height:1.1em;fill:none;stroke:var(--course);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;margin-right:.45rem}
 .pagehead .hi{width:.8em;height:.8em;fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.04em;margin-right:.3em}
 .pagehead .lead{margin:.7rem 0 0;color:var(--muted);font-size:1.1rem}
 .back{display:inline-block;margin-bottom:.8rem;font-weight:600}
@@ -294,7 +295,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 73';
+const BUILD = 'build 74';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -316,6 +317,9 @@ function upgradeEvent(e){
   const o = Object.assign({}, e);
   if (!o.level && o.type) o.level = o.type;  /* older entries used a single Event type */
   const en = e.entry || {}, off = e.officials || {}, loc = e.location || {}, doc = e.documents || {}, rl = e.resultLinks || {};
+  const fe = e.fees || {};
+  if (fe.entryUrl && !o.entryUrl) o.entryUrl = String(fe.entryUrl).trim();
+  if (fe.entryNote && !o.entryNote) o.entryNote = fe.entryNote;
   if (en.url && !o.entryUrl) o.entryUrl = en.url;
   if (en.note && !o.entryNote) o.entryNote = en.note;
   if (doc.oldPage && !o.link) o.link = doc.oldPage;
@@ -699,8 +703,14 @@ const ICONS = {
   anytime:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 3h6"/>',
   club:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5a5 5 0 0 1 4.5 5"/>',
   mapped:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  coin:'<circle cx="12" cy="12" r="9"/><path d="M14.8 8.6c-.5-.9-1.5-1.4-2.6-1.4-1.6 0-2.7 1-2.7 2.6V16M7.8 16h8.2M8.2 12h5.6"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+  courses:'<path d="M6 21V4"/><path d="M6 5h11l-2.5 3.5L17 12H6"/>',
+  about:'<path d="M3 19l6-10 4 6 3-4 5 8z"/>',
+  docs:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>',
   newcomers:'<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>'
 };
+const ct = (icon, text) => `<svg class="ci" viewBox="0 0 24 24" aria-hidden="true">${ICONS[icon]}</svg>${text}`;
 function pageHead(title, intro, icon){
   const ic = icon && ICONS[icon] ? `<svg class="hi" viewBox="0 0 24 24" aria-hidden="true">${ICONS[icon]}</svg>` : '';
   return `<section class="pagehead"><div class="wrap"><h1>${ic}${esc(title)}</h1>${intro ? `<p class="lead">${intro}</p>` : ''}</div></section>`;
@@ -890,14 +900,15 @@ function coursesCard(e){
   const m = v => { v = String(v || '').trim(); return v ? (/^[\d.]+$/.test(v) ? v + ' m' : v) : ''; };
   const row = c => `<tr><td><span class="cchip"><i style="background:${col(c) || 'transparent'}"></i>${esc(c.name || c.colour || 'Course')}</span>${c.note ? `<div class="cnote">${esc(c.note)}</div>` : ''}</td>
     ${has('length') ? `<td class="num">${esc(km(c.length))}</td>` : ''}${has('controls') ? `<td class="num">${esc(c.controls || '')}</td>` : ''}${has('climb') ? `<td class="num">${esc(m(c.climb))}</td>` : ''}</tr>`;
-  return `<section class="card"><h3>Courses</h3><div class="cwrap"><table class="ctable"><thead><tr><th>Course</th>${has('length') ? '<th>Length</th>' : ''}${has('controls') ? '<th>Controls</th>' : ''}${has('climb') ? '<th>Climb</th>' : ''}</tr></thead><tbody>${list.map(row).join('')}</tbody></table></div></section>`;
+  return `<section class="card"><h3>${ct('courses', 'Courses')}</h3><div class="cwrap"><table class="ctable"><thead><tr><th>Course</th>${has('length') ? '<th>Length</th>' : ''}${has('controls') ? '<th>Controls</th>' : ''}${has('climb') ? '<th>Climb</th>' : ''}</tr></thead><tbody>${list.map(row).join('')}</tbody></table></div></section>`;
 }
 function feesCard(e){
   const f = e.fees || {};
   const rows = (Array.isArray(f.rows) ? f.rows : []).filter(r => r && r.category && (r.early || r.late));
   const t = k => String(f[k] == null ? '' : f[k]).trim();
   const chip = t('chipHire'), siac = t('siacHire'), note = t('note');
-  if (!rows.length) return '';
+  const canEnter = !!e.entryUrl && !isPast(e);
+  if (!rows.length && !canEnter) return '';
   const gbp = v => { v = String(v == null ? '' : v).trim(); return /^\d+(\.\d+)?$/.test(v) ? '\u00a3' + v : v; };
   const day = v => { const d = /^\d{4}-\d{2}-\d{2}$/.test(v) ? parseDate(v) : null; return d ? fmtLong.format(d).replace(/,/g, '').replace(/ \d{4}$/, '') : v; };
   const hasEarly = rows.some(r => String(r.early || '').trim()), hasLate = rows.some(r => String(r.late || '').trim());
@@ -908,10 +919,11 @@ function feesCard(e){
   if (t('earlyDeadline')) lines.push(`Enter online${via} by <b>${esc(day(t('earlyDeadline')))}</b> for the standard price.`);
   if (t('lateDeadline')) lines.push(`Late online entry is open until <b>${esc(day(t('lateDeadline')))}</b>.`);
   if (hasLate) lines.push('Entry on the day is available, subject to map availability.');
-  return `<section class="card"><h3>Entry fees</h3>
+  return `<section class="card"><h3>${ct('coin', 'Entry fees')}</h3>
     ${lines.map(l => `<p style="margin:.5rem 0 0">${l}</p>`).join('')}
-    <div class="cwrap"><table class="ctable"><thead><tr><th>Who</th>${hasEarly ? `<th>${both ? 'Standard' : 'Price'}</th>` : ''}${both ? '<th>Late / on the day</th>' : (!hasEarly ? '<th>Price</th>' : '')}</tr></thead>
-      <tbody>${rows.map(r => `<tr><td><b>${esc(r.category)}</b></td>${hasEarly ? `<td class="num">${esc(gbp(r.early))}</td>` : ''}${hasLate && (both || !hasEarly) ? `<td class="num">${esc(gbp(r.late))}</td>` : ''}</tr>`).join('')}</tbody></table></div>
+    ${canEnter ? `<p style="margin:1rem 0 1.2rem"><a class="btn big gold" href="${esc(e.entryUrl)}" ${ext}>Enter online</a></p>${e.entryNote ? `<p class="note-line">${esc(e.entryNote)}</p>` : ''}` : ''}
+    ${rows.length ? `    <div class="cwrap"><table class="ctable"><thead><tr><th>Who</th>${hasEarly ? `<th>${both ? 'Standard' : 'Price'}</th>` : ''}${both ? '<th>Late / on the day</th>' : (!hasEarly ? '<th>Price</th>' : '')}</tr></thead>
+      <tbody>${rows.map(r => `<tr><td><b>${esc(r.category)}</b></td>${hasEarly ? `<td class="num">${esc(gbp(r.early))}</td>` : ''}${hasLate && (both || !hasEarly) ? `<td class="num">${esc(gbp(r.late))}</td>` : ''}</tr>`).join('')}</tbody></table></div>` : ''}
     ${chip ? `<p style="margin:.6rem 0 0"><b>Chip hire:</b> ${esc(gbp(chip))}</p>` : ''}
     ${siac ? `<p style="margin:.3rem 0 0"><b>SIAC chip hire:</b> ${esc(gbp(siac))}</p>` : ''}
     ${note ? `<p class="cnote" style="margin:.5rem 0 0">${esc(note)}</p>` : ''}</section>`;
@@ -934,21 +946,20 @@ function eventPage(id){
     </div></section>
     <div class="wrap"><div class="detail-grid">
       <aside class="stack">
-        ${e.entryUrl && !isPast(e) ? `<div class="card entrycard"><a class="btn big gold" href="${esc(e.entryUrl)}" ${ext}>Enter online</a>${e.entryNote ? `<p class="note-line">${esc(e.entryNote)}</p>` : ''}</div>` : ''}
-        ${timingsRows(e).length ? `<div class="card"><h3>Event times</h3>
+        ${timingsRows(e).length ? `<div class="card"><h3>${ct('clock', 'Event times')}</h3>
           <dl class="facts">${timingsRows(e).map(r => `<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join('')}</dl></div>` : ''}
-        ${d.officials.length ? `<div class="card"><h3>Event Officials</h3>
+        ${d.officials.length ? `<div class="card"><h3>${ct('club', 'Event Officials')}</h3>
           <dl class="facts">${d.officials.map(o => `<dt>${esc(o[0])}</dt><dd>${o[2] ? `<a href="${esc(o[2])}">${esc(o[1])}</a>` : esc(o[1])}</dd>`).join('')}</dl></div>` : ''}
-        ${docs.length ? `<div class="card"><h3>Documents and links</h3>
+        ${docs.length ? `<div class="card"><h3>${ct('docs', 'Documents and links')}</h3>
           <div class="links" style="margin-top:.8rem">${docs.map(x => `<a class="btn small line" href="${esc(x[1])}" ${ext}>${esc(x[0])}</a>`).join('')}</div></div>` : ''}
       </aside>
       <div class="stack">
-        ${e.results && e.results.length ? `<section class="card"><h3>Results</h3><div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small gold" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div></section>`
-          : (isPast(e) ? `<section class="card todo"><h3>Results</h3><p style="margin:.6rem 0 0">Results to follow.</p></section>` : '')}
-        ${coursesCard(e)}${feesCard(e)}${(coursesCard(e) || feesCard(e)) ? '' : `<section class="card todo"><h3>Courses, fees and entry</h3>
+        ${e.results && e.results.length ? `<section class="card"><h3>${ct('results', 'Results')}</h3><div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small gold" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div></section>`
+          : (isPast(e) ? `<section class="card todo"><h3>${ct('results', 'Results')}</h3><p style="margin:.6rem 0 0">Results to follow.</p></section>` : '')}
+        ${coursesCard(e)}${feesCard(e)}${(coursesCard(e) || feesCard(e)) ? '' : `<section class="card todo"><h3>${ct('coin', 'Courses, fees and entry')}</h3>
           <p style="margin:.6rem 0 0">To add: courses and lengths, entry fees, how to enter, start times and parking. These come from the preliminary details once confirmed.</p></section>`}
-        ${d.about ? `<section class="card"><h3>About the area</h3><p style="margin-top:.6rem">${esc(d.about)}</p></section>` : ''}
-        ${(loc || areaName || d.address.length || d.postcode || d.gridRef || d.w3w) ? `<section class="card"><h3>Event Location</h3>
+        ${d.about ? `<section class="card"><h3>${ct('about', 'About the area')}</h3><p style="margin-top:.6rem">${esc(d.about)}</p></section>` : ''}
+        ${(loc || areaName || d.address.length || d.postcode || d.gridRef || d.w3w) ? `<section class="card"><h3>${ct('newcomers', 'Event Location')}</h3>
           ${(d.address.length || d.postcode) ? `<p style="margin:.6rem 0">${[...d.address.map(esc), esc(d.postcode)].filter(Boolean).join('<br>')}</p>` : ''}
           <dl class="facts" style="margin-bottom:1rem">
             ${areaName ? `<dt>Area</dt><dd>${areaLink ? `<a href="${esc(areaLink)}">${esc(areaName)}</a>` : esc(areaName)}</dd>` : ''}

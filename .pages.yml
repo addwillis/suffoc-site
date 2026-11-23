@@ -67,19 +67,6 @@ content:
       - "Sudbury"
       - "Tunstall Forest"
       # END areas
-  - name: entry
-    label: ENTRY
-    type: object
-    description: Adds the big gold Enter online button, at the top of the event page.
-    fields:
-    - name: url
-      label: Enter online link
-      type: string
-      description: The full web address of the entry page, e.g. the RaceSignup link.
-    - name: note
-      label: Entry note
-      type: string
-      description: Short line under the button, e.g. Entries close Friday 27 November
   - name: timings
     label: EVENT TIMES
     type: object
@@ -232,6 +219,14 @@ content:
     type: object
     description: Leave empty until the fees are confirmed. Prices can be typed as 8 or £8.
     fields:
+    - name: entryUrl
+      label: Enter online link
+      type: string
+      description: The full web address of the entry page, e.g. the RaceSignup link. Adds the gold Enter online button.
+    - name: entryNote
+      label: Entry note (optional)
+      type: string
+      description: Short line under the Enter online button.
     - name: rows
       label: Prices
       type: object

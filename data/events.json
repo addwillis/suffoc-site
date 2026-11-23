@@ -26,9 +26,6 @@
       "level": "Local",
       "series": "Mid-Week Street-O",
       "area": "Hardwick",
-      "entry": {
-        "url": "https://racesignup.co.uk/2026-street-O-2"
-      },
       "timings": {
         "startsFrom": "18:00"
       },
@@ -39,6 +36,9 @@
       },
       "location": {
         "gridRef": "TL858628"
+      },
+      "fees": {
+        "entryUrl": "https://racesignup.co.uk/2026-street-O-2"
       },
       "id": "hardwick-street-o-2"
     },
@@ -83,9 +83,6 @@
       "level": "Local",
       "series": "Mid-Week Street-O",
       "area": "Claydon",
-      "entry": {
-        "url": "https://racesignup.co.uk/2026-street-O-3"
-      },
       "timings": {
         "startsFrom": "18:00"
       },
@@ -97,6 +94,9 @@
       "location": {
         "gridRef": "TL858628",
         "w3w": "only.pint.form"
+      },
+      "fees": {
+        "entryUrl": "https://racesignup.co.uk/2026-street-O-3"
       },
       "id": "street-o-claydon"
     },
@@ -127,15 +127,13 @@
       "date": "2026-11-29",
       "level": "Regional",
       "area": "Tunstall Forest",
-      "entry": {
-        "url": "https://racesignup.co.uk/tunstall-forest-2026"
-      },
       "timings": {
         "startsFrom": "10:30",
         "startsTo": "13:00",
         "courseClose": "14:00"
       },
       "fees": {
+        "entryUrl": "https://racesignup.co.uk/tunstall-forest-2026",
         "rows": [
           {
             "category": "Senior member",

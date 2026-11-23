@@ -4,9 +4,6 @@
   "level": "Local",
   "series": "Mid-Week Street-O",
   "area": "Claydon",
-  "entry": {
-    "url": "https://racesignup.co.uk/2026-street-O-3"
-  },
   "timings": {
     "startsFrom": "18:00"
   },
@@ -18,5 +15,8 @@
   "location": {
     "gridRef": "TL858628",
     "w3w": "only.pint.form"
+  },
+  "fees": {
+    "entryUrl": "https://racesignup.co.uk/2026-street-O-3"
   }
 }

@@ -4,9 +4,6 @@
   "level": "Local",
   "series": "Mid-Week Street-O",
   "area": "Hardwick",
-  "entry": {
-    "url": "https://racesignup.co.uk/2026-street-O-2"
-  },
   "timings": {
     "startsFrom": "18:00"
   },
@@ -17,5 +14,8 @@
   },
   "location": {
     "gridRef": "TL858628"
+  },
+  "fees": {
+    "entryUrl": "https://racesignup.co.uk/2026-street-O-2"
   }
 }

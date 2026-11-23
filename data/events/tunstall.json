@@ -3,15 +3,13 @@
   "date": "2026-11-29",
   "level": "Regional",
   "area": "Tunstall Forest",
-  "entry": {
-    "url": "https://racesignup.co.uk/tunstall-forest-2026"
-  },
   "timings": {
     "startsFrom": "10:30",
     "startsTo": "13:00",
     "courseClose": "14:00"
   },
   "fees": {
+    "entryUrl": "https://racesignup.co.uk/tunstall-forest-2026",
     "rows": [
       {
         "category": "Senior member",
