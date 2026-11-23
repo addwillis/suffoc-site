@@ -45,6 +45,7 @@ content:
     options:
       values:
       # BEGIN series
+      - "Compass Sport Heat"
       - "Mid-Week Street-O"
       - "Simon Peck Summer Series"
       # END series
