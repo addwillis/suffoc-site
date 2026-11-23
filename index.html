@@ -116,7 +116,7 @@ p{margin:0 0 1rem;max-width:65ch}
 .more{font-weight:600;white-space:nowrap}
 .pagehead{padding:2.2rem 0 1.2rem;border-bottom:1px solid var(--line);background:var(--card)}
 .pagehead h1{font-size:clamp(2.2rem,6vw,3.4rem);text-transform:uppercase;font-weight:700}
-.card h3 .ci{width:1.1em;height:1.1em;fill:none;stroke:var(--course);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;margin-right:.45rem}
+.tile h3 .ci,.card h3 .ci{width:1.1em;height:1.1em;fill:none;stroke:var(--course);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;margin-right:.45rem}
 .pagehead .hi{width:.8em;height:.8em;fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.04em;margin-right:.3em}
 .pagehead .lead{margin:.7rem 0 0;color:var(--muted);font-size:1.1rem}
 .back{display:inline-block;margin-bottom:.8rem;font-weight:600}
@@ -323,7 +323,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 100';
+const BUILD = 'build 106';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -694,7 +694,7 @@ function initPermMaps(){
       const key = el.dataset.map, all = key === 'perm-all';
       const items = all ? PERM : PERM.filter(p => p.id === key.slice(5));
       el.innerHTML = '';
-      const map = L.map(el, { scrollWheelZoom:false });
+      const map = L.map(el, { scrollWheelZoom:true });
       map.attributionControl.setPrefix(false);
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19,
         attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
@@ -724,7 +724,7 @@ function initMaps(){
     try {
       const key = el.dataset.map;
       el.innerHTML = '';
-      const map = L.map(el, { scrollWheelZoom:false });
+      const map = L.map(el, { scrollWheelZoom:true });
       map.attributionControl.setPrefix(false);
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19,
         attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
@@ -782,8 +782,11 @@ const ICONS = {
   anytime:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 3h6"/>',
   club:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5a5 5 0 0 1 4.5 5"/>',
   mapped:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  download:'<path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/>',
   enter:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 7.5v6M16 10.5h6"/>',
   comments:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/>',
+  phone:'<rect x="6.5" y="2.5" width="11" height="19" rx="2.4"/><path d="M10.5 18.5h3"/><path d="M12 13.2s-2.6-2.1-2.6-4a2.6 2.6 0 0 1 5.2 0c0 1.9-2.6 4-2.6 4z"/>',
+  post:'<path d="M9.5 21V3.5h5V21"/><path d="M5.5 21h13M9.5 8h5"/>',
   coin:'<circle cx="12" cy="12" r="9"/><path d="M14.8 8.6c-.5-.9-1.5-1.4-2.6-1.4-1.6 0-2.7 1-2.7 2.6V16M7.8 16h8.2M8.2 12h5.6"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
   courses:'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h8"/>',
@@ -856,8 +859,8 @@ const VIEWS = {
     return `${pageHead('Anytime O', 'Orienteer whenever you like, no event needed.', 'anytime')}
     <div class="wrap">
       <section class="section"><div class="grid">
-        <a class="tile" href="#permanent"><h3>Permanent Orienteering Courses</h3><p>Courses set up in parks and woods that you can follow at any time with a downloadable map.</p></a>
-        <article class="card"><h3>MapRun</h3><p style="margin-top:.5rem">Use the MapRun app on your phone to find virtual controls and get timed, wherever you are.</p></article>
+        <article class="card"><h3>${ct('phone', 'MapRun')}</h3><p style="margin-top:.5rem">Use the MapRun app on your phone to find virtual controls and get timed, wherever you are.</p></article>
+        <a class="tile" href="#permanent"><h3>${ct('post', 'Permanent Orienteering Courses')}</h3><p>Courses set up in parks and woods that you can follow at any time with a downloadable map.</p></a>
       </div></section>
     </div>`;
   },
@@ -902,12 +905,12 @@ function timingsRows(e){
 /* "More ways to get out" tiles, shown at the bottom of the Events page and each event page. */
 function exploreTiles(){
   const t = [
-    ['#mapped', 'Mapped areas', 'Every place the club has made a map for.'],
-    ['#anytime', 'MapRun', 'Virtual controls on your phone, any time.'],
-    ['#permanent', 'Permanent Orienteering Courses', 'Courses to follow whenever you like.']
+    ['#mapped', 'Mapped areas', 'Every place the club has made a map for.', 'mapped'],
+    ['#anytime', 'MapRun', 'Virtual controls on your phone, any time.', 'phone'],
+    ['#permanent', 'Permanent Orienteering Courses', 'Courses to follow whenever you like.', 'post']
   ];
   return `<section class="section"><div class="section-head"><h2>More to explore</h2></div><div class="tiles">
-    ${t.map(x => `<a class="tile" href="${x[0]}"><h3>${esc(x[1])}</h3><p>${esc(x[2])}</p></a>`).join('')}
+    ${t.map(x => `<a class="tile" href="${x[0]}"><h3>${ct(x[3], esc(x[1]))}</h3><p>${esc(x[2])}</p></a>`).join('')}
   </div></section>`;
 }
 /* Past events grouped by year, newest year open. Used by Results and the area pages. */
@@ -1055,7 +1058,7 @@ function permanentPage(id){
     </div></section>
     <div class="wrap"><div class="detail-grid">
       <aside class="stack">
-        ${p.mapUrl ? `<div class="card entrycard"><a class="btn big gold" href="${esc(p.mapUrl)}" ${ext}>Download the Map</a>${p.mapNote ? `<p class="note-line">${esc(p.mapNote)}</p>` : ''}</div>` : ''}
+        ${p.mapUrl ? `<div class="card entrycard"><a class="btn big gold" href="${esc(p.mapUrl)}" ${ext}><svg class="ei" viewBox="0 0 24 24" aria-hidden="true">${ICONS.download}</svg>Download the Map</a>${p.mapNote ? `<p class="note-line">${esc(p.mapNote)}</p>` : ''}</div>` : ''}
       </aside>
       <div class="stack">
         ${has(p.description) ? `<section class="card"><h3>${ct('about', 'About the Course')}</h3><div class="prose" style="margin-top:.6rem">${richHTML(p.description)}</div></section>` : ''}
