@@ -27,6 +27,8 @@
     {
       "name": "Rod Mansel",
       "role": "Secretary",
+      "email": "secretary@suffoc.uk",
+      "photo": "/images/481042691_1115465880378185_515702870223544262_n.jpg",
       "committee": true,
       "id": "rod-mansel"
     },
