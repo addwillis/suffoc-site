@@ -162,16 +162,12 @@ content:
         type: string
     - name: earlyDeadline
       label: Standard price online entry closes (optional)
-      type: date
-      options:
-        format: yyyy-MM-dd
-      description: Online entries up to this date get the standard price.
+      type: string
+      description: Type as 2026-11-22, or in words like 22 November. Online entries up to this date get the standard price. Leave empty if not needed.
     - name: lateDeadline
       label: Late online entry closes (optional)
-      type: date
-      options:
-        format: yyyy-MM-dd
-      description: Late online entries are taken up to this date.
+      type: string
+      description: Type as 2026-11-22, or in words like 22 November. Late online entries are taken up to this date. Leave empty if not needed.
     - name: chipHire
       label: Chip hire
       type: string
