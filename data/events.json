@@ -1,7 +1,107 @@
 {
   "events": [
     {
-      "id": "tunstall",
+      "title": "Brandon Country park",
+      "date": "2026-02-22",
+      "area": "Brandon Country Park",
+      "id": "brandon-country-park"
+    },
+    {
+      "title": "Clare Country Park",
+      "date": "2026-06-21",
+      "type": "Local event",
+      "area": "Clare Country Park",
+      "resultLinks": {
+        "results": "http://www.suffoc.co.uk/results/2026/Clare/index.html",
+        "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113649",
+        "routegadget": "https://www.suffoc.routegadget.co.uk/rg2/#139"
+      },
+      "id": "clare-2026"
+    },
+    {
+      "title": "SUFFOC Mid-Week Street-O 2 Hardwick",
+      "date": "2026-12-08",
+      "timings": {
+        "startsFrom": "18:00"
+      },
+      "type": "Street-O",
+      "area": "Hardwick",
+      "detail": {
+        "gridRef": "TL858628",
+        "organiser": "Gareth Radcliffe",
+        "planner": "Gareth Radcliffe"
+      },
+      "id": "hardwick-street-o-2"
+    },
+    {
+      "title": "Kings Forest West Stow",
+      "date": "2027-01-10",
+      "timings": {
+        "registrationFrom": "10:00",
+        "registrationTo": "12:00",
+        "startsFrom": "10:30",
+        "startsTo": "12:30",
+        "courseClose": "14:00"
+      },
+      "type": "Regional",
+      "area": "Kings Forest",
+      "detail": {
+        "gridRef": "TL 821760",
+        "organiser": "Rod Mansel",
+        "planner": "Phil Halford",
+        "controller": "Mike Bickle"
+      },
+      "id": "kings-forest-west-stow"
+    },
+    {
+      "title": "Needham Lakes",
+      "date": "2026-07-05",
+      "type": "Local event",
+      "area": "Needham Lakes",
+      "resultLinks": {
+        "results": "http://www.suffoc.co.uk/results/2026/Needham/index.html",
+        "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113907",
+        "routegadget": "https://www.suffoc.routegadget.co.uk/rg2/#140"
+      },
+      "id": "needham-2026"
+    },
+    {
+      "title": "SUFFOC Mid-Week Street-O 3 Claydon",
+      "date": "2027-01-12",
+      "timings": {
+        "startsFrom": "18:00"
+      },
+      "type": "Street-O",
+      "area": "Claydon",
+      "detail": {
+        "gridRef": "TL858628",
+        "w3w": "only.pint.form"
+      },
+      "id": "street-o-claydon"
+    },
+    {
+      "title": "Sudbury Urban",
+      "date": "2026-05-17",
+      "type": "Regional",
+      "area": "Sudbury",
+      "results": [
+        {
+          "label": "Routegadget courses 1 to 3",
+          "url": "https://www.suffoc.routegadget.co.uk/rg2/#138"
+        },
+        {
+          "label": "Routegadget courses 4 to 7",
+          "url": "https://www.suffoc.routegadget.co.uk/rg2/#137"
+        }
+      ],
+      "resultLinks": {
+        "results": "http://www.suffoc.co.uk/results/2026/Sudbury/index.html",
+        "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=112544",
+        "comments": "https://www.suffoc.co.uk/resources/event_comments/suffoc-sudbury-urban-2026-comments"
+      },
+      "id": "sudbury-2026"
+    },
+    {
       "title": "Tunstall Forest Barnes Carr and The Birches",
       "date": "2026-11-29",
       "timings": {
@@ -31,108 +131,8 @@
             "url": "http://www.suffoc.co.uk/area-overview/tunstall-forest"
           }
         ]
-      }
-    },
-    {
-      "id": "hardwick-street-o-2",
-      "title": "SUFFOC Mid-Week Street-O 2 Hardwick",
-      "date": "2026-12-08",
-      "timings": {
-        "startsFrom": "18:00"
       },
-      "type": "Street-O",
-      "area": "Hardwick",
-      "detail": {
-        "gridRef": "TL858628",
-        "organiser": "Gareth Radcliffe",
-        "planner": "Gareth Radcliffe"
-      }
-    },
-    {
-      "id": "needham-2026",
-      "title": "Needham Lakes",
-      "date": "2026-07-05",
-      "type": "Local event",
-      "area": "Needham Lakes",
-      "resultLinks": {
-        "results": "http://www.suffoc.co.uk/results/2026/Needham/index.html",
-        "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113907",
-        "routegadget": "https://www.suffoc.routegadget.co.uk/rg2/#140"
-      }
-    },
-    {
-      "id": "clare-2026",
-      "title": "Clare Country Park",
-      "date": "2026-06-21",
-      "type": "Local event",
-      "area": "Clare Country Park",
-      "resultLinks": {
-        "results": "http://www.suffoc.co.uk/results/2026/Clare/index.html",
-        "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113649",
-        "routegadget": "https://www.suffoc.routegadget.co.uk/rg2/#139"
-      }
-    },
-    {
-      "id": "sudbury-2026",
-      "title": "Sudbury Urban",
-      "date": "2026-05-17",
-      "type": "Regional",
-      "area": "Sudbury",
-      "results": [
-        {
-          "label": "Routegadget courses 1 to 3",
-          "url": "https://www.suffoc.routegadget.co.uk/rg2/#138"
-        },
-        {
-          "label": "Routegadget courses 4 to 7",
-          "url": "https://www.suffoc.routegadget.co.uk/rg2/#137"
-        }
-      ],
-      "resultLinks": {
-        "results": "http://www.suffoc.co.uk/results/2026/Sudbury/index.html",
-        "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=112544",
-        "comments": "https://www.suffoc.co.uk/resources/event_comments/suffoc-sudbury-urban-2026-comments"
-      }
-    },
-    {
-      "id": "street-o-claydon",
-      "title": "SUFFOC Mid-Week Street-O 3 Claydon",
-      "date": "2027-01-12",
-      "timings": {
-        "startsFrom": "18:00"
-      },
-      "type": "Street-O",
-      "area": "Claydon",
-      "detail": {
-        "gridRef": "TL858628",
-        "w3w": "only.pint.form"
-      }
-    },
-    {
-      "id": "kings-forest-west-stow",
-      "title": "Kings Forest West Stow",
-      "date": "2027-01-10",
-      "timings": {
-        "registrationFrom": "10:00",
-        "registrationTo": "12:00",
-        "startsFrom": "10:30",
-        "startsTo": "12:30",
-        "courseClose": "14:00"
-      },
-      "type": "Regional",
-      "area": "Kings Forest",
-      "detail": {
-        "gridRef": "TL 821760",
-        "organiser": "Rod Mansel",
-        "planner": "Phil Halford",
-        "controller": "Mike Bickle"
-      }
-    },
-    {
-      "id": "Brandon Country Park",
-      "title": "Brandon Country park",
-      "date": "2026-02-22",
-      "area": "Brandon Country Park"
+      "id": "tunstall"
     }
   ]
 }

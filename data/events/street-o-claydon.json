@@ -1,0 +1,13 @@
+{
+  "title": "SUFFOC Mid-Week Street-O 3 Claydon",
+  "date": "2027-01-12",
+  "timings": {
+    "startsFrom": "18:00"
+  },
+  "type": "Street-O",
+  "area": "Claydon",
+  "detail": {
+    "gridRef": "TL858628",
+    "w3w": "only.pint.form"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "title": "Tunstall Forest Barnes Carr and The Birches",
+  "date": "2026-11-29",
+  "timings": {
+    "startsFrom": "10:30",
+    "startsTo": "13:00",
+    "courseClose": "14:00"
+  },
+  "type": "Regional",
+  "area": "Tunstall Forest",
+  "entryUrl": "https://racesignup.co.uk/tunstall-forest-2026",
+  "detail": {
+    "about": "Barnes Carr and The Birches is in the south-east portion of Tunstall Forest, in the East Suffolk Sandlings. The area has interesting terrain, with a variety of water and relief features and some nice areas of deciduous woodland.",
+    "address": [
+      "Tunstall Forest",
+      "B1078 Orford Road, FR22",
+      "Tunstall"
+    ],
+    "postcode": "IP12 2AP",
+    "gridRef": "TM 39950 52750",
+    "w3w": "economies.winter.windmills",
+    "organiser": "Louise Walker",
+    "planner": "Gareth Radcliffe",
+    "controller": "Paul Beckett",
+    "docs": [
+      {
+        "label": "Area overview: Tunstall Forest",
+        "url": "http://www.suffoc.co.uk/area-overview/tunstall-forest"
+      }
+    ]
+  }
+}

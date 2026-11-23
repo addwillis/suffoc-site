@@ -4,186 +4,156 @@ media:
 content:
 - name: events
   label: Events and results
-  type: file
-  path: data/events.json
+  type: collection
+  path: data/events
   format: json
+  filename:
+    template: '{primary}.json'
+    field: create
+  view:
+    fields: [date, title, type, area]
+    primary: title
+    sort: [date, title]
+    search: [title, area]
+    default:
+      sort: date
+      order: desc
   fields:
-  - name: events
-    label: Events
+  - name: title
+    label: Event name
+    type: string
+    required: true
+  - name: date
+    label: Date
+    type: date
+    options:
+      format: yyyy-MM-dd
+    required: true
+  - name: timings
+    label: Timings
     type: object
-    list:
-      collapsible:
-        collapsed: true
-        summary: '{date} {title}'
+    description: Fill in what you know. The first Starts time and the last Course closes time are shown on the home page and Events page.
     fields:
-    - name: id
-      label: Short ID (web address)
+    - name: registrationFrom
+      label: Registration opens
       type: string
-      description: Lowercase, no spaces, e.g. tunstall-2026. Used in the event page link.
-      required: true
-    - name: title
-      label: Event name
+      description: e.g. 10:00
+    - name: registrationTo
+      label: Registration closes
       type: string
-      required: true
-    - name: date
-      label: Date
+      description: e.g. 11:30
+    - name: startsFrom
+      label: Starts open
       type: string
-      description: Format YYYY-MM-DD, e.g. 2026-11-29
-      required: true
-    - name: timings
-      label: Timings
-      type: object
-      description: Fill in what you know. The first Starts time and the last Course closes time are shown on the home page and Events page.
-      fields:
-      - name: registrationFrom
-        label: Registration opens
-        type: string
-        description: e.g. 10:00
-      - name: registrationTo
-        label: Registration closes
-        type: string
-        description: e.g. 11:30
-      - name: startsFrom
-        label: Starts open
-        type: string
-        description: First start time, e.g. 10:30
-      - name: startsTo
-        label: Starts close
-        type: string
-        description: Last start time, e.g. 12:00
-      - name: courseClose
-        label: Course closes
-        type: string
-        description: Final course close time, e.g. 14:00
-    - name: type
-      label: Event type
-      type: select
-      options:
-        values:
-        - Regional
-        - Local event
-        - Street-O
-        - Score event
-        - Training
-        - Other
-    - name: area
-      label: Area
+      description: First start time, e.g. 10:30
+    - name: startsTo
+      label: Starts close
+      type: string
+      description: Last start time, e.g. 12:00
+    - name: courseClose
+      label: Course closes
+      type: string
+      description: Final course close time, e.g. 14:00
+  - name: type
+    label: Event type
+    type: select
+    options:
+      values:
+      - Regional
+      - Local event
+      - Street-O
+      - Score event
+      - Training
+      - Other
+  - name: area
+    label: Area
+    type: reference
+    description: Pick from the Mapped areas list. If the place isn't there yet, add it under Mapped areas first.
+    required: true
+    options:
+      collection: areas
+      search: name
+      label: '{primary}'
+      value: '{primary}'
+  - name: link
+    label: Link to existing event page (optional)
+    type: string
+  - name: pdf
+    label: Preliminary details PDF link (optional)
+    type: string
+  - name: entryUrl
+    label: Enter online link (optional)
+    type: string
+    description: The full web address of the entry page, e.g. the RaceSignup link. Adds a big Enter online button.
+  - name: entryNote
+    label: Entry note (optional)
+    type: string
+    description: Short line shown next to the button, e.g. Entries close Friday 27 November
+  - name: detail
+    label: Event page details (optional, creates a full event page)
+    type: object
+    fields:
+    - name: about
+      label: About the area
+      type: text
+    - name: address
+      label: Address lines
+      type: string
+      list: true
+    - name: postcode
+      label: Postcode
+      type: string
+    - name: gridRef
+      label: Grid reference (OS)
+      type: string
+      description: e.g. TM 39950 52750. Places the pin on this event's map and the Google Maps link.
+    - name: w3w
+      label: what3words (no ///)
+      type: string
+      description: e.g. only.pint.form. Shown as text and a link only, it does not move the map pin.
+    - name: organiser
+      label: Organiser
       type: reference
-      description: Pick from the Mapped areas list. If the place isn't there yet, add it under Mapped areas first.
-      required: true
+      description: Pick from Club members. If they aren't there yet, add them under Club members first, or use Other officials below.
       options:
-        collection: areas
+        collection: members
         search: name
         label: '{primary}'
         value: '{primary}'
-    - name: link
-      label: Link to existing event page (optional)
-      type: string
-    - name: pdf
-      label: Preliminary details PDF link (optional)
-      type: string
-    - name: entryUrl
-      label: Enter online link (optional)
-      type: string
-      description: The full web address of the entry page, e.g. the RaceSignup link. Adds a big Enter online button.
-    - name: entryNote
-      label: Entry note (optional)
-      type: string
-      description: Short line shown next to the button, e.g. Entries close Friday 27 November
-    - name: detail
-      label: Event page details (optional, creates a full event page)
-      type: object
-      fields:
-      - name: about
-        label: About the area
-        type: text
-      - name: address
-        label: Address lines
-        type: string
-        list: true
-      - name: postcode
-        label: Postcode
-        type: string
-      - name: gridRef
-        label: Grid reference (OS)
-        type: string
-        description: e.g. TM 39950 52750. Places the pin on this event's map and the Google Maps link.
-      - name: w3w
-        label: what3words (no ///)
-        type: string
-        description: e.g. only.pint.form. Shown as text and a link only, it does not move the map pin.
-      - name: organiser
-        label: Organiser
-        type: reference
-        description: Pick from Club members. If they aren't there yet, add them under Club members first, or use Other officials below.
-        options:
-          collection: members
-          search: name
-          label: '{primary}'
-          value: '{primary}'
-      - name: planner
-        label: Planner
-        type: reference
-        description: Pick from Club members. If they aren't there yet, add them under Club members first, or use Other officials below.
-        options:
-          collection: members
-          search: name
-          label: '{primary}'
-          value: '{primary}'
-      - name: controller
-        label: Controller
-        type: reference
-        description: Pick from Club members. If they aren't there yet, add them under Club members first, or use Other officials below.
-        options:
-          collection: members
-          search: name
-          label: '{primary}'
-          value: '{primary}'
-      - name: officials
-        label: Other officials (optional)
-        type: object
-        list: true
-        description: For helpers who aren't club members, e.g. a controller from another club.
-        fields:
-        - name: role
-          label: Role
-          type: string
-        - name: name
-          label: Name
-          type: string
-      - name: docs
-        label: Documents and links
-        type: object
-        list: true
-        fields:
-        - name: label
-          label: Link text
-          type: string
-        - name: url
-          label: Web address
-          type: string
-    - name: resultLinks
-      label: Results (add after the event)
-      type: object
-      description: Paste the web address for each one you have. Leave the others blank.
-      fields:
-      - name: results
-        label: Results and split times
-        type: string
-      - name: winsplits
-        label: Winsplits
-        type: string
-      - name: routegadget
-        label: Routegadget
-        type: string
-      - name: comments
-        label: Comments
-        type: string
-    - name: results
-      label: Other result links (optional)
+    - name: planner
+      label: Planner
+      type: reference
+      description: Pick from Club members. If they aren't there yet, add them under Club members first, or use Other officials below.
+      options:
+        collection: members
+        search: name
+        label: '{primary}'
+        value: '{primary}'
+    - name: controller
+      label: Controller
+      type: reference
+      description: Pick from Club members. If they aren't there yet, add them under Club members first, or use Other officials below.
+      options:
+        collection: members
+        search: name
+        label: '{primary}'
+        value: '{primary}'
+    - name: officials
+      label: Other officials (optional)
       type: object
       list: true
-      description: Only for extra links that don't fit above, e.g. a second Routegadget map.
+      description: For helpers who aren't club members, e.g. a controller from another club.
+      fields:
+      - name: role
+        label: Role
+        type: string
+      - name: name
+        label: Name
+        type: string
+    - name: docs
+      label: Documents and links
+      type: object
+      list: true
       fields:
       - name: label
         label: Link text
@@ -191,6 +161,35 @@ content:
       - name: url
         label: Web address
         type: string
+  - name: resultLinks
+    label: Results (add after the event)
+    type: object
+    description: Paste the web address for each one you have. Leave the others blank.
+    fields:
+    - name: results
+      label: Results and split times
+      type: string
+    - name: winsplits
+      label: Winsplits
+      type: string
+    - name: routegadget
+      label: Routegadget
+      type: string
+    - name: comments
+      label: Comments
+      type: string
+  - name: results
+    label: Other result links (optional)
+    type: object
+    list: true
+    description: Only for extra links that don't fit above, e.g. a second Routegadget map.
+    fields:
+    - name: label
+      label: Link text
+      type: string
+    - name: url
+      label: Web address
+      type: string
 - name: areas
   label: Mapped areas
   type: collection
@@ -279,8 +278,9 @@ content:
       type: string
     - name: date
       label: Date
-      type: string
-      description: Year-month-day, e.g. 2026-10-18
+      type: date
+      options:
+        format: yyyy-MM-dd
     - name: image
       label: Picture (optional)
       type: image
