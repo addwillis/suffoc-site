@@ -67,31 +67,30 @@ content:
       - "Sudbury"
       - "Tunstall Forest"
       # END areas
-  - name: timings
-    label: EVENT TIMES
+  - name: about
+    label: EVENT OVERVIEW
+    type: text
+    description: A short summary of the event, e.g. what to expect, the terrain and who it suits.
+  - name: location
+    label: EVENT LOCATION
     type: object
-    description: Fill in what you know. The first Starts time and the last Course closes time are shown on the home page and Events page.
+    description: Filling in anything here creates the full event page.
     fields:
-    - name: registrationFrom
-      label: Registration opens
+    - name: address
+      label: Address lines
       type: string
-      description: e.g. 10:00
-    - name: registrationTo
-      label: Registration closes
+      list: true
+    - name: postcode
+      label: Postcode
       type: string
-      description: e.g. 11:30
-    - name: startsFrom
-      label: Starts open
+    - name: gridRef
+      label: Grid reference (OS)
       type: string
-      description: First start time, e.g. 10:30
-    - name: startsTo
-      label: Starts close
+      description: e.g. TM 39950 52750. Places the pin on this event's map and the Google Maps link.
+    - name: w3w
+      label: what3words (no ///)
       type: string
-      description: Last start time, e.g. 12:00
-    - name: courseClose
-      label: Course closes
-      type: string
-      description: Final course close time, e.g. 14:00
+      description: e.g. only.pint.form. Shown as text and a link only, it does not move the map pin.
   - name: courses
     label: COURSES
     type: object
@@ -266,6 +265,31 @@ content:
       label: Note (optional)
       type: text
       description: e.g. Cash or card on the day. Group discounts.
+  - name: timings
+    label: EVENT TIMES
+    type: object
+    description: Fill in what you know. The first Starts time and the last Course closes time are shown on the home page and Events page.
+    fields:
+    - name: registrationFrom
+      label: Registration opens
+      type: string
+      description: e.g. 10:00
+    - name: registrationTo
+      label: Registration closes
+      type: string
+      description: e.g. 11:30
+    - name: startsFrom
+      label: Starts open
+      type: string
+      description: First start time, e.g. 10:30
+    - name: startsTo
+      label: Starts close
+      type: string
+      description: Last start time, e.g. 12:00
+    - name: courseClose
+      label: Course closes
+      type: string
+      description: Final course close time, e.g. 14:00
   - name: officials
     label: EVENT OFFICIALS
     type: object
@@ -339,29 +363,6 @@ content:
         - name: name
           label: Name
           type: string
-  - name: location
-    label: EVENT LOCATION
-    type: object
-    description: Filling in anything here creates the full event page.
-    fields:
-    - name: address
-      label: Address lines
-      type: string
-      list: true
-    - name: postcode
-      label: Postcode
-      type: string
-    - name: gridRef
-      label: Grid reference (OS)
-      type: string
-      description: e.g. TM 39950 52750. Places the pin on this event's map and the Google Maps link.
-    - name: w3w
-      label: what3words (no ///)
-      type: string
-      description: e.g. only.pint.form. Shown as text and a link only, it does not move the map pin.
-  - name: about
-    label: ABOUT THE AREA
-    type: text
   - name: documents
     label: DOCUMENTS AND LINKS
     type: object
