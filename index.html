@@ -305,7 +305,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 84';
+const BUILD = 'build 85';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -342,10 +342,12 @@ function upgradeEvent(e){
   if (e.about && !d.about) d.about = e.about;
   if (doc.docs && !d.docs) d.docs = doc.docs;
   if (Object.keys(d).length) o.detail = d; else delete o.detail;
-  /* result links: four fixed boxes first, then any extra links */
-  o.results = [['Results and split times', rl.results], ['Winsplits', rl.winsplits], ['Routegadget', rl.routegadget], ['Comments', rl.comments]]
+  /* result links: the fixed boxes first, then the website's own Comments page (when someone has written comments), then any extra links */
+  const cm = e.comments || {}, plain = v => String(v == null ? '' : v).replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+  const hasComments = ['planner', 'organiser', 'controller'].some(k => plain(cm[k]));
+  o.results = [['Results and split times', rl.results], ['Winsplits', rl.winsplits], ['Routegadget', rl.routegadget]]
     .filter(x => x[1] && String(x[1]).trim()).map(x => [x[0], String(x[1]).trim()])
-    .concat(pairs(rl.other, 'label', 'url'), Array.isArray(e.results) ? pairs(e.results, 'label', 'url') : []);
+    .concat(hasComments ? [['Comments', '#comments-' + e.id]] : [], pairs(rl.other, 'label', 'url'), Array.isArray(e.results) ? pairs(e.results, 'label', 'url') : []);
   return o;
 }
 function loadData(areas, events){
@@ -470,6 +472,7 @@ const now = new Date();
 const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 const fmtShort = new Intl.DateTimeFormat('en-GB', { day:'numeric', month:'short', year:'numeric' });
 const fmtLong = new Intl.DateTimeFormat('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+const linkExt = u => String(u).charAt(0) === '#' ? '' : ext;
 const ext = 'target="_blank" rel="noopener"';
 
 /* An event moves from Events to Results this many minutes after its course close time
@@ -526,7 +529,7 @@ function resultCard(e){
     ${pills(e, false)}
     <h3>${titleLink(e)}</h3>
     ${has
-      ? `<div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small line" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div>`
+      ? `<div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small line" href="${esc(l[1])}" ${linkExt(l[1])}>${esc(l[0])}</a>`).join('')}</div>`
       : `<p class="meta" style="margin-top:.6rem">Results to follow</p>`}
   </article>`;
 }
@@ -545,7 +548,7 @@ function resultRow(e){
       ${pills(e, true)}
       <h3>${titleLink(e)}</h3>
     </div>
-    ${has ? `<div class="links">${e.results.map(l => `<a class="btn small line" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div>` : `<p class="tbc">Results to follow</p>`}
+    ${has ? `<div class="links">${e.results.map(l => `<a class="btn small line" href="${esc(l[1])}" ${linkExt(l[1])}>${esc(l[0])}</a>`).join('')}</div>` : `<p class="tbc">Results to follow</p>`}
   </div>`;
 }
 /* Picture paths come from Pages CMS (e.g. /images/x.jpg); make them relative so they work under /suffoc-site/ too. */
@@ -722,6 +725,7 @@ const ICONS = {
   club:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5a5 5 0 0 1 4.5 5"/>',
   mapped:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',
   enter:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 7.5v6M16 10.5h6"/>',
+  comments:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/>',
   coin:'<circle cx="12" cy="12" r="9"/><path d="M14.8 8.6c-.5-.9-1.5-1.4-2.6-1.4-1.6 0-2.7 1-2.7 2.6V16M7.8 16h8.2M8.2 12h5.6"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
   courses:'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h8"/>',
@@ -863,6 +867,23 @@ function areaPage(id){
       <section class="section"><div class="section-head"><h2>Previous events</h2></div>${old.length ? pastByYear(old) : '<div class="empty">No previous events are listed for this area yet.</div>'}</section>
     </div>`;
 }
+/* Comments from the planner, organiser and controller of one event. */
+function commentsPage(id){
+  const e = EVENTS.find(x => x.id === id);
+  if (!e) return VIEWS.results();
+  const cm = e.comments || {}, d = e.detail || {};
+  const plain = v => String(v == null ? '' : v).replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+  const who = (name) => { if (!name) return ''; const mid = memberId(name); return mid ? `<a href="#person-${esc(mid)}">${esc(MEMBERS[mid].name)}</a>` : esc(String(name).replace(/^.*\//, '').replace(/\.json$/i, '')); };
+  const parts = [['planner', 'Planner', d.planner], ['organiser', 'Organiser', d.organiser], ['controller', 'Controller', d.controller]].filter(p => plain(cm[p[0]]));
+  return `<section class="pagehead"><div class="wrap">
+      <a class="back" href="#${e.detail ? 'event-' + esc(e.id) : 'results'}">&larr; Back to ${e.detail ? 'the event' : 'Results'}</a><br>
+      <h1 class="event-title">${esc(e.title)}</h1>
+      <p class="lead">Comments &middot; ${esc(fmtLong.format(parseDate(e.date)))}</p>
+    </div></section>
+    <div class="wrap"><div class="stack" style="max-width:52rem;margin:1.5rem 0">
+      ${parts.length ? parts.map(p => `<section class="card"><h3>${ct('comments', p[1] + "'s Comments")}</h3>${p[2] ? `<p class="cnote" style="margin:.3rem 0 0">${who(p[2])}</p>` : ''}<div class="prose" style="margin-top:.6rem">${richHTML(cm[p[0]])}</div></section>`).join('') : '<div class="empty">No comments have been added for this event yet.</div>'}
+    </div></div>`;
+}
 /* A tag page: every event of one level or series, upcoming and previous. */
 function tagPage(kind, slug){
   const key = kind === 'series' ? 'series' : 'level';
@@ -979,7 +1000,7 @@ function eventPage(id){
       </aside>
       <div class="stack">
         ${d.about ? `<section class="card"><h3>${ct('about', 'Event Overview')}</h3><div class="prose" style="margin-top:.6rem">${richHTML(d.about)}</div></section>` : ''}
-        ${e.results && e.results.length ? `<section class="card"><h3>${ct('results', 'Results')}</h3><div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small gold" href="${esc(l[1])}" ${ext}>${esc(l[0])}</a>`).join('')}</div></section>`
+        ${e.results && e.results.length ? `<section class="card"><h3>${ct('results', 'Results')}</h3><div class="links" style="margin-top:.8rem">${e.results.map(l => `<a class="btn small gold" href="${esc(l[1])}" ${linkExt(l[1])}>${esc(l[0])}</a>`).join('')}</div></section>`
           : (isPast(e) ? `<section class="card todo"><h3>${ct('results', 'Results')}</h3><p style="margin:.6rem 0 0">Results to follow.</p></section>` : '')}
         ${(loc || areaName || d.address.length || d.postcode || d.gridRef || d.w3w) ? `<section class="card"><h3>${ct('newcomers', 'Event Location')}</h3>
           ${(d.address.length || d.postcode) ? `<p style="margin:.6rem 0">${[...d.address.map(esc), esc(d.postcode)].filter(Boolean).join('<br>')}</p>` : ''}
@@ -1016,11 +1037,12 @@ const view = document.getElementById('view');
 const nav = document.getElementById('nav');
 const menuBtn = document.getElementById('menuBtn');
 /* Clean URLs. Internally pages are still named like 'event-tunstall'; these turn that into /events/tunstall and back. */
-const isRoute = n => n === 'home' || !!VIEWS[n] || /^(club|person|tag|area|news|event)-./.test(n);
+const isRoute = n => n === 'home' || !!VIEWS[n] || /^(club|person|tag|area|news|event|comments)-./.test(n);
 function nameToPath(n){
   let m;
   if (!n || n === 'home') return '';
   if ((m = n.match(/^event-(.+)$/))) return 'events/' + m[1];
+  if ((m = n.match(/^comments-(.+)$/))) return 'events/' + m[1] + '/comments';
   if ((m = n.match(/^area-(.+)$/))) return 'mapped/' + m[1];
   if ((m = n.match(/^news-(.+)$/))) return 'news/' + m[1];
   if ((m = n.match(/^club-(.+)$/))) return 'club/' + m[1];
@@ -1032,6 +1054,7 @@ function pathToName(p){
   p = p.replace(/^\/+|\/+$/g, '');
   if (!p) return 'home';
   const s = p.split('/'), rest = s.slice(1).join('/');
+  if (s[0] === 'events' && s.length === 3 && s[2] === 'comments' && !/^(level|series)$/.test(s[1])) return 'comments-' + s[1];
   if (s[0] === 'events' && s.length > 1) return /^(level|series)$/.test(s[1]) && s[2] ? 'tag-' + s[1] + '-' + s.slice(2).join('/') : 'event-' + rest;
   if (s[0] === 'mapped' && s.length > 1) return 'area-' + rest;
   if (s[0] === 'news' && s.length > 1) return 'news-' + rest;
@@ -1069,6 +1092,7 @@ function route(){
   else if (/^tag-(level|series)-/.test(h)) { key = 'events'; html = tagPage(h.split('-')[1], h.replace(/^tag-(level|series)-/, '')); }
   else if (h.startsWith('area-')) { key = 'events'; html = areaPage(h.slice(5)); }
   else if (h.startsWith('news-')) { key = 'news'; html = newsPage(h.slice(5)); }
+  else if (h.startsWith('comments-')) { key = 'results'; html = commentsPage(h.slice(9)); }
   else if (h.startsWith('event-')) { key = 'events'; html = eventPage(h.slice(6)); }
   else if (VIEWS[h]) { key = h === 'mapped' ? 'events' : h; html = VIEWS[h](); }
   else { html = VIEWS.home(); }

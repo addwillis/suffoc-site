@@ -316,9 +316,6 @@ content:
     - name: routegadget
       label: Routegadget
       type: string
-    - name: comments
-      label: Comments
-      type: string
     - name: other
       label: Other result links (optional)
       type: object
@@ -331,6 +328,26 @@ content:
       - name: url
         label: Web address
         type: string
+  - name: comments
+    label: EVENT COMMENTS (add after the event)
+    type: object
+    description: Comments from the people who ran the event. Leave empty if you haven't been sent any. A Comments button appears next to the results once any of these have text.
+    fields:
+    - name: planner
+      label: Planner's comments
+      type: rich-text
+      options:
+        format: html
+    - name: organiser
+      label: Organiser's comments
+      type: rich-text
+      options:
+        format: html
+    - name: controller
+      label: Controller's comments
+      type: rich-text
+      options:
+        format: html
 - name: levels
   label: Event levels
   type: collection
