@@ -11,6 +11,33 @@
     "startsTo": "13:00",
     "courseClose": "14:00"
   },
+  "courses": [
+    {
+      "colour": "White"
+    },
+    {
+      "colour": "Yellow"
+    },
+    {
+      "colour": "Orange"
+    },
+    {
+      "colour": "Light Green"
+    },
+    {
+      "colour": "Other",
+      "name": "Short Green"
+    },
+    {
+      "colour": "Green"
+    },
+    {
+      "colour": "Blue"
+    },
+    {
+      "colour": "Brown"
+    }
+  ],
   "officials": {
     "organiser": "Louise Walker",
     "planner": "Gareth Radcliffe",
