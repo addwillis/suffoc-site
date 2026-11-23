@@ -224,6 +224,7 @@ content:
           - "Paul Beckett"
           - "Phil Halford"
           - "Rod Mansel"
+          - "Sally Wilkinson"
           - "Sarah Mansel"
           # END members
       - name: planner
@@ -241,6 +242,7 @@ content:
           - "Paul Beckett"
           - "Phil Halford"
           - "Rod Mansel"
+          - "Sally Wilkinson"
           - "Sarah Mansel"
           # END members
       - name: controller
@@ -258,6 +260,7 @@ content:
           - "Paul Beckett"
           - "Phil Halford"
           - "Rod Mansel"
+          - "Sally Wilkinson"
           - "Sarah Mansel"
           # END members
       - name: riskAssessor
@@ -275,6 +278,7 @@ content:
           - "Paul Beckett"
           - "Phil Halford"
           - "Rod Mansel"
+          - "Sally Wilkinson"
           - "Sarah Mansel"
           # END members
       - name: others

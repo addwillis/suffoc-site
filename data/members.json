@@ -76,6 +76,25 @@
       "id": "rod-mansel"
     },
     {
+      "name": "Sally Wilkinson",
+      "roles": [
+        {
+          "role": "Fixtures Secretary",
+          "email": "events"
+        },
+        {
+          "role": "Welfare Officer",
+          "email": "evemts@suffolk.co.uk"
+        },
+        {
+          "role": "Voluneer Coordinator",
+          "email": "events@suffoc.co.uk"
+        }
+      ],
+      "photo": "/images/492498193_1151921863399253_1709721349349532313_n.jpg",
+      "id": "sally-wilkinson"
+    },
+    {
       "name": "Sarah Mansel",
       "roles": [
         {
