@@ -8,6 +8,9 @@
     "chipHire": "£1",
     "siacHire": "£3"
   },
+  "officials": {
+    "planner": "Sarah Mansel"
+  },
   "resultLinks": {
     "results": "https://suffoc.co.uk/results/2026/Brandon/index.html",
     "winsplits": "https://obasen.orientering.se/winsplits/online/en/default.asp?page=classes&databaseId=110610&ct=true",
