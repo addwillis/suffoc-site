@@ -31,6 +31,25 @@
       "id": "bridge-wood"
     },
     {
+      "name": "Clare Country Park",
+      "area": "Clare",
+      "description": "<p></p>",
+      "courses": [
+        {
+          "name": "Course",
+          "controls": "8"
+        }
+      ],
+      "mapUrl": "https://www.suffoc.co.uk/events/Clare_Orienteering_Course_v3.pdf",
+      "gridRef": "TL 77183 45209",
+      "lat": 52.076886,
+      "lon": 0.58409397,
+      "postcode": "CO10 8NJ",
+      "w3w": "airbase.triangle.openly",
+      "notes": "<p></p>",
+      "id": "clare-country-park"
+    },
+    {
       "name": "Holywells Park",
       "description": "<p></p>",
       "courses": [
