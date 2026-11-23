@@ -29,8 +29,42 @@ content:
     options:
       format: yyyy-MM-dd
     required: true
+  - name: type
+    label: Event type
+    type: select
+    options:
+      values:
+      - Regional
+      - Local event
+      - Street-O
+      - Score event
+      - Training
+      - Other
+  - name: area
+    label: Area
+    type: reference
+    description: Pick from the Mapped areas list. If the place isn't there yet, add it under Mapped areas first.
+    required: true
+    options:
+      collection: areas
+      search: name
+      label: '{primary}'
+      value: '{primary}'
+  - name: entry
+    label: ENTRY
+    type: object
+    description: Adds the big gold Enter online button, at the top of the event page.
+    fields:
+    - name: url
+      label: Enter online link
+      type: string
+      description: The full web address of the entry page, e.g. the RaceSignup link.
+    - name: note
+      label: Entry note
+      type: string
+      description: Short line under the button, e.g. Entries close Friday 27 November
   - name: timings
-    label: Timings
+    label: TIMINGS
     type: object
     description: Fill in what you know. The first Starts time and the last Course closes time are shown on the home page and Events page.
     fields:
@@ -54,48 +88,52 @@ content:
       label: Course closes
       type: string
       description: Final course close time, e.g. 14:00
-  - name: type
-    label: Event type
-    type: select
-    options:
-      values:
-      - Regional
-      - Local event
-      - Street-O
-      - Score event
-      - Training
-      - Other
-  - name: area
-    label: Area
-    type: reference
-    description: Pick from the Mapped areas list. If the place isn't there yet, add it under Mapped areas first.
-    required: true
-    options:
-      collection: areas
-      search: name
-      label: '{primary}'
-      value: '{primary}'
-  - name: link
-    label: Link to existing event page (optional)
-    type: string
-  - name: pdf
-    label: Preliminary details PDF link (optional)
-    type: string
-  - name: entryUrl
-    label: Enter online link (optional)
-    type: string
-    description: The full web address of the entry page, e.g. the RaceSignup link. Adds a big Enter online button.
-  - name: entryNote
-    label: Entry note (optional)
-    type: string
-    description: Short line shown next to the button, e.g. Entries close Friday 27 November
-  - name: detail
-    label: Event page details (optional, creates a full event page)
+  - name: officials
+    label: EVENT OFFICIALS
     type: object
+    description: Pick from Club members. If someone isn't there yet, add them under Club members first, or use Other officials.
     fields:
-    - name: about
-      label: About the area
-      type: text
+      - name: organiser
+        label: Organiser
+        type: reference
+        options:
+          collection: members
+          search: name
+          label: '{primary}'
+          value: '{primary}'
+      - name: planner
+        label: Planner
+        type: reference
+        options:
+          collection: members
+          search: name
+          label: '{primary}'
+          value: '{primary}'
+      - name: controller
+        label: Controller
+        type: reference
+        options:
+          collection: members
+          search: name
+          label: '{primary}'
+          value: '{primary}'
+      - name: others
+        label: Other officials (optional)
+        type: object
+        list: true
+        description: For helpers who aren't club members, e.g. a controller from another club.
+        fields:
+        - name: role
+          label: Role
+          type: string
+        - name: name
+          label: Name
+          type: string
+  - name: location
+    label: EVENT LOCATION
+    type: object
+    description: Filling in anything here creates the full event page.
+    fields:
     - name: address
       label: Address lines
       type: string
@@ -111,47 +149,21 @@ content:
       label: what3words (no ///)
       type: string
       description: e.g. only.pint.form. Shown as text and a link only, it does not move the map pin.
-    - name: organiser
-      label: Organiser
-      type: reference
-      description: Pick from Club members. If they aren't there yet, add them under Club members first, or use Other officials below.
-      options:
-        collection: members
-        search: name
-        label: '{primary}'
-        value: '{primary}'
-    - name: planner
-      label: Planner
-      type: reference
-      description: Pick from Club members. If they aren't there yet, add them under Club members first, or use Other officials below.
-      options:
-        collection: members
-        search: name
-        label: '{primary}'
-        value: '{primary}'
-    - name: controller
-      label: Controller
-      type: reference
-      description: Pick from Club members. If they aren't there yet, add them under Club members first, or use Other officials below.
-      options:
-        collection: members
-        search: name
-        label: '{primary}'
-        value: '{primary}'
-    - name: officials
-      label: Other officials (optional)
-      type: object
-      list: true
-      description: For helpers who aren't club members, e.g. a controller from another club.
-      fields:
-      - name: role
-        label: Role
-        type: string
-      - name: name
-        label: Name
-        type: string
+  - name: about
+    label: ABOUT THE AREA
+    type: text
+  - name: documents
+    label: DOCUMENTS AND LINKS
+    type: object
+    fields:
+    - name: pdf
+      label: Preliminary details PDF link
+      type: string
+    - name: oldPage
+      label: Link to existing event page
+      type: string
     - name: docs
-      label: Documents and links
+      label: Other documents and links
       type: object
       list: true
       fields:
@@ -162,7 +174,7 @@ content:
         label: Web address
         type: string
   - name: resultLinks
-    label: Results (add after the event)
+    label: RESULTS (add after the event)
     type: object
     description: Paste the web address for each one you have. Leave the others blank.
     fields:
@@ -178,18 +190,18 @@ content:
     - name: comments
       label: Comments
       type: string
-  - name: results
-    label: Other result links (optional)
-    type: object
-    list: true
-    description: Only for extra links that don't fit above, e.g. a second Routegadget map.
-    fields:
-    - name: label
-      label: Link text
-      type: string
-    - name: url
-      label: Web address
-      type: string
+    - name: other
+      label: Other result links (optional)
+      type: object
+      list: true
+      description: Only for extra links that don't fit above, e.g. a second Routegadget map.
+      fields:
+      - name: label
+        label: Link text
+        type: string
+      - name: url
+        label: Web address
+        type: string
 - name: areas
   label: Mapped areas
   type: collection

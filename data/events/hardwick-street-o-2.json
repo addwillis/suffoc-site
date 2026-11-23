@@ -1,14 +1,16 @@
 {
   "title": "SUFFOC Mid-Week Street-O 2 Hardwick",
   "date": "2026-12-08",
+  "type": "Street-O",
+  "area": "Hardwick",
   "timings": {
     "startsFrom": "18:00"
   },
-  "type": "Street-O",
-  "area": "Hardwick",
-  "detail": {
-    "gridRef": "TL858628",
+  "officials": {
     "organiser": "Gareth Radcliffe",
     "planner": "Gareth Radcliffe"
+  },
+  "location": {
+    "gridRef": "TL858628"
   }
 }

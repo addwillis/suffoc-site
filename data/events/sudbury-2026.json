@@ -3,19 +3,19 @@
   "date": "2026-05-17",
   "type": "Regional",
   "area": "Sudbury",
-  "results": [
-    {
-      "label": "Routegadget courses 1 to 3",
-      "url": "https://www.suffoc.routegadget.co.uk/rg2/#138"
-    },
-    {
-      "label": "Routegadget courses 4 to 7",
-      "url": "https://www.suffoc.routegadget.co.uk/rg2/#137"
-    }
-  ],
   "resultLinks": {
     "results": "http://www.suffoc.co.uk/results/2026/Sudbury/index.html",
     "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=112544",
-    "comments": "https://www.suffoc.co.uk/resources/event_comments/suffoc-sudbury-urban-2026-comments"
+    "comments": "https://www.suffoc.co.uk/resources/event_comments/suffoc-sudbury-urban-2026-comments",
+    "other": [
+      {
+        "label": "Routegadget courses 1 to 3",
+        "url": "https://www.suffoc.routegadget.co.uk/rg2/#138"
+      },
+      {
+        "label": "Routegadget courses 4 to 7",
+        "url": "https://www.suffoc.routegadget.co.uk/rg2/#137"
+      }
+    ]
   }
 }

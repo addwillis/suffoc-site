@@ -1,6 +1,8 @@
 {
   "title": "Kings Forest West Stow",
   "date": "2027-01-10",
+  "type": "Regional",
+  "area": "Kings Forest",
   "timings": {
     "registrationFrom": "10:00",
     "registrationTo": "12:00",
@@ -8,12 +10,12 @@
     "startsTo": "12:30",
     "courseClose": "14:00"
   },
-  "type": "Regional",
-  "area": "Kings Forest",
-  "detail": {
-    "gridRef": "TL 821760",
+  "officials": {
     "organiser": "Rod Mansel",
     "planner": "Phil Halford",
     "controller": "Mike Bickle"
+  },
+  "location": {
+    "gridRef": "TL 821760"
   }
 }

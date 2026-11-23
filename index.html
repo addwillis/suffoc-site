@@ -285,7 +285,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 59';
+const BUILD = 'build 60';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -298,6 +298,28 @@ function loadNews(list){
     .map(n => Object.assign({}, n, { date:String(n.date).trim(), id:n.id || (String(n.date).trim() + '-' + String(n.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')) }))
     .sort((a, b) => parseDate(b.date) - parseDate(a.date));
 }
+/* Events are stored in sections (entry, officials, location, documents...) for easy editing in Pages CMS.
+   This flattens them into the shape the rest of the site uses. The older flat layout is still understood. */
+function upgradeEvent(e){
+  const o = Object.assign({}, e);
+  const en = e.entry || {}, off = e.officials || {}, loc = e.location || {}, doc = e.documents || {}, rl = e.resultLinks || {};
+  if (en.url && !o.entryUrl) o.entryUrl = en.url;
+  if (en.note && !o.entryNote) o.entryNote = en.note;
+  if (doc.oldPage && !o.link) o.link = doc.oldPage;
+  if (doc.pdf && !o.pdf) o.pdf = doc.pdf;
+  const d = Object.assign({}, e.detail || {});
+  ['organiser', 'planner', 'controller'].forEach(k => { if (off[k] && !d[k]) d[k] = off[k]; });
+  if (off.others && !d.officials) d.officials = off.others;
+  ['address', 'postcode', 'gridRef', 'w3w'].forEach(k => { if (loc[k] && !(d[k] && d[k].length)) d[k] = loc[k]; });
+  if (e.about && !d.about) d.about = e.about;
+  if (doc.docs && !d.docs) d.docs = doc.docs;
+  if (Object.keys(d).length) o.detail = d; else delete o.detail;
+  /* result links: four fixed boxes first, then any extra links */
+  o.results = [['Results and split times', rl.results], ['Winsplits', rl.winsplits], ['Routegadget', rl.routegadget], ['Comments', rl.comments]]
+    .filter(x => x[1] && String(x[1]).trim()).map(x => [x[0], String(x[1]).trim()])
+    .concat(pairs(rl.other, 'label', 'url'), Array.isArray(e.results) ? pairs(e.results, 'label', 'url') : []);
+  return o;
+}
 function loadData(areas, events){
   AREAS = {};
   areas.forEach(a => { let lat = parseFloat(a.lat), lon = parseFloat(a.lon);
@@ -308,13 +330,8 @@ function loadData(areas, events){
   events = events.filter(ok);
   events.forEach(e => { e.date = String(e.date).trim(); });
   EVENTS = events.map(e => {
-    const o = Object.assign({}, e);
-    /* Result links: fixed fields first (in this order), then any extra links added as a list. */
-    const rl = e.resultLinks || {};
-    o.results = [['Results and split times', rl.results], ['Winsplits', rl.winsplits], ['Routegadget', rl.routegadget], ['Comments', rl.comments]]
-      .filter(x => x[1] && String(x[1]).trim()).map(x => [x[0], String(x[1]).trim()])
-      .concat(pairs(e.results, 'label', 'url'));
-    const d = e.detail;
+    const o = upgradeEvent(e);
+    const d = o.detail;
     if (d && (d.about || d.postcode || d.w3w || d.organiser || d.planner || d.controller)) {
       o.detail = Object.assign({}, d, { address: (d.address || []).filter(Boolean), officials: [['Organiser', d.organiser], ['Planner', d.planner], ['Controller', d.controller]].filter(x => x[1]).map(x => { const id = memberId(x[1]); return [x[0], id ? MEMBERS[id].name : personKey(x[1]) ? String(x[1]).replace(/^.*\//, '').replace(/\.json$/i, '') : x[1], id ? '#person-' + id : '']; }).concat(pairs(d.officials, 'role', 'name').map(x => { const id = memberId(x[1]); return [x[0], x[1], id ? '#person-' + id : '']; })), docs: pairs(d.docs, 'label', 'url') });
     } else delete o.detail;

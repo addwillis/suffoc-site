@@ -21,21 +21,25 @@
     {
       "title": "SUFFOC Mid-Week Street-O 2 Hardwick",
       "date": "2026-12-08",
+      "type": "Street-O",
+      "area": "Hardwick",
       "timings": {
         "startsFrom": "18:00"
       },
-      "type": "Street-O",
-      "area": "Hardwick",
-      "detail": {
-        "gridRef": "TL858628",
+      "officials": {
         "organiser": "Gareth Radcliffe",
         "planner": "Gareth Radcliffe"
+      },
+      "location": {
+        "gridRef": "TL858628"
       },
       "id": "hardwick-street-o-2"
     },
     {
       "title": "Kings Forest West Stow",
       "date": "2027-01-10",
+      "type": "Regional",
+      "area": "Kings Forest",
       "timings": {
         "registrationFrom": "10:00",
         "registrationTo": "12:00",
@@ -43,13 +47,13 @@
         "startsTo": "12:30",
         "courseClose": "14:00"
       },
-      "type": "Regional",
-      "area": "Kings Forest",
-      "detail": {
-        "gridRef": "TL 821760",
+      "officials": {
         "organiser": "Rod Mansel",
         "planner": "Phil Halford",
         "controller": "Mike Bickle"
+      },
+      "location": {
+        "gridRef": "TL 821760"
       },
       "id": "kings-forest-west-stow"
     },
@@ -68,12 +72,12 @@
     {
       "title": "SUFFOC Mid-Week Street-O 3 Claydon",
       "date": "2027-01-12",
+      "type": "Street-O",
+      "area": "Claydon",
       "timings": {
         "startsFrom": "18:00"
       },
-      "type": "Street-O",
-      "area": "Claydon",
-      "detail": {
+      "location": {
         "gridRef": "TL858628",
         "w3w": "only.pint.form"
       },
@@ -84,36 +88,42 @@
       "date": "2026-05-17",
       "type": "Regional",
       "area": "Sudbury",
-      "results": [
-        {
-          "label": "Routegadget courses 1 to 3",
-          "url": "https://www.suffoc.routegadget.co.uk/rg2/#138"
-        },
-        {
-          "label": "Routegadget courses 4 to 7",
-          "url": "https://www.suffoc.routegadget.co.uk/rg2/#137"
-        }
-      ],
       "resultLinks": {
         "results": "http://www.suffoc.co.uk/results/2026/Sudbury/index.html",
         "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=112544",
-        "comments": "https://www.suffoc.co.uk/resources/event_comments/suffoc-sudbury-urban-2026-comments"
+        "comments": "https://www.suffoc.co.uk/resources/event_comments/suffoc-sudbury-urban-2026-comments",
+        "other": [
+          {
+            "label": "Routegadget courses 1 to 3",
+            "url": "https://www.suffoc.routegadget.co.uk/rg2/#138"
+          },
+          {
+            "label": "Routegadget courses 4 to 7",
+            "url": "https://www.suffoc.routegadget.co.uk/rg2/#137"
+          }
+        ]
       },
       "id": "sudbury-2026"
     },
     {
       "title": "Tunstall Forest Barnes Carr and The Birches",
       "date": "2026-11-29",
+      "type": "Regional",
+      "area": "Tunstall Forest",
+      "entry": {
+        "url": "https://racesignup.co.uk/tunstall-forest-2026"
+      },
       "timings": {
         "startsFrom": "10:30",
         "startsTo": "13:00",
         "courseClose": "14:00"
       },
-      "type": "Regional",
-      "area": "Tunstall Forest",
-      "entryUrl": "https://racesignup.co.uk/tunstall-forest-2026",
-      "detail": {
-        "about": "Barnes Carr and The Birches is in the south-east portion of Tunstall Forest, in the East Suffolk Sandlings. The area has interesting terrain, with a variety of water and relief features and some nice areas of deciduous woodland.",
+      "officials": {
+        "organiser": "Louise Walker",
+        "planner": "Gareth Radcliffe",
+        "controller": "Paul Beckett"
+      },
+      "location": {
         "address": [
           "Tunstall Forest",
           "B1078 Orford Road, FR22",
@@ -121,10 +131,10 @@
         ],
         "postcode": "IP12 2AP",
         "gridRef": "TM 39950 52750",
-        "w3w": "economies.winter.windmills",
-        "organiser": "Louise Walker",
-        "planner": "Gareth Radcliffe",
-        "controller": "Paul Beckett",
+        "w3w": "economies.winter.windmills"
+      },
+      "about": "Barnes Carr and The Birches is in the south-east portion of Tunstall Forest, in the East Suffolk Sandlings. The area has interesting terrain, with a variety of water and relief features and some nice areas of deciduous woodland.",
+      "documents": {
         "docs": [
           {
             "label": "Area overview: Tunstall Forest",
