@@ -31,6 +31,16 @@
       "id": "louise-walker"
     },
     {
+      "name": "Martin Hore",
+      "roles": [
+        {
+          "role": "Mapping Coordinator",
+          "email": "mapping"
+        }
+      ],
+      "id": "martin-hore"
+    },
+    {
       "name": "Mike Bickle",
       "id": "mike-bickle"
     },
