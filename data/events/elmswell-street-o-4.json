@@ -1,6 +1,6 @@
 {
   "title": "SUFFOC Mid-Week Street-O 4 Elmswell",
-  "date": "2026-11-23",
+  "date": "2027-02-09",
   "level": "Local",
   "series": "Mid-Week Street-O",
   "area": "Elmswell",
@@ -38,7 +38,9 @@
         "early": "3"
       }
     ],
-    "earlyDeadline": "7 February"
+    "earlyDeadline": "7 February",
+    "chipHire": "£1",
+    "siacHire": "£3"
   },
   "timings": {
     "startsFrom": "18:00",
