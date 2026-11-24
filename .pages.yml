@@ -797,6 +797,24 @@ content:
       label: Picture
       type: image
       description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: committee
+    label: COMMITTEE PAGE
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
 - name: agm
   label: AGM minutes
   type: file

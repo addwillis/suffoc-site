@@ -37,7 +37,7 @@
     "text": "<p></p>"
   },
   "mapped": {
-    "sub": "A sense of the area the club covers. Each marker is an area the club has made a map for.",
+    "sub": "Every area the club has made a map for.",
     "text": "<p></p>"
   },
   "club": {
@@ -47,5 +47,8 @@
   "newcomers": {
     "sub": "A quick guide to getting started.",
     "text": "<p></p>"
+  },
+  "committee": {
+    "sub": "The people who run the club."
   }
 }

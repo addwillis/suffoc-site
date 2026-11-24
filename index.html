@@ -332,7 +332,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 125';
+const BUILD = 'build 127';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -406,6 +406,7 @@ function loadData(areas, events){
   });
 }
 let CURKEY = '';
+const subOf = (key, fallback) => String((PAGETEXT[key + '_sub'] || fallback) || '').trim();
 let NEWS = [], MEMBERS = {}, PERM = [], PAGETEXT = {}, AGM = [];
 const personKey = v => String(v == null ? '' : v).replace(/^.*\//, '').replace(/\.json$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
 function loadPermanent(list){
@@ -869,7 +870,7 @@ const VIEWS = {
     </div>`;
   },
   mapped(){
-    return `${pageHead('Mapped areas', 'A sense of the area the club covers. Each marker is an area the club has made a map for.', 'mapped', true)}
+    return `${pageHead('Mapped areas', 'Every area the club has made a map for.', 'mapped', true)}
     <div class="wrap">
       <section class="section"><a class="back" href="#events">&larr; Back to Events</a><div style="height:1rem"></div>${mapBlock()}</section>
     </div>`;
@@ -886,8 +887,8 @@ const VIEWS = {
     return `${pageHead('Anytime O', 'Orienteer whenever you like, no event needed.', 'anytime')}
     <div class="wrap">
       <section class="section"><div class="grid">
-        <a class="tile" href="#maprun"><h3>${ct('phone', 'MapRun')}</h3><p>Use the MapRun app on your phone to find virtual controls and get timed, wherever you are.</p></a>
-        <a class="tile" href="#permanent"><h3>${ct('post', 'Permanent Orienteering Courses')}</h3><p>Courses set up in parks and woods that you can follow at any time with a downloadable map.</p></a>
+        <a class="tile" href="#maprun"><h3>${ct('phone', 'MapRun')}</h3><p>${esc(subOf('maprun', 'Virtual controls on your phone, any time.'))}</p></a>
+        <a class="tile" href="#permanent"><h3>${ct('post', 'Permanent Orienteering Courses')}</h3><p>${esc(subOf('permanent', 'Courses you can follow at any time, with a map to download.'))}</p></a>
       </div></section>
     </div>`;
   },
@@ -895,7 +896,7 @@ const VIEWS = {
     return `${pageHead('MapRun', 'Virtual controls on your phone, any time.', 'phone', true)}
     <div class="wrap"><section class="section">
       <a class="back" href="#anytime">&larr; Back to Anytime O</a>
-      <div class="grid" style="margin-top:1rem"><a class="tile" href="#maprunnew"><h3>${ct('about', 'New to MapRun?')}</h3><p>What you need and how to do your first course, step by step.</p></a></div>
+      <div class="grid" style="margin-top:1rem"><a class="tile" href="#maprunnew"><h3>${ct('about', 'New to MapRun?')}</h3><p>${esc(subOf('maprunnew', 'Everything you need for your first course.'))}</p></a></div>
       <h2 style="margin-top:1.8rem;font-size:1.3rem">${ct('mapped', 'Course Locations')}</h2>
       <iframe class="maprun" title="MapRun.uk events for SUFFOC" src="https://maprun.uk/?club=suffoc&embed=y" loading="lazy"></iframe>
       <p class="muted" style="margin-top:.8rem">Courses from <a href="https://maprun.uk/?club=suffoc" target="_blank" rel="noopener">MapRun.uk</a>. Not showing? Open it there directly.</p>
@@ -946,9 +947,9 @@ function timingsRows(e){
 /* "More ways to get out" tiles, shown at the bottom of the Events page and each event page. */
 function exploreTiles(){
   const t = [
-    ['#mapped', 'Mapped areas', 'Every place the club has made a map for.', 'mapped'],
-    ['#maprun', 'MapRun', 'Virtual controls on your phone, any time.', 'phone'],
-    ['#permanent', 'Permanent Orienteering Courses', 'Courses to follow whenever you like.', 'post']
+    ['#mapped', 'Mapped areas', subOf('mapped', 'Every area the club has made a map for.'), 'mapped'],
+    ['#maprun', 'MapRun', subOf('maprun', 'Virtual controls on your phone, any time.'), 'phone'],
+    ['#permanent', 'Permanent Orienteering Courses', subOf('permanent', 'Courses you can follow at any time, with a map to download.'), 'post']
   ];
   return `<section class="section"><div class="section-head"><h2>More to explore</h2></div><div class="tiles">
     ${t.map(x => `<a class="tile" href="${x[0]}"><h3>${ct(x[3], esc(x[1]))}</h3><p>${esc(x[2])}</p></a>`).join('')}
