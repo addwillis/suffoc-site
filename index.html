@@ -191,6 +191,7 @@ dl.facts dd a:hover{color:var(--sky)}
 .newsimg-full{display:block;width:100%;height:auto;border-radius:var(--radius);margin:0 0 1.2rem}
 .prose{font-size:1.08rem;line-height:1.65}
 .pageintro{max-width:46rem;padding:1.6rem 0 .2rem}
+.maprun{width:100%;height:640px;border:1px solid var(--line,#d8dde6);border-radius:12px;margin-top:1rem;background:#fff}
 .prose p{margin:0 0 1em}
 .prose img{max-width:100%;height:auto;border-radius:10px;margin:.4em 0 1em;display:block}
 .prose ul,.prose ol{margin:0 0 1em;padding-left:1.4em}
@@ -325,7 +326,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 109';
+const BUILD = 'build 110';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -869,10 +870,18 @@ const VIEWS = {
     return `${pageHead('Anytime O', 'Orienteer whenever you like, no event needed.', 'anytime')}
     <div class="wrap">
       <section class="section"><div class="grid">
-        <article class="card"><h3>${ct('phone', 'MapRun')}</h3><p style="margin-top:.5rem">Use the MapRun app on your phone to find virtual controls and get timed, wherever you are.</p></article>
+        <a class="tile" href="#maprun"><h3>${ct('phone', 'MapRun')}</h3><p>Use the MapRun app on your phone to find virtual controls and get timed, wherever you are.</p></a>
         <a class="tile" href="#permanent"><h3>${ct('post', 'Permanent Orienteering Courses')}</h3><p>Courses set up in parks and woods that you can follow at any time with a downloadable map.</p></a>
       </div></section>
     </div>`;
+  },
+  maprun(){
+    return `${pageHead('MapRun', 'Virtual controls on your phone, any time.', 'phone')}
+    <div class="wrap"><section class="section">
+      <a class="back" href="#anytime">&larr; Back to Anytime O</a>
+      <iframe class="maprun" title="MapRun.uk events for SUFFOC" src="https://maprun.uk/?club=SUFFOC&embed=y" loading="lazy"></iframe>
+      <p class="muted" style="margin-top:.8rem">Courses from <a href="https://maprun.uk/?club=SUFFOC" target="_blank" rel="noopener">MapRun.uk</a>. Not showing? Open it there directly.</p>
+    </section></div>`;
   },
   permanent(){
     const dots = p => p.courses.length ? `<p class="cdots">${p.courses.map(c => { const col = courseColour(c), len = String(c.length || '').trim(); return `<span><i style="background:${col || 'transparent'}"></i>${esc(c.name || c.colour || 'Course')}${len ? ' ' + esc(/^[\d.]+$/.test(len) ? len + ' km' : len) : ''}</span>`; }).join('')}</p>` : '';
@@ -1242,7 +1251,7 @@ function route(){
   else if (h.startsWith('permanent-')) { key = 'anytime'; html = permanentPage(h.slice(10)); }
   else if (h.startsWith('comments-')) { key = 'results'; html = commentsPage(h.slice(9)); }
   else if (h.startsWith('event-')) { key = 'events'; html = eventPage(h.slice(6)); }
-  else if (VIEWS[h]) { key = h === 'mapped' ? 'events' : (h === 'permanent' ? 'anytime' : h); html = introText(h, VIEWS[h]()); }
+  else if (VIEWS[h]) { key = h === 'mapped' ? 'events' : ((h === 'permanent' || h === 'maprun') ? 'anytime' : h); html = introText(h, VIEWS[h]()); }
   else { html = VIEWS.home(); }
   view.innerHTML = html;
   cleanLinks(view);

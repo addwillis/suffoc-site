@@ -604,6 +604,12 @@ content:
     options:
       format: html
     description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: maprun
+    label: MAPRUN PAGE
+    type: rich-text
+    options:
+      format: html
+    description: Text shown at the top of the page, under the title. Leave empty for none.
   - name: mapped
     label: MAPPED AREAS PAGE
     type: rich-text
