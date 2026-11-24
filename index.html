@@ -332,7 +332,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 122';
+const BUILD = 'build 123';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -405,7 +405,7 @@ function loadData(areas, events){
     if (id) o.area = id;
   });
 }
-let NEWS = [], MEMBERS = {}, PERM = [], PAGETEXT = {};
+let NEWS = [], MEMBERS = {}, PERM = [], PAGETEXT = {}, AGM = [];
 const personKey = v => String(v == null ? '' : v).replace(/^.*\//, '').replace(/\.json$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
 function loadPermanent(list){
   PERM = list.filter(p => p && p.name).map(p => {
@@ -1186,8 +1186,22 @@ function committeePage(){
     ${list.length ? `<div class="committee">${list.map(card).join('')}</div>` : '<div class="empty">The committee will be listed here soon.</div>'}
   </section></div>`;
 }
+function agmPage(){
+  const url = f => /^https?:\/\//i.test(f) ? f : (window.BASE || '/').replace(/\/$/, '') + '/' + String(f).replace(/^\/+/, '');
+  const rows = AGM.map(x => {
+    const d = x.date ? new Date(x.date + 'T00:00:00') : null, ok = d && !isNaN(d);
+    const title = x.title || ('AGM' + (ok ? ' ' + d.getFullYear() : ''));
+    return `<a class="tile" href="${esc(url(x.file))}" target="_blank" rel="noopener"><h3>${ct('download', esc(title))}</h3><p>${ok ? fmtShort.format(d) : ''}${x.note ? (ok ? '. ' : '') + esc(x.note) : ''}</p></a>`;
+  }).join('');
+  return `${pageHead('AGM Minutes', '', 'docs', true)}
+  <div class="wrap"><section class="section">
+    <a class="back" href="#club">&larr; Back to Club</a>
+    ${rows ? `<div class="tiles" style="margin-top:1rem">${rows}</div>` : (PAGETEXT.agm || PAGETEXT.agm_image ? '' : '<div class="empty">Minutes will be added here.</div>')}
+  </section></div>`;
+}
 function clubPage(id){
   if (id === 'committee') return committeePage();
+  if (id === 'agm') return agmPage();
   const c = CLUB.find(x => x.id === id) || (id === 'contact' ? { title:'Contact', desc:'', icon:'contact' } : null);
   if (!c) return VIEWS.club();
   const extra = id === 'agm' ? ' The link to the Google Drive folder goes here.' : '';
@@ -1316,8 +1330,9 @@ Promise.all([
   fetch('data/news.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/members.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/permanent.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-  fetch('data/pagetext.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-]).then(([a, e, n, m, pm, pt]) => { PAGETEXT = (pt && typeof pt === 'object' && !Array.isArray(pt)) ? pt : {}; loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+  fetch('data/pagetext.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  fetch('data/agm.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([a, e, n, m, pm, pt, ag]) => { AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = (pt && typeof pt === 'object' && !Array.isArray(pt)) ? pt : {}; loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>

@@ -1,6 +1,11 @@
 media:
+- name: images
   input: images
   output: /images
+- name: documents
+  input: documents
+  output: /documents
+  extensions: [pdf, doc, docx]
 content:
 - name: events
   label: Events and results
@@ -656,6 +661,16 @@ content:
     label: CLUB KIT PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: agm
+    label: AGM MINUTES PAGE
+    type: rich-text
+    options:
+      format: html
+    description: Text shown at the top of the AGM Minutes page, under the title. Leave empty for none.
+  - name: agm_image
+    label: AGM MINUTES PAGE PICTURE
+    type: image
+    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: mapped
     label: MAPPED AREAS PAGE
     type: rich-text
@@ -686,6 +701,39 @@ content:
     label: NEWCOMERS PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+- name: agm
+  label: AGM minutes
+  type: file
+  path: data/agm.json
+  format: json
+  fields:
+  - name: minutes
+    label: AGM minutes
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{date} {title}'
+    fields:
+    - name: date
+      label: AGM date
+      type: date
+      options:
+        format: yyyy-MM-dd
+    - name: title
+      label: Title (optional)
+      type: string
+      description: For example AGM 2025. If left empty the page shows AGM and the year.
+    - name: file
+      label: Minutes file
+      type: file
+      options:
+        media: documents
+      description: Upload the minutes as a PDF. These are public, so check there is nothing private in them.
+    - name: note
+      label: Note (optional)
+      type: string
+      description: A few words if needed, for example approved at the 2026 AGM.
 - name: news
   label: News
   type: file
