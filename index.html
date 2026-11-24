@@ -191,7 +191,10 @@ dl.facts dd a:hover{color:var(--sky)}
 .newsimg-full{display:block;width:100%;height:auto;border-radius:var(--radius);margin:0 0 1.2rem}
 .prose{font-size:1.08rem;line-height:1.65}
 .pageintro{max-width:60rem;padding:1.6rem 0 .2rem;overflow:hidden}
-.pageintro .introimg{float:right;width:min(280px,38%);margin:.2em 0 .8em 1.4rem}
+.pageintro .introimg{float:right;width:min(420px,48%);margin:.2em 0 .8em 1.4rem;cursor:zoom-in}
+.pageintro .introimg.tall{width:min(280px,38%)}
+.lightbox{position:fixed;inset:0;z-index:1000;background:rgba(10,20,40,.88);display:flex;align-items:center;justify-content:center;padding:1.5rem;cursor:zoom-out}
+.lightbox img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 @media(max-width:600px){.pageintro .introimg{float:none;width:100%;margin:0 0 1em}}
 .maprun{width:100%;height:640px;border:1px solid var(--line,#d8dde6);border-radius:12px;margin-top:1rem;background:#fff}
 .prose p{margin:0 0 1em}
@@ -328,7 +331,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 119';
+const BUILD = 'build 120';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -1248,7 +1251,7 @@ function introText(name, html){
   let pic = String(PAGETEXT[name + '_image'] || '').trim();
   if (pic && !/^https?:\/\//i.test(pic)) pic = (window.BASE || '/').replace(/\/$/, '') + '/' + pic.replace(/^\/+/, '');
   if (!plain && !pic) return html;
-  const img = pic ? '<img class="introimg" src="' + esc(pic) + '" alt="" loading="lazy">' : '';
+  const img = pic ? '<img class="introimg" src="' + esc(pic) + '" alt="" loading="lazy" onload="this.classList.toggle(\'tall\', this.naturalHeight > this.naturalWidth)">' : '';
   const box = '<div class="wrap"><div class="prose pageintro">' + img + (plain ? richHTML(t) : '') + '</div></div>';
   const i = html.indexOf('</section>');
   if (i < 0) return html;
@@ -1256,6 +1259,19 @@ function introText(name, html){
   rest = rest.replace(/<a class="back"[^>]*>[\s\S]*?<\/a>/, m => { back = '<div class="wrap"><section class="section" style="padding-bottom:0">' + m + '</section></div>'; return ''; });
   return head + back + box + rest;
 }
+/* Click a picture at the top of a page to see it full size. */
+document.addEventListener('click', e => {
+  const im = e.target.closest && e.target.closest('.pageintro img');
+  if (!im) return;
+  const lb = document.createElement('div');
+  lb.className = 'lightbox';
+  lb.innerHTML = '<img src="' + im.src + '" alt="">';
+  const close = () => { lb.remove(); document.removeEventListener('keydown', esc2); };
+  const esc2 = ev => { if (ev.key === 'Escape') close(); };
+  lb.addEventListener('click', close);
+  document.addEventListener('keydown', esc2);
+  document.body.appendChild(lb);
+});
 function route(){
   const h = currentName();
   let key = 'home', html;
