@@ -25,6 +25,10 @@
       "label_anchor": "start"
     },
     {
+      "name": "Combs Ford",
+      "id": "combs-ford"
+    },
+    {
       "name": "Elmswell",
       "lat": 52.237019,
       "lon": 0.912547,
