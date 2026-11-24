@@ -583,172 +583,220 @@ content:
   fields:
   - name: events
     label: EVENTS PAGE
-    type: rich-text
-    options:
-      format: html
-    description: Text shown at the top of the page, under the title. Leave empty for none.
-  - name: events_image
-    label: EVENTS PAGE PICTURE
-    type: image
-    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: events_sub
-    label: EVENTS SUBTITLE
-    type: string
-    description: The line under the page title, also shown in the box that leads to this page.
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: results
     label: RESULTS PAGE
-    type: rich-text
-    options:
-      format: html
-    description: Text shown at the top of the page, under the title. Leave empty for none.
-  - name: results_image
-    label: RESULTS PAGE PICTURE
-    type: image
-    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: results_sub
-    label: RESULTS SUBTITLE
-    type: string
-    description: The line under the page title, also shown in the box that leads to this page.
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: news
     label: NEWS PAGE
-    type: rich-text
-    options:
-      format: html
-    description: Text shown at the top of the page, under the title. Leave empty for none.
-  - name: news_image
-    label: NEWS PAGE PICTURE
-    type: image
-    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: news_sub
-    label: NEWS SUBTITLE
-    type: string
-    description: The line under the page title, also shown in the box that leads to this page.
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: anytime
     label: ANYTIME O PAGE
-    type: rich-text
-    options:
-      format: html
-    description: Text shown at the top of the page, under the title. Leave empty for none.
-  - name: anytime_image
-    label: ANYTIME O PAGE PICTURE
-    type: image
-    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: anytime_sub
-    label: ANYTIME O SUBTITLE
-    type: string
-    description: The line under the page title, also shown in the box that leads to this page.
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: permanent
     label: PERMANENT ORIENTEERING COURSES PAGE
-    type: rich-text
-    options:
-      format: html
-    description: Text shown at the top of the page, under the title. Leave empty for none.
-  - name: permanent_image
-    label: PERMANENT ORIENTEERING COURSES PAGE PICTURE
-    type: image
-    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: permanent_sub
-    label: PERMANENT ORIENTEERING COURSES SUBTITLE
-    type: string
-    description: The line under the page title, also shown in the box that leads to this page.
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: maprun
     label: MAPRUN PAGE
-    type: rich-text
-    options:
-      format: html
-    description: Text shown at the top of the page, under the title. Leave empty for none.
-  - name: maprun_image
-    label: MAPRUN PAGE PICTURE
-    type: image
-    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: maprun_sub
-    label: MAPRUN SUBTITLE
-    type: string
-    description: The line under the page title, also shown in the box that leads to this page.
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: maprunnew
     label: NEW TO MAPRUN PAGE
-    type: rich-text
-    options:
-      format: html
-    description: The full guide for newcomers to MapRun. Opened from the New to MapRun box on the MapRun page.
-  - name: maprunnew_image
-    label: NEW TO MAPRUN PAGE PICTURE
-    type: image
-    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: maprunnew_sub
-    label: NEW TO MAPRUN SUBTITLE
-    type: string
-    description: The line under the page title, also shown in the box that leads to this page.
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: kit
     label: CLUB KIT PAGE
-    type: rich-text
-    options:
-      format: html
-    description: Text shown at the top of the Club Kit page, under the title. Leave empty for none.
-  - name: kit_image
-    label: CLUB KIT PAGE PICTURE
-    type: image
-    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: kit_sub
-    label: CLUB KIT SUBTITLE
-    type: string
-    description: The line under the page title, also shown in the box that leads to this page.
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: agm
     label: AGM MINUTES PAGE
-    type: rich-text
-    options:
-      format: html
-    description: Text shown at the top of the AGM Minutes page, under the title. Leave empty for none.
-  - name: agm_image
-    label: AGM MINUTES PAGE PICTURE
-    type: image
-    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: agm_sub
-    label: AGM MINUTES SUBTITLE
-    type: string
-    description: The line under the page title, also shown in the box that leads to this page.
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: mapped
     label: MAPPED AREAS PAGE
-    type: rich-text
-    options:
-      format: html
-    description: Text shown at the top of the page, under the title. Leave empty for none.
-  - name: mapped_image
-    label: MAPPED AREAS PAGE PICTURE
-    type: image
-    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: mapped_sub
-    label: MAPPED AREAS SUBTITLE
-    type: string
-    description: The line under the page title, also shown in the box that leads to this page.
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: club
     label: CLUB PAGE
-    type: rich-text
-    options:
-      format: html
-    description: Text shown at the top of the page, under the title. Leave empty for none.
-  - name: club_image
-    label: CLUB PAGE PICTURE
-    type: image
-    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: club_sub
-    label: CLUB SUBTITLE
-    type: string
-    description: The line under the page title, also shown in the box that leads to this page.
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: newcomers
     label: NEWCOMERS PAGE
-    type: rich-text
-    options:
-      format: html
-    description: Text shown at the top of the page, under the title. Leave empty for none.
-  - name: newcomers_image
-    label: NEWCOMERS PAGE PICTURE
-    type: image
-    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: newcomers_sub
-    label: NEWCOMERS SUBTITLE
-    type: string
-    description: The line under the page title, also shown in the box that leads to this page.
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
 - name: agm
   label: AGM minutes
   type: file
