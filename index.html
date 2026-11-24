@@ -53,7 +53,7 @@ p{margin:0 0 1rem;max-width:65ch}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px}
 .brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none}
 .brand svg{flex:none}
-.brand .name{font:700 1.75rem/1 var(--display);letter-spacing:.05em}
+.brand .name{font:italic 700 1.75rem/1 var(--display);letter-spacing:.05em}
 .brand .logo{display:block;height:76px;width:auto;margin:6px 0}
 @media (max-width:520px){.brand .logo{height:54px}}
 .brand .sub{display:block;font:600 .72rem/1.2 var(--body);letter-spacing:.14em;text-transform:uppercase;color:#BFD3EA;margin-top:3px}
@@ -328,7 +328,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 116';
+const BUILD = 'build 118';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -933,7 +933,7 @@ function timingsRows(e){
 function exploreTiles(){
   const t = [
     ['#mapped', 'Mapped areas', 'Every place the club has made a map for.', 'mapped'],
-    ['#anytime', 'MapRun', 'Virtual controls on your phone, any time.', 'phone'],
+    ['#maprun', 'MapRun', 'Virtual controls on your phone, any time.', 'phone'],
     ['#permanent', 'Permanent Orienteering Courses', 'Courses to follow whenever you like.', 'post']
   ];
   return `<section class="section"><div class="section-head"><h2>More to explore</h2></div><div class="tiles">
