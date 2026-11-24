@@ -4,7 +4,7 @@
     "text": "<p></p>"
   },
   "results": {
-    "sub": "Results, split times and routes from past events.",
+    "sub": "Results, splits analysis and comments from past events.",
     "text": "<p></p>"
   },
   "news": {
@@ -33,7 +33,8 @@
     "image": "/images/Club_Kit.png"
   },
   "agm": {
-    "sub": "Minutes from past AGMs."
+    "sub": "Minutes from past AGMs.",
+    "text": "<p></p>"
   },
   "mapped": {
     "sub": "A sense of the area the club covers. Each marker is an area the club has made a map for.",
