@@ -610,6 +610,12 @@ content:
     options:
       format: html
     description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: maprunnew
+    label: NEW TO MAPRUN PAGE
+    type: rich-text
+    options:
+      format: html
+    description: The full guide for newcomers to MapRun. Opened from the New to MapRun box on the MapRun page.
   - name: mapped
     label: MAPPED AREAS PAGE
     type: rich-text

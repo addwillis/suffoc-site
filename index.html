@@ -326,7 +326,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 111';
+const BUILD = 'build 112';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -879,9 +879,14 @@ const VIEWS = {
     return `${pageHead('MapRun', 'Virtual controls on your phone, any time.', 'phone')}
     <div class="wrap"><section class="section">
       <a class="back" href="#anytime">&larr; Back to Anytime O</a>
+      <div class="grid" style="margin-top:1rem"><a class="tile" href="#maprunnew"><h3>${ct('about', 'New to MapRun?')}</h3><p>What you need and how to do your first course, step by step.</p></a></div>
       <iframe class="maprun" title="MapRun.uk events for SUFFOC" src="https://maprun.uk/?club=suffoc&embed=y" loading="lazy"></iframe>
       <p class="muted" style="margin-top:.8rem">Courses from <a href="https://maprun.uk/?club=suffoc" target="_blank" rel="noopener">MapRun.uk</a>. Not showing? Open it there directly.</p>
     </section></div>`;
+  },
+  maprunnew(){
+    return `${pageHead('New to MapRun?', 'Everything you need for your first course.', 'phone')}
+    <div class="wrap"><section class="section"><a class="back" href="#maprun">&larr; Back to MapRun</a></section></div>`;
   },
   permanent(){
     const dots = p => p.courses.length ? `<p class="cdots">${p.courses.map(c => { const col = courseColour(c), len = String(c.length || '').trim(); return `<span><i style="background:${col || 'transparent'}"></i>${esc(c.name || c.colour || 'Course')}${len ? ' ' + esc(/^[\d.]+$/.test(len) ? len + ' km' : len) : ''}</span>`; }).join('')}</p>` : '';
@@ -1187,6 +1192,7 @@ const isRoute = n => n === 'home' || !!VIEWS[n] || /^(club|person|tag|area|news|
 function nameToPath(n){
   let m;
   if (!n || n === 'home') return '';
+  if (n === 'maprunnew') return 'maprun/new';
   if ((m = n.match(/^event-(.+)$/))) return 'events/' + m[1];
   if ((m = n.match(/^permanent-(.+)$/))) return 'permanent/' + m[1];
   if ((m = n.match(/^comments-(.+)$/))) return 'events/' + m[1] + '/comments';
@@ -1208,6 +1214,7 @@ function pathToName(p){
   if (s[0] === 'club' && s.length > 1) return 'club-' + rest;
   if (s[0] === 'people' && s.length > 1) return 'person-' + rest;
   if (s[0] === 'permanent' && s.length > 1) return 'permanent-' + rest;
+  if (s[0] === 'maprun' && s[1] === 'new') return 'maprunnew';
   return s[0];
 }
 function currentName(){
@@ -1251,7 +1258,7 @@ function route(){
   else if (h.startsWith('permanent-')) { key = 'anytime'; html = permanentPage(h.slice(10)); }
   else if (h.startsWith('comments-')) { key = 'results'; html = commentsPage(h.slice(9)); }
   else if (h.startsWith('event-')) { key = 'events'; html = eventPage(h.slice(6)); }
-  else if (VIEWS[h]) { key = h === 'mapped' ? 'events' : ((h === 'permanent' || h === 'maprun') ? 'anytime' : h); html = introText(h, VIEWS[h]()); }
+  else if (VIEWS[h]) { key = h === 'mapped' ? 'events' : ((h === 'permanent' || h === 'maprun' || h === 'maprunnew') ? 'anytime' : h); html = introText(h, VIEWS[h]()); }
   else { html = VIEWS.home(); }
   view.innerHTML = html;
   cleanLinks(view);
