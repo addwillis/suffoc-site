@@ -11,5 +11,16 @@
   "kit_image": "/images/Club_Kit.png",
   "mapped": "<p></p>",
   "club": "<p></p>",
-  "newcomers": "<p></p>"
+  "newcomers": "<p></p>",
+  "events_sub": "Planned club events, street-Os and MapRun evenings.",
+  "results_sub": "Results, split times and routes from past events.",
+  "anytime_sub": "Orienteer whenever you like, no event needed.",
+  "permanent_sub": "Courses you can follow at any time, with a map to download.",
+  "mapped_sub": "A sense of the area the club covers. Each marker is an area the club has made a map for.",
+  "maprun_sub": "Virtual controls on your phone, any time.",
+  "maprunnew_sub": "Everything you need for your first course.",
+  "club_sub": "Everything about SUFFOC in one place.",
+  "newcomers_sub": "A quick guide to getting started.",
+  "kit_sub": "Club clothing and how to get it.",
+  "agm_sub": "Minutes from past AGMs."
 }

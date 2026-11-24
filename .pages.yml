@@ -591,6 +591,10 @@ content:
     label: EVENTS PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: events_sub
+    label: EVENTS SUBTITLE
+    type: string
+    description: The line under the page title, also shown in the box that leads to this page.
   - name: results
     label: RESULTS PAGE
     type: rich-text
@@ -601,6 +605,10 @@ content:
     label: RESULTS PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: results_sub
+    label: RESULTS SUBTITLE
+    type: string
+    description: The line under the page title, also shown in the box that leads to this page.
   - name: news
     label: NEWS PAGE
     type: rich-text
@@ -611,6 +619,10 @@ content:
     label: NEWS PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: news_sub
+    label: NEWS SUBTITLE
+    type: string
+    description: The line under the page title, also shown in the box that leads to this page.
   - name: anytime
     label: ANYTIME O PAGE
     type: rich-text
@@ -621,6 +633,10 @@ content:
     label: ANYTIME O PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: anytime_sub
+    label: ANYTIME O SUBTITLE
+    type: string
+    description: The line under the page title, also shown in the box that leads to this page.
   - name: permanent
     label: PERMANENT ORIENTEERING COURSES PAGE
     type: rich-text
@@ -631,6 +647,10 @@ content:
     label: PERMANENT ORIENTEERING COURSES PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: permanent_sub
+    label: PERMANENT ORIENTEERING COURSES SUBTITLE
+    type: string
+    description: The line under the page title, also shown in the box that leads to this page.
   - name: maprun
     label: MAPRUN PAGE
     type: rich-text
@@ -641,6 +661,10 @@ content:
     label: MAPRUN PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: maprun_sub
+    label: MAPRUN SUBTITLE
+    type: string
+    description: The line under the page title, also shown in the box that leads to this page.
   - name: maprunnew
     label: NEW TO MAPRUN PAGE
     type: rich-text
@@ -651,6 +675,10 @@ content:
     label: NEW TO MAPRUN PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: maprunnew_sub
+    label: NEW TO MAPRUN SUBTITLE
+    type: string
+    description: The line under the page title, also shown in the box that leads to this page.
   - name: kit
     label: CLUB KIT PAGE
     type: rich-text
@@ -661,6 +689,10 @@ content:
     label: CLUB KIT PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: kit_sub
+    label: CLUB KIT SUBTITLE
+    type: string
+    description: The line under the page title, also shown in the box that leads to this page.
   - name: agm
     label: AGM MINUTES PAGE
     type: rich-text
@@ -671,6 +703,10 @@ content:
     label: AGM MINUTES PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: agm_sub
+    label: AGM MINUTES SUBTITLE
+    type: string
+    description: The line under the page title, also shown in the box that leads to this page.
   - name: mapped
     label: MAPPED AREAS PAGE
     type: rich-text
@@ -681,6 +717,10 @@ content:
     label: MAPPED AREAS PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: mapped_sub
+    label: MAPPED AREAS SUBTITLE
+    type: string
+    description: The line under the page title, also shown in the box that leads to this page.
   - name: club
     label: CLUB PAGE
     type: rich-text
@@ -691,6 +731,10 @@ content:
     label: CLUB PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: club_sub
+    label: CLUB SUBTITLE
+    type: string
+    description: The line under the page title, also shown in the box that leads to this page.
   - name: newcomers
     label: NEWCOMERS PAGE
     type: rich-text
@@ -701,6 +745,10 @@ content:
     label: NEWCOMERS PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: newcomers_sub
+    label: NEWCOMERS SUBTITLE
+    type: string
+    description: The line under the page title, also shown in the box that leads to this page.
 - name: agm
   label: AGM minutes
   type: file

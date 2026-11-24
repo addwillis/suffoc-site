@@ -332,7 +332,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 123';
+const BUILD = 'build 124';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -405,6 +405,7 @@ function loadData(areas, events){
     if (id) o.area = id;
   });
 }
+let CURKEY = '';
 let NEWS = [], MEMBERS = {}, PERM = [], PAGETEXT = {}, AGM = [];
 const personKey = v => String(v == null ? '' : v).replace(/^.*\//, '').replace(/\.json$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
 function loadPermanent(list){
@@ -435,7 +436,7 @@ const CLUB = [
   { id:'championships', title:'Club Championships',desc:'Annual championship results and awards.', icon:'champ' },
   { id:'juniors',       title:'Juniors',           desc:'Junior orienteering and who to contact.', icon:'juniors' },
   { id:'kit',           title:'Club Kit',          desc:'Club clothing and how to get it.', icon:'kit' },
-  { id:'agm',           title:'AGM Minutes',       desc:'Minutes from past AGMs, kept on Google Drive.', icon:'docs' },
+  { id:'agm',           title:'AGM Minutes',       desc:'Minutes from past AGMs.', icon:'docs' },
   { id:'membership',    title:'Membership',        desc:'How to join and what membership includes.', icon:'membership' }
 ];
 
@@ -822,6 +823,7 @@ const ICONS = {
 const enterIcon = '<svg class="ei" viewBox="0 0 24 24" aria-hidden="true">' + ICONS.enter + '</svg>';
 const ct = (icon, text) => `<svg class="ci" viewBox="0 0 24 24" aria-hidden="true">${ICONS[icon]}</svg>${text}`;
 function pageHead(title, intro, icon, sub){
+  const ov = PAGETEXT[CURKEY + '_sub']; if (ov != null && String(ov).trim()) intro = esc(String(ov).trim());
   const ic = icon && ICONS[icon] ? `<svg class="hi${sub ? ' sub' : ''}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[icon]}</svg>` : '';
   return `<section class="pagehead"><div class="wrap"><h1>${ic}${esc(title)}</h1>${intro ? `<p class="lead">${intro}</p>` : ''}</div></section>`;
 }
@@ -918,7 +920,7 @@ const VIEWS = {
   club(){
     return `${pageHead('Club', 'Everything about SUFFOC in one place.', 'club')}
     <div class="wrap"><section class="section"><div class="tiles">
-      ${CLUB.map(c => `<a class="tile" href="#club-${c.id}"><h3>${ct(c.icon, esc(c.title))}</h3><p>${esc(c.desc)}</p></a>`).join('')}
+      ${CLUB.map(c => `<a class="tile" href="#club-${c.id}"><h3>${ct(c.icon, esc(c.title))}</h3><p>${esc(String(PAGETEXT[c.id + '_sub'] || c.desc).trim())}</p></a>`).join('')}
     </div></section></div>`;
   },
   newcomers(){
@@ -1193,7 +1195,7 @@ function agmPage(){
     const title = x.title || ('AGM' + (ok ? ' ' + d.getFullYear() : ''));
     return `<a class="tile" href="${esc(url(x.file))}" target="_blank" rel="noopener"><h3>${ct('download', esc(title))}</h3><p>${ok ? fmtShort.format(d) : ''}${x.note ? (ok ? '. ' : '') + esc(x.note) : ''}</p></a>`;
   }).join('');
-  return `${pageHead('AGM Minutes', '', 'docs', true)}
+  return `${pageHead('AGM Minutes', 'Minutes from past AGMs.', 'docs', true)}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
     ${rows ? `<div class="tiles" style="margin-top:1rem">${rows}</div>` : (PAGETEXT.agm || PAGETEXT.agm_image ? '' : '<div class="empty">Minutes will be added here.</div>')}
@@ -1205,7 +1207,7 @@ function clubPage(id){
   const c = CLUB.find(x => x.id === id) || (id === 'contact' ? { title:'Contact', desc:'', icon:'contact' } : null);
   if (!c) return VIEWS.club();
   const extra = id === 'agm' ? ' The link to the Google Drive folder goes here.' : '';
-  return `${pageHead(c.title, '', c.icon || 'club', true)}
+  return `${pageHead(c.title, esc(c.desc || ''), c.icon || 'club', true)}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
     ${PAGETEXT[id] || PAGETEXT[id + '_image'] ? '' : `<div class="empty">This page is a placeholder. The content from the current site moves here.${extra}</div>`}
@@ -1297,6 +1299,7 @@ document.addEventListener('click', e => {
 });
 function route(){
   const h = currentName();
+  CURKEY = h.startsWith('club-') ? h.slice(5) : h;
   let key = 'home', html;
   if (h.startsWith('club-')) { key = 'club'; html = introText(h.slice(5), clubPage(h.slice(5))); }
   else if (h.startsWith('person-')) { key = 'club'; html = personPage(h.slice(7)); }
