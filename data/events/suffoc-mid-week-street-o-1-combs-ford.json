@@ -1,0 +1,25 @@
+{
+  "title": "SUFFOC Mid-Week Street-O 1 Combs Ford",
+  "date": "2026-11-10",
+  "level": "Local",
+  "series": "Mid-Week Street-O",
+  "area": "Combs Ford",
+  "about": "<p></p>",
+  "fees": {
+    "chipHire": "£1",
+    "siacHire": "£3"
+  },
+  "resultLinks": {
+    "other": [
+      {
+        "label": "MapRun",
+        "url": "https://results.maprun.net/#/event_results?eventName=Combs%20Ford%202026%20PXAS%20ScoreV45"
+      }
+    ]
+  },
+  "comments": {
+    "planner": "<p></p>",
+    "organiser": "<p></p>",
+    "controller": "<p></p>"
+  }
+}
