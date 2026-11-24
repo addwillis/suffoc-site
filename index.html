@@ -117,6 +117,7 @@ p{margin:0 0 1rem;max-width:65ch}
 .pagehead{padding:2.2rem 0 1.2rem;border-bottom:1px solid var(--line);background:var(--card)}
 .pagehead h1{font-size:clamp(2.2rem,6vw,3.4rem);text-transform:uppercase;font-weight:700}
 .tile h3 .ci,.card h3 .ci,h2 .ci{width:1.1em;height:1.1em;fill:none;stroke:var(--course);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;margin-right:.45rem}
+.pagehead .hi.sub{stroke:var(--course)}
 .pagehead .hi{width:.8em;height:.8em;fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.04em;margin-right:.3em}
 .pagehead .lead{margin:.7rem 0 0;color:var(--muted);font-size:1.1rem}
 .back{display:inline-block;margin-bottom:.8rem;font-weight:600}
@@ -331,7 +332,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 121';
+const BUILD = 'build 122';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -820,8 +821,8 @@ const ICONS = {
 };
 const enterIcon = '<svg class="ei" viewBox="0 0 24 24" aria-hidden="true">' + ICONS.enter + '</svg>';
 const ct = (icon, text) => `<svg class="ci" viewBox="0 0 24 24" aria-hidden="true">${ICONS[icon]}</svg>${text}`;
-function pageHead(title, intro, icon){
-  const ic = icon && ICONS[icon] ? `<svg class="hi" viewBox="0 0 24 24" aria-hidden="true">${ICONS[icon]}</svg>` : '';
+function pageHead(title, intro, icon, sub){
+  const ic = icon && ICONS[icon] ? `<svg class="hi${sub ? ' sub' : ''}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[icon]}</svg>` : '';
   return `<section class="pagehead"><div class="wrap"><h1>${ic}${esc(title)}</h1>${intro ? `<p class="lead">${intro}</p>` : ''}</div></section>`;
 }
 
@@ -866,7 +867,7 @@ const VIEWS = {
     </div>`;
   },
   mapped(){
-    return `${pageHead('Mapped areas', 'A sense of the area the club covers. Each marker is an area the club has made a map for.', 'mapped')}
+    return `${pageHead('Mapped areas', 'A sense of the area the club covers. Each marker is an area the club has made a map for.', 'mapped', true)}
     <div class="wrap">
       <section class="section"><a class="back" href="#events">&larr; Back to Events</a><div style="height:1rem"></div>${mapBlock()}</section>
     </div>`;
@@ -889,7 +890,7 @@ const VIEWS = {
     </div>`;
   },
   maprun(){
-    return `${pageHead('MapRun', 'Virtual controls on your phone, any time.', 'phone')}
+    return `${pageHead('MapRun', 'Virtual controls on your phone, any time.', 'phone', true)}
     <div class="wrap"><section class="section">
       <a class="back" href="#anytime">&larr; Back to Anytime O</a>
       <div class="grid" style="margin-top:1rem"><a class="tile" href="#maprunnew"><h3>${ct('about', 'New to MapRun?')}</h3><p>What you need and how to do your first course, step by step.</p></a></div>
@@ -899,14 +900,14 @@ const VIEWS = {
     </section></div>`;
   },
   maprunnew(){
-    return `${pageHead('New to MapRun?', 'Everything you need for your first course.', 'phone')}
+    return `${pageHead('New to MapRun?', 'Everything you need for your first course.', 'phone', true)}
     <div class="wrap"><section class="section"><a class="back" href="#maprun">&larr; Back to MapRun</a></section></div>`;
   },
   permanent(){
     const dots = p => p.courses.length ? `<p class="cdots">${p.courses.map(c => { const col = courseColour(c), len = String(c.length || '').trim(); return `<span><i style="background:${col || 'transparent'}"></i>${esc(c.name || c.colour || 'Course')}${len ? ' ' + esc(/^[\d.]+$/.test(len) ? len + ' km' : len) : ''}</span>`; }).join('')}</p>` : '';
     const card = p => { const ak = areaKey(p.area), an = ak ? AREAS[ak].name : (p.area || ''); return `<a class="tile" href="#permanent-${esc(p.id)}"><h3>${esc(p.name)}</h3>${an ? `<p>${esc(an)}</p>` : ''}${dots(p)}</a>`; };
     const withPin = PERM.some(p => isFinite(p.lat) && isFinite(p.lon));
-    return `${pageHead('Permanent Orienteering Courses', 'Courses you can follow at any time, with a map to download.', 'post')}
+    return `${pageHead('Permanent Orienteering Courses', 'Courses you can follow at any time, with a map to download.', 'post', true)}
     <div class="wrap"><section class="section">
       <a class="back" href="#anytime">&larr; Back to Anytime O</a>
       ${PERM.length ? `${withPin ? `<h2 style="margin-top:1.8rem;font-size:1.3rem">${ct('mapped', 'Course Locations')}</h2><div class="map" style="margin-top:.8rem"><div class="leafmap" data-map="perm-all">${FALLBACK_NOTE}</div></div>` : ''}
@@ -1179,7 +1180,7 @@ function committeePage(){
       ${m.photo ? `<img class="mimg" src="${esc(imgSrc(m.photo))}" alt="" loading="lazy">` : `<span class="minit" aria-hidden="true">${esc(initials(m.name))}</span>`}
       <h3>${esc(m.name)}</h3>
       <p class="mroles">${sentence(m)}</p></a>`;
-  return `${pageHead('Committee', 'The people who run the club.', 'committee')}
+  return `${pageHead('Committee', 'The people who run the club.', 'committee', true)}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
     ${list.length ? `<div class="committee">${list.map(card).join('')}</div>` : '<div class="empty">The committee will be listed here soon.</div>'}
@@ -1190,7 +1191,7 @@ function clubPage(id){
   const c = CLUB.find(x => x.id === id) || (id === 'contact' ? { title:'Contact', desc:'', icon:'contact' } : null);
   if (!c) return VIEWS.club();
   const extra = id === 'agm' ? ' The link to the Google Drive folder goes here.' : '';
-  return `${pageHead(c.title, '', c.icon || 'club')}
+  return `${pageHead(c.title, '', c.icon || 'club', true)}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
     ${PAGETEXT[id] || PAGETEXT[id + '_image'] ? '' : `<div class="empty">This page is a placeholder. The content from the current site moves here.${extra}</div>`}
