@@ -328,7 +328,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 113';
+const BUILD = 'build 115';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -882,6 +882,7 @@ const VIEWS = {
     <div class="wrap"><section class="section">
       <a class="back" href="#anytime">&larr; Back to Anytime O</a>
       <div class="grid" style="margin-top:1rem"><a class="tile" href="#maprunnew"><h3>${ct('about', 'New to MapRun?')}</h3><p>What you need and how to do your first course, step by step.</p></a></div>
+      <h2 style="margin-top:1.8rem;font-size:1.3rem">${ct('mapped', 'Course Locations')}</h2>
       <iframe class="maprun" title="MapRun.uk events for SUFFOC" src="https://maprun.uk/?club=suffoc&embed=y" loading="lazy"></iframe>
       <p class="muted" style="margin-top:.8rem">Courses from <a href="https://maprun.uk/?club=suffoc" target="_blank" rel="noopener">MapRun.uk</a>. Not showing? Open it there directly.</p>
     </section></div>`;
@@ -897,7 +898,7 @@ const VIEWS = {
     return `${pageHead('Permanent Orienteering Courses', 'Courses you can follow at any time, with a map to download.', 'post')}
     <div class="wrap"><section class="section">
       <a class="back" href="#anytime">&larr; Back to Anytime O</a>
-      ${PERM.length ? `${withPin ? `<div class="map" style="margin-top:1rem"><div class="leafmap" data-map="perm-all">${FALLBACK_NOTE}</div></div>` : ''}
+      ${PERM.length ? `${withPin ? `<h2 style="margin-top:1.8rem;font-size:1.3rem">${ct('mapped', 'Course Locations')}</h2><div class="map" style="margin-top:.8rem"><div class="leafmap" data-map="perm-all">${FALLBACK_NOTE}</div></div>` : ''}
         <div class="grid" style="margin-top:1.2rem">${PERM.map(card).join('')}</div>` : '<div class="empty" style="margin-top:1rem">The permanent courses will be listed here soon.</div>'}
     </section></div>`;
   },
@@ -1250,7 +1251,10 @@ function introText(name, html){
   const img = pic ? '<img class="introimg" src="' + esc(pic) + '" alt="" loading="lazy">' : '';
   const box = '<div class="wrap"><div class="prose pageintro">' + img + (plain ? richHTML(t) : '') + '</div></div>';
   const i = html.indexOf('</section>');
-  return i < 0 ? html : html.slice(0, i + 10) + box + html.slice(i + 10);
+  if (i < 0) return html;
+  let head = html.slice(0, i + 10), rest = html.slice(i + 10), back = '';
+  rest = rest.replace(/<a class="back"[^>]*>[\s\S]*?<\/a>/, m => { back = '<div class="wrap"><section class="section" style="padding-bottom:0">' + m + '</section></div>'; return ''; });
+  return head + back + box + rest;
 }
 function route(){
   const h = currentName();
