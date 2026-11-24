@@ -326,7 +326,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 110';
+const BUILD = 'build 111';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -879,8 +879,8 @@ const VIEWS = {
     return `${pageHead('MapRun', 'Virtual controls on your phone, any time.', 'phone')}
     <div class="wrap"><section class="section">
       <a class="back" href="#anytime">&larr; Back to Anytime O</a>
-      <iframe class="maprun" title="MapRun.uk events for SUFFOC" src="https://maprun.uk/?club=SUFFOC&embed=y" loading="lazy"></iframe>
-      <p class="muted" style="margin-top:.8rem">Courses from <a href="https://maprun.uk/?club=SUFFOC" target="_blank" rel="noopener">MapRun.uk</a>. Not showing? Open it there directly.</p>
+      <iframe class="maprun" title="MapRun.uk events for SUFFOC" src="https://maprun.uk/?club=suffoc&embed=y" loading="lazy"></iframe>
+      <p class="muted" style="margin-top:.8rem">Courses from <a href="https://maprun.uk/?club=suffoc" target="_blank" rel="noopener">MapRun.uk</a>. Not showing? Open it there directly.</p>
     </section></div>`;
   },
   permanent(){
