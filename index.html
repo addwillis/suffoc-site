@@ -190,7 +190,9 @@ dl.facts dd a:hover{color:var(--sky)}
 .newsfull{max-width:46rem}
 .newsimg-full{display:block;width:100%;height:auto;border-radius:var(--radius);margin:0 0 1.2rem}
 .prose{font-size:1.08rem;line-height:1.65}
-.pageintro{max-width:46rem;padding:1.6rem 0 .2rem}
+.pageintro{max-width:60rem;padding:1.6rem 0 .2rem;overflow:hidden}
+.pageintro .introimg{float:right;width:min(280px,38%);margin:.2em 0 .8em 1.4rem}
+@media(max-width:600px){.pageintro .introimg{float:none;width:100%;margin:0 0 1em}}
 .maprun{width:100%;height:640px;border:1px solid var(--line,#d8dde6);border-radius:12px;margin-top:1rem;background:#fff}
 .prose p{margin:0 0 1em}
 .prose img{max-width:100%;height:auto;border-radius:10px;margin:.4em 0 1em;display:block}
@@ -326,7 +328,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 112';
+const BUILD = 'build 113';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -1242,8 +1244,11 @@ function cleanLinks(root){
 /* Text the webmaster types under "Page text" in Pages CMS is shown right under the page title. */
 function introText(name, html){
   const t = PAGETEXT[name], plain = String(t == null ? '' : t).replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
-  if (!plain) return html;
-  const box = '<div class="wrap"><div class="prose pageintro">' + richHTML(t) + '</div></div>';
+  let pic = String(PAGETEXT[name + '_image'] || '').trim();
+  if (pic && !/^https?:\/\//i.test(pic)) pic = (window.BASE || '/').replace(/\/$/, '') + '/' + pic.replace(/^\/+/, '');
+  if (!plain && !pic) return html;
+  const img = pic ? '<img class="introimg" src="' + esc(pic) + '" alt="" loading="lazy">' : '';
+  const box = '<div class="wrap"><div class="prose pageintro">' + img + (plain ? richHTML(t) : '') + '</div></div>';
   const i = html.indexOf('</section>');
   return i < 0 ? html : html.slice(0, i + 10) + box + html.slice(i + 10);
 }

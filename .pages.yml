@@ -580,60 +580,100 @@ content:
     options:
       format: html
     description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: events_image
+    label: EVENTS PAGE PICTURE
+    type: image
+    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: results
     label: RESULTS PAGE
     type: rich-text
     options:
       format: html
     description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: results_image
+    label: RESULTS PAGE PICTURE
+    type: image
+    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: news
     label: NEWS PAGE
     type: rich-text
     options:
       format: html
     description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: news_image
+    label: NEWS PAGE PICTURE
+    type: image
+    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: anytime
     label: ANYTIME O PAGE
     type: rich-text
     options:
       format: html
     description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: anytime_image
+    label: ANYTIME O PAGE PICTURE
+    type: image
+    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: permanent
     label: PERMANENT ORIENTEERING COURSES PAGE
     type: rich-text
     options:
       format: html
     description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: permanent_image
+    label: PERMANENT ORIENTEERING COURSES PAGE PICTURE
+    type: image
+    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: maprun
     label: MAPRUN PAGE
     type: rich-text
     options:
       format: html
     description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: maprun_image
+    label: MAPRUN PAGE PICTURE
+    type: image
+    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: maprunnew
     label: NEW TO MAPRUN PAGE
     type: rich-text
     options:
       format: html
     description: The full guide for newcomers to MapRun. Opened from the New to MapRun box on the MapRun page.
+  - name: maprunnew_image
+    label: NEW TO MAPRUN PAGE PICTURE
+    type: image
+    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: mapped
     label: MAPPED AREAS PAGE
     type: rich-text
     options:
       format: html
     description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: mapped_image
+    label: MAPPED AREAS PAGE PICTURE
+    type: image
+    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: club
     label: CLUB PAGE
     type: rich-text
     options:
       format: html
     description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: club_image
+    label: CLUB PAGE PICTURE
+    type: image
+    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: newcomers
     label: NEWCOMERS PAGE
     type: rich-text
     options:
       format: html
     description: Text shown at the top of the page, under the title. Leave empty for none.
+  - name: newcomers_image
+    label: NEWCOMERS PAGE PICTURE
+    type: image
+    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
 - name: news
   label: News
   type: file
