@@ -328,7 +328,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 118';
+const BUILD = 'build 119';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -1182,7 +1182,7 @@ function clubPage(id){
   return `${pageHead(c.title, '', 'club')}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
-    <div class="empty">This page is a placeholder. The content from the current site moves here.${extra}</div>
+    ${PAGETEXT[id] || PAGETEXT[id + '_image'] ? '' : `<div class="empty">This page is a placeholder. The content from the current site moves here.${extra}</div>`}
   </section></div>`;
 }
 
@@ -1259,7 +1259,7 @@ function introText(name, html){
 function route(){
   const h = currentName();
   let key = 'home', html;
-  if (h.startsWith('club-')) { key = 'club'; html = clubPage(h.slice(5)); }
+  if (h.startsWith('club-')) { key = 'club'; html = introText(h.slice(5), clubPage(h.slice(5))); }
   else if (h.startsWith('person-')) { key = 'club'; html = personPage(h.slice(7)); }
   else if (/^tag-(level|series)-/.test(h)) { key = 'events'; html = tagPage(h.split('-')[1], h.replace(/^tag-(level|series)-/, '')); }
   else if (h.startsWith('area-')) { key = 'events'; html = areaPage(h.slice(5)); }

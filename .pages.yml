@@ -646,6 +646,16 @@ content:
     label: NEW TO MAPRUN PAGE PICTURE
     type: image
     description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: kit
+    label: CLUB KIT PAGE
+    type: rich-text
+    options:
+      format: html
+    description: Text shown at the top of the Club Kit page, under the title. Leave empty for none.
+  - name: kit_image
+    label: CLUB KIT PAGE PICTURE
+    type: image
+    description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: mapped
     label: MAPPED AREAS PAGE
     type: rich-text
