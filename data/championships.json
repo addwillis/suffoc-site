@@ -23,6 +23,18 @@
           "member": "David Hodkinson"
         }
       ]
+    },
+    {
+      "year": "2023",
+      "event": "Club Championships",
+      "date": "2023-10-01",
+      "venue": "Epping Forest",
+      "resultsFile": "/documents/SUFFOC_Champs_2023_Results.pdf",
+      "winners": [
+        {
+          "member": "Gareth Radcliffe"
+        }
+      ]
     }
   ]
 }
