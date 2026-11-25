@@ -199,6 +199,9 @@ dl.facts dd a:hover{color:var(--sky)}
 @media(max-width:600px){.pageintro .introimg{float:none;width:100%;margin:0 0 1em}}
 .maprun{width:100%;height:640px;border:1px solid var(--line,#d8dde6);border-radius:12px;margin-top:1rem;background:#fff}
 .prose p{margin:0 0 1em}
+.prose table{display:block;max-width:100%;overflow-x:auto;border-collapse:collapse;margin:0 0 1.2em;font-size:.95rem}
+.prose th,.prose td{border:1px solid #d3d9e3;padding:.4rem .7rem;text-align:left;white-space:nowrap}
+.prose th{background:#eef2f8;color:var(--navy)}
 .prose img{max-width:100%;height:auto;border-radius:10px;margin:.4em 0 1em;display:block}
 .prose ul,.prose ol{margin:0 0 1em;padding-left:1.4em}
 .prose h2,.prose h3,.prose h4{margin:1.4em 0 .5em}
@@ -332,7 +335,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 131';
+const BUILD = 'build 133';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -406,7 +409,7 @@ function loadData(areas, events){
   });
 }
 let CURKEY = '';
-let LEAGUE = {}, CHAMPS = [];
+let LEAGUE = {}, CHAMPS = [], CHAMPRULES = '';
 const subOf = (key, fallback) => String((PAGETEXT[key + '_sub'] || fallback) || '').trim();
 let NEWS = [], MEMBERS = {}, PERM = [], PAGETEXT = {}, AGM = [];
 const personKey = v => String(v == null ? '' : v).replace(/^.*\//, '').replace(/\.json$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -597,7 +600,7 @@ const imgSrc = p => /^https?:/i.test(p) ? p : String(p).replace(/^\/+/, '');
 
 /* News text comes from the Pages CMS rich-text editor (HTML), or plain text with blank lines between paragraphs.
    Only a short list of safe tags is kept. */
-const SAFE_TAGS = { P:1, BR:1, STRONG:1, B:1, EM:1, I:1, U:1, A:1, UL:1, OL:1, LI:1, H2:1, H3:1, H4:1, BLOCKQUOTE:1, IMG:1 };
+const SAFE_TAGS = { P:1, BR:1, STRONG:1, B:1, EM:1, I:1, U:1, A:1, UL:1, OL:1, LI:1, H2:1, H3:1, H4:1, BLOCKQUOTE:1, IMG:1, TABLE:1, THEAD:1, TBODY:1, TR:1, TH:1, TD:1 };
 function richHTML(src){
   src = String(src || '').trim();
   if (!src) return '';
@@ -1247,9 +1250,11 @@ function championshipsPage(){
       ${c.note ? `<p class="meta" style="margin-top:.7rem">${esc(c.note)}</p>` : ''}
     </article>`;
   }).join('');
+  const rules = String(CHAMPRULES || '').replace(/<[^>]*>/g, '').trim() ? richHTML(CHAMPRULES) : '';
   return `${pageHead('Club Championships', 'Annual championship results and awards.', 'champ', true)}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
+    ${rules ? `<details class="year" style="margin-top:1.2rem"><summary>Championship rules</summary><div class="prose" style="margin-top:.8rem">${rules}</div></details>` : ''}
     ${cards || (PAGETEXT.championships || PAGETEXT.championships_image ? '' : '<div class="empty">Championship results will be added here.</div>')}
   </section></div>`;
 }
@@ -1415,7 +1420,7 @@ Promise.all([
   fetch('data/agm.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/league.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/championships.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-]).then(([a, e, n, m, pm, pt, ag, lg, ch]) => { CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+]).then(([a, e, n, m, pm, pt, ag, lg, ch]) => { CHAMPRULES = (ch && ch.rules) || ''; CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>

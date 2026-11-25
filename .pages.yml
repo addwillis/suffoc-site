@@ -964,6 +964,12 @@ content:
   path: data/championships.json
   format: json
   fields:
+  - name: rules
+    label: Championship rules
+    type: rich-text
+    options:
+      format: html
+    description: Shown on the Club Championships page under Championship rules. Tables are supported.
   - name: championships
     label: Club championships
     type: object
