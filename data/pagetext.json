@@ -50,5 +50,8 @@
   },
   "committee": {
     "sub": "The people who run the club."
+  },
+  "league": {
+    "sub": "Club league events, rules and standings."
   }
 }

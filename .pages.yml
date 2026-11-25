@@ -54,6 +54,10 @@ content:
       - "Mid-Week Street-O"
       - "Simon Peck Summer Series"
       # END series
+  - name: league
+    label: Counts for the club league
+    type: boolean
+    description: Tick if this event is part of the club league. It then appears on the League page and the home page reminder.
   - name: area
     label: Area
     type: select
@@ -815,6 +819,24 @@ content:
       label: Picture
       type: image
       description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: league
+    label: LEAGUE PAGE
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
 - name: agm
   label: AGM minutes
   type: file
@@ -848,6 +870,53 @@ content:
       label: Note (optional)
       type: string
       description: A few words if needed, for example approved at the 2026 AGM.
+- name: league
+  label: Club league
+  type: file
+  path: data/league.json
+  format: json
+  fields:
+  - name: rulesFile
+    label: League rules (PDF upload)
+    type: file
+    options:
+      media: documents
+    description: Upload the rules as a PDF. Shows as a Rules button on the League page.
+  - name: rulesUrl
+    label: League rules link (instead of an upload)
+    type: string
+    description: Only if the rules are already online. An uploaded PDF above is used first.
+  - name: tableUrl
+    label: League table link
+    type: string
+    description: The web address of the current league table, for example a Google Sheets link. Shows as a League table button.
+  - name: events
+    label: Other clubs' league events
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{date} {title}'
+    fields:
+    - name: date
+      label: Date
+      type: date
+      options:
+        format: yyyy-MM-dd
+    - name: title
+      label: Event name
+      type: string
+    - name: club
+      label: Host club
+      type: string
+      description: For example West Anglian Orienteering Club.
+    - name: link
+      label: Link to enter or find out more
+      type: string
+      description: The full web address, usually the other club's event page or entry page.
+    - name: note
+      label: Note (optional)
+      type: string
 - name: news
   label: News
   type: file

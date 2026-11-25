@@ -332,7 +332,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 127';
+const BUILD = 'build 128';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -406,6 +406,7 @@ function loadData(areas, events){
   });
 }
 let CURKEY = '';
+let LEAGUE = {};
 const subOf = (key, fallback) => String((PAGETEXT[key + '_sub'] || fallback) || '').trim();
 let NEWS = [], MEMBERS = {}, PERM = [], PAGETEXT = {}, AGM = [];
 const personKey = v => String(v == null ? '' : v).replace(/^.*\//, '').replace(/\.json$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -433,7 +434,7 @@ function memberId(v){
 const CLUB = [
   { id:'about',         title:'About Us',          desc:'Who we are, where we run, and our club history.', icon:'clubabout' },
   { id:'committee',     title:'Committee',         desc:'Who does what on the committee.', icon:'committee' },
-  { id:'league',        title:'League',            desc:'Club league standings and how it works.', icon:'league' },
+  { id:'league',        title:'League',            desc:'Club league events, rules and standings.', icon:'league' },
   { id:'championships', title:'Club Championships',desc:'Annual championship results and awards.', icon:'champ' },
   { id:'juniors',       title:'Juniors',           desc:'Junior orienteering and who to contact.', icon:'juniors' },
   { id:'kit',           title:'Club Kit',          desc:'Club clothing and how to get it.', icon:'kit' },
@@ -848,6 +849,7 @@ const VIEWS = {
         <div class="section-head"><h2>Upcoming events</h2><a class="more" href="#events">All events &rarr;</a></div>
         ${eventsList(upcoming().slice(0,3))}
       </section>
+      ${(() => { const n = leagueUpcoming()[0]; return n ? `<section class="section"><div class="section-head"><h2>Next club league event</h2><a class="more" href="#club-league">League &rarr;</a></div><div class="events">${leagueCard(n, false)}</div></section>` : ''; })()}
       <div class="two-col">
         <section class="section">
           <div class="section-head"><h2>Club news</h2><a class="more" href="#news">More news &rarr;</a></div>
@@ -1189,6 +1191,45 @@ function committeePage(){
     ${list.length ? `<div class="committee">${list.map(card).join('')}</div>` : '<div class="empty">The committee will be listed here soon.</div>'}
   </section></div>`;
 }
+/* Club league: our own events ticked "Counts for the club league", plus other clubs' events listed in the Club league entry. */
+function leagueItems(){
+  const own = EVENTS.filter(e => e.league === true || e.league === 'true').map(e => ({ date:e.date, title:e.title, club:'SUFFOC', own:true, ev:e }));
+  const other = asList(LEAGUE.events).filter(x => x && x.title && /^\d{4}-\d{2}-\d{2}$/.test(String(x.date || '').trim()))
+    .map(x => ({ date:String(x.date).trim(), title:x.title, club:x.club || '', link:x.link ? String(x.link).trim() : '', note:x.note || '', own:false }));
+  return own.concat(other).sort((a, b) => parseDate(a.date) - parseDate(b.date));
+}
+const leagueIsUp = i => !(i.ev ? isPast(i.ev) : new Date() >= (d => (d.setHours(23, 59, 59, 999), d))(parseDate(i.date)));
+const leagueUpcoming = () => leagueItems().filter(leagueIsUp);
+function leagueCard(i, past){
+  if (i.own && !past) return eventCard(i.ev);
+  const d = parseDate(i.date);
+  const wd = d.toLocaleString('en-GB', { weekday:'short' }), mon = d.toLocaleString('en-GB', { month:'short' });
+  const href = i.own ? '#event-' + esc(i.ev.id) : i.link;
+  return `<article class="event">
+    <div class="datebox" aria-hidden="true"><span class="wd">${wd}</span><span class="day">${d.getDate()}</span><span class="mon">${mon}</span></div>
+    <div>
+      <h3>${href ? `<a class="title-link" href="${esc(href)}" ${i.own ? '' : ext}>${esc(i.title)}</a>` : esc(i.title)}</h3>
+      <p class="meta">${esc(i.club)}${i.note ? ' &middot; ' + esc(i.note) : ''}</p>
+      ${href && !past ? `<div class="links"><a class="btn small gold" href="${esc(href)}" ${i.own ? '' : ext}>${i.own ? 'Event page' : 'Event details'}</a></div>` : ''}
+    </div>
+  </article>`;
+}
+function leaguePage(){
+  const url = f => /^https?:\/\//i.test(f) ? f : (window.BASE || '/').replace(/\/$/, '') + '/' + String(f).replace(/^\/+/, '');
+  const rules = LEAGUE.rulesFile ? url(LEAGUE.rulesFile) : (LEAGUE.rulesUrl || '');
+  const table = LEAGUE.tableUrl || '';
+  const all = leagueItems(), up = all.filter(leagueIsUp);
+  const done = all.filter(i => !leagueIsUp(i)).sort((a, b) => parseDate(b.date) - parseDate(a.date));
+  const years = [...new Set(done.map(i => i.date.slice(0, 4)))];
+  return `${pageHead('League', 'Club league events, rules and standings.', 'league', true)}
+  <div class="wrap"><section class="section">
+    <a class="back" href="#club">&larr; Back to Club</a>
+    ${rules || table ? `<div class="btns" style="margin:1rem 0 0">${table ? `<a class="btn gold" href="${esc(table)}" ${ext}>League table</a>` : ''}${rules ? `<a class="btn ${table ? 'line' : 'gold'}" href="${esc(rules)}" ${ext}>League rules</a>` : ''}</div>` : ''}
+    <div class="section-head" style="margin-top:1.8rem"><h2>Upcoming league events</h2></div>
+    ${up.length ? `<div class="events">${up.map(i => leagueCard(i, false)).join('')}</div>` : '<div class="empty">No league events are listed yet. Check back soon.</div>'}
+    ${years.map((y, n) => `<details class="year"${n === 0 ? ' open' : ''}><summary>${y}</summary><div class="events" style="margin-top:.8rem">${done.filter(i => i.date.slice(0, 4) === y).map(i => leagueCard(i, true)).join('')}</div></details>`).join('')}
+  </section></div>`;
+}
 function agmPage(){
   const url = f => /^https?:\/\//i.test(f) ? f : (window.BASE || '/').replace(/\/$/, '') + '/' + String(f).replace(/^\/+/, '');
   const rows = AGM.map(x => {
@@ -1205,6 +1246,7 @@ function agmPage(){
 function clubPage(id){
   if (id === 'committee') return committeePage();
   if (id === 'agm') return agmPage();
+  if (id === 'league') return leaguePage();
   const c = CLUB.find(x => x.id === id) || (id === 'contact' ? { title:'Contact', desc:'', icon:'contact' } : null);
   if (!c) return VIEWS.club();
   const extra = id === 'agm' ? ' The link to the Google Drive folder goes here.' : '';
@@ -1346,8 +1388,9 @@ Promise.all([
   fetch('data/members.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/permanent.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/pagetext.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-  fetch('data/agm.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-]).then(([a, e, n, m, pm, pt, ag]) => { AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+  fetch('data/agm.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  fetch('data/league.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([a, e, n, m, pm, pt, ag, lg]) => { LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>
