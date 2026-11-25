@@ -332,7 +332,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 130';
+const BUILD = 'build 131';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -406,7 +406,7 @@ function loadData(areas, events){
   });
 }
 let CURKEY = '';
-let LEAGUE = {};
+let LEAGUE = {}, CHAMPS = [];
 const subOf = (key, fallback) => String((PAGETEXT[key + '_sub'] || fallback) || '').trim();
 let NEWS = [], MEMBERS = {}, PERM = [], PAGETEXT = {}, AGM = [];
 const personKey = v => String(v == null ? '' : v).replace(/^.*\//, '').replace(/\.json$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -1038,6 +1038,7 @@ function personPage(id){
     <div class="wrap">
       ${m.roles.length ? `<section class="section"><div class="section-head"><h2>Club Roles</h2></div>
         <div class="card"><dl class="facts" style="margin:0">${m.roles.map(r => `<dt>${esc(r.role)}</dt><dd>${r.email ? `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ''}</dd>`).join('')}</dl></div></section>` : ''}
+      ${(() => { const wins = []; CHAMPS.forEach(c => asList(c.winners).forEach(w => { if (w && w.member && memberId(w.member) === id) wins.push({ y:c.year, cls:String(w.class || '').trim(), ev:c.event }); })); return wins.length ? `<section class="section"><div class="section-head"><h2>Club Championship Wins</h2></div><div class="card"><dl class="facts" style="margin:0">${wins.map(x => `<dt>${esc(x.y)}</dt><dd>${esc([x.cls, x.ev].filter(Boolean).join(' \u00b7 '))}</dd>`).join('')}</dl></div></section>` : ''; })()}
       <section class="section"><div class="section-head"><h2>Event Official History</h2></div>
         ${mine.length ? `<div class="rlist">${mine.map(row).join('')}</div>` : '<div class="empty">No events are listed for this person yet.</div>'}</section>
     </div>`;
@@ -1231,6 +1232,27 @@ function leaguePage(){
     ${years.map((y, n) => `<details class="year"${n === 0 ? ' open' : ''}><summary>${y}</summary><div class="events" style="margin-top:.8rem">${done.filter(i => i.date.slice(0, 4) === y).map(i => leagueCard(i, true)).join('')}</div></details>`).join('')}
   </section></div>`;
 }
+/* Club championships: one entry per year, winners picked from the members list. */
+const champWinner = w => { const mid = w.member ? memberId(w.member) : null; return { mid:mid, name:mid ? MEMBERS[mid].name : String(w.otherName || w.member || '').trim() }; };
+function championshipsPage(){
+  const url = f => /^https?:\/\//i.test(f) ? f : (window.BASE || '/').replace(/\/$/, '') + '/' + String(f).replace(/^\/+/, '');
+  const cards = CHAMPS.map(c => {
+    const d = c.date && /^\d{4}-\d{2}-\d{2}$/.test(String(c.date).trim()) ? fmtShort.format(parseDate(String(c.date).trim())) : '';
+    const res = c.resultsFile ? url(c.resultsFile) : String(c.resultsLink || '').trim();
+    const winners = asList(c.winners).filter(w => w).map(w => ({ cls:String(w.class || '').trim(), w:champWinner(w) })).filter(x => x.w.name);
+    return `<article class="card" style="margin-top:1rem"><h3>${esc(c.year)}${c.event ? ' &middot; ' + (c.eventLink ? `<a class="title-link" href="${esc(c.eventLink)}" ${ext}>${esc(c.event)}</a>` : esc(c.event)) : ''}</h3>
+      ${d || c.venue ? `<p class="meta">${[d, c.venue].filter(Boolean).map(esc).join(' &middot; ')}</p>` : ''}
+      ${winners.length ? `<dl class="facts" style="margin:.8rem 0 0">${winners.map(x => `<dt>${esc(x.cls)}</dt><dd>${x.w.mid ? `<a href="#person-${esc(x.w.mid)}">${esc(x.w.name)}</a>` : esc(x.w.name)}</dd>`).join('')}</dl>` : ''}
+      ${res ? `<div class="links" style="margin-top:.9rem"><a class="btn small line" href="${esc(res)}" ${ext}>Results</a></div>` : ''}
+      ${c.note ? `<p class="meta" style="margin-top:.7rem">${esc(c.note)}</p>` : ''}
+    </article>`;
+  }).join('');
+  return `${pageHead('Club Championships', 'Annual championship results and awards.', 'champ', true)}
+  <div class="wrap"><section class="section">
+    <a class="back" href="#club">&larr; Back to Club</a>
+    ${cards || (PAGETEXT.championships || PAGETEXT.championships_image ? '' : '<div class="empty">Championship results will be added here.</div>')}
+  </section></div>`;
+}
 function agmPage(){
   const url = f => /^https?:\/\//i.test(f) ? f : (window.BASE || '/').replace(/\/$/, '') + '/' + String(f).replace(/^\/+/, '');
   const rows = AGM.map(x => {
@@ -1248,6 +1270,7 @@ function clubPage(id){
   if (id === 'committee') return committeePage();
   if (id === 'agm') return agmPage();
   if (id === 'league') return leaguePage();
+  if (id === 'championships') return championshipsPage();
   const c = CLUB.find(x => x.id === id) || (id === 'contact' ? { title:'Contact', desc:'', icon:'contact' } : null);
   if (!c) return VIEWS.club();
   const extra = id === 'agm' ? ' The link to the Google Drive folder goes here.' : '';
@@ -1390,8 +1413,9 @@ Promise.all([
   fetch('data/permanent.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/pagetext.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/agm.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-  fetch('data/league.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-]).then(([a, e, n, m, pm, pt, ag, lg]) => { LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+  fetch('data/league.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  fetch('data/championships.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([a, e, n, m, pm, pt, ag, lg, ch]) => { CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>

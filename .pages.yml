@@ -837,6 +837,24 @@ content:
       label: Picture
       type: image
       description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: championships
+    label: CLUB CHAMPIONSHIPS PAGE
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
 - name: agm
   label: AGM minutes
   type: file
@@ -936,6 +954,85 @@ content:
     - name: note
       label: Note (optional)
       type: string
+- name: championships
+  label: Club championships
+  type: file
+  path: data/championships.json
+  format: json
+  fields:
+  - name: championships
+    label: Club championships
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{year} {event}'
+    fields:
+    - name: year
+      label: Year
+      type: string
+      description: For example 2026.
+    - name: event
+      label: Event name
+      type: string
+    - name: date
+      label: Date (optional)
+      type: date
+      options:
+        format: yyyy-MM-dd
+    - name: venue
+      label: Venue (optional)
+      type: string
+    - name: eventLink
+      label: Event page link (optional)
+      type: string
+      description: The full web address of the event, for example a SUFFOC event page.
+    - name: resultsLink
+      label: Results link (optional)
+      type: string
+      description: The full web address of the results.
+    - name: resultsFile
+      label: Results file (optional)
+      type: file
+      options:
+        media: documents
+      description: Upload the results as a PDF, if there is no online link.
+    - name: note
+      label: Note (optional)
+      type: string
+    - name: winners
+      label: Winners
+      type: object
+      list: true
+      fields:
+      - name: class
+        label: Class
+        type: string
+        description: For example Men, Women or M16.
+      - name: member
+        label: Club member
+        type: select
+        description: Pick the winner from Club members. They then get this win on their own page.
+        options:
+          values:
+          # BEGIN members
+          - "Adam Willis"
+          - "Andrew Elliott"
+          - "Clive Wilkinson"
+          - "Gareth Radcliffe"
+          - "Louise Walker"
+          - "Martin Hore"
+          - "Mike Bickle"
+          - "Paul Beckett"
+          - "Phil Halford"
+          - "Rod Mansel"
+          - "Sally Wilkinson"
+          - "Sarah Mansel"
+          # END members
+      - name: otherName
+        label: Winner not in the members list
+        type: string
+        description: Only if the winner isn't in Club members, for example an earlier year. Leave empty when you pick a member above.
 - name: news
   label: News
   type: file

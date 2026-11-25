@@ -53,5 +53,8 @@
   },
   "league": {
     "sub": "Club league events, rules and standings."
+  },
+  "championships": {
+    "sub": "Annual championship results and awards."
   }
 }
