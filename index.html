@@ -332,7 +332,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 128';
+const BUILD = 'build 130';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -1195,7 +1195,7 @@ function committeePage(){
 function leagueItems(){
   const own = EVENTS.filter(e => e.league === true || e.league === 'true').map(e => ({ date:e.date, title:e.title, club:'SUFFOC', own:true, ev:e }));
   const other = asList(LEAGUE.events).filter(x => x && x.title && /^\d{4}-\d{2}-\d{2}$/.test(String(x.date || '').trim()))
-    .map(x => ({ date:String(x.date).trim(), title:x.title, club:x.club || '', link:x.link ? String(x.link).trim() : '', note:x.note || '', own:false }));
+    .map(x => ({ date:String(x.date).trim(), title:x.title, club:x.club || '', level:String(x.level || '').trim(), startFrom:String(x.startFrom || '').trim(), closes:String(x.closes || '').trim(), link:x.link ? String(x.link).trim() : '', note:x.note || '', own:false }));
   return own.concat(other).sort((a, b) => parseDate(a.date) - parseDate(b.date));
 }
 const leagueIsUp = i => !(i.ev ? isPast(i.ev) : new Date() >= (d => (d.setHours(23, 59, 59, 999), d))(parseDate(i.date)));
@@ -1208,8 +1208,9 @@ function leagueCard(i, past){
   return `<article class="event">
     <div class="datebox" aria-hidden="true"><span class="wd">${wd}</span><span class="day">${d.getDate()}</span><span class="mon">${mon}</span></div>
     <div>
+      ${i.own ? pills(i.ev, true) : ((i.club ? '<span class="pill">' + esc(i.club) + '</span> ' : '') + (i.level ? '<span class="pill">' + esc(i.level) + '</span>' : ''))}
       <h3>${href ? `<a class="title-link" href="${esc(href)}" ${i.own ? '' : ext}>${esc(i.title)}</a>` : esc(i.title)}</h3>
-      <p class="meta">${esc(i.club)}${i.note ? ' &middot; ' + esc(i.note) : ''}</p>
+      ${(() => { const t = i.own ? timeRange(i.ev) : (i.startFrom && i.closes ? i.startFrom + '\u2013' + i.closes : i.startFrom || (i.closes ? 'closes ' + i.closes : '')); const bits = [t, i.note].filter(Boolean); return bits.length ? '<p class="meta">' + bits.map(esc).join(' &middot; ') + '</p>' : ''; })()}
       ${href && !past ? `<div class="links"><a class="btn small gold" href="${esc(href)}" ${i.own ? '' : ext}>${i.own ? 'Event page' : 'Event details'}</a></div>` : ''}
     </div>
   </article>`;

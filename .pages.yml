@@ -906,10 +906,29 @@ content:
     - name: title
       label: Event name
       type: string
+    - name: level
+      label: Event level
+      type: select
+      description: Optional. National, Regional or Local. To change the list, use Event levels in the menu.
+      options:
+        values:
+        # BEGIN levels
+        - "National"
+        - "Regional"
+        - "Local"
+        # END levels
     - name: club
       label: Host club
       type: string
       description: For example West Anglian Orienteering Club.
+    - name: startFrom
+      label: Start times from (optional)
+      type: string
+      description: For example 10:30.
+    - name: closes
+      label: Courses close (optional)
+      type: string
+      description: For example 14:15.
     - name: link
       label: Link to enter or find out more
       type: string
