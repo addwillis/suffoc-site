@@ -10,6 +10,10 @@
       "label_anchor": "start"
     },
     {
+      "name": "Bury St Edmunds",
+      "id": "bury-st-edmunds"
+    },
+    {
       "name": "Clare",
       "mapType": "SUFFOC map",
       "gridRef": " TL 770451",
