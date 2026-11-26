@@ -3,7 +3,22 @@
   "date": "2026-06-21",
   "level": "Local",
   "series": "Simon Peck Summer Series",
-  "area": "Clare Country Park",
+  "league": false,
+  "area": "Clare",
+  "about": "<p></p>",
+  "fees": {
+    "chipHire": "£1",
+    "siacHire": "£3"
+  },
+  "officials": {
+    "planner": "Phil Halford",
+    "controller": "Clive Wilkinson"
+  },
+  "comments": {
+    "planner": "<p></p>",
+    "organiser": "<p></p>",
+    "controller": "<p></p>"
+  },
   "resultLinks": {
     "results": "http://www.suffoc.co.uk/results/2026/Clare/index.html",
     "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113649",
