@@ -164,6 +164,12 @@
       "id": "ickworth-park"
     },
     {
+      "name": "Ipswich High School",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 195386",
+      "id": "ipswich-high-school"
+    },
+    {
       "name": "King's Forest",
       "mapType": "SUFFOC map",
       "gridRef": "TL 821760",
