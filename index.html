@@ -356,7 +356,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 148';
+const BUILD = 'build 150';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -414,7 +414,7 @@ function loadData(areas, events){
     const o = upgradeEvent(e);
     const d = o.detail || {};
     { /* every event gets its own page, even if it only has a title and date so far */
-      o.detail = Object.assign({}, d, { address: (d.address || []).filter(Boolean), officials: [['Organiser', d.organiser], ['Planner', d.planner], ['Controller', d.controller], ['Risk Assessor', d.riskAssessor]].filter(x => x[1]).map(x => { const id = memberId(x[1]); return [x[0], id ? MEMBERS[id].name : personKey(x[1]) ? String(x[1]).replace(/^.*\//, '').replace(/\.json$/i, '') : x[1], id ? '#person-' + id : '']; }).concat(pairs(d.officials, 'role', 'name').map(x => { const id = memberId(x[1]); return [x[0], x[1], id ? '#person-' + id : '']; })), docs: pairs(d.docs, 'label', 'url') });
+      o.detail = Object.assign({}, d, { address: (d.address || []).filter(Boolean), officials: [['Planner', d.planner], ['Organiser', d.organiser], ['Controller', d.controller], ['Risk Assessor', d.riskAssessor]].filter(x => x[1]).map(x => { const id = memberId(x[1]); return [x[0], id ? MEMBERS[id].name : personKey(x[1]) ? String(x[1]).replace(/^.*\//, '').replace(/\.json$/i, '') : x[1], id ? '#person-' + id : '']; }).concat(pairs(d.officials, 'role', 'name').map(x => { const id = memberId(x[1]); return [x[0], x[1], id ? '#person-' + id : '']; })), docs: pairs(d.docs, 'label', 'url') });
     }
     o.loc = o.detail && o.detail.gridRef ? gridToLatLon(o.detail.gridRef) : null;
     return o;
@@ -1008,6 +1008,7 @@ const VIEWS = {
     return `${pageHead('Club', 'Everything about SUFFOC in one place.', 'club')}
     <div class="wrap"><section class="section"><div class="tiles">
       ${CLUB.map(c => `<a class="tile" href="#club-${c.id}"><h3>${ct(c.icon, esc(c.title))}</h3><p>${esc(String(PAGETEXT[c.id + '_sub'] || c.desc).trim())}</p></a>`).join('')}
+      <a class="tile" href="#mapped"><h3>${ct('mapped', 'Mapped Areas')}</h3><p>${esc(subOf('mapped', 'Areas we run events in, and which have a surveyed orienteering map.'))}</p></a>
     </div></section></div>`;
   },
   newcomers(){

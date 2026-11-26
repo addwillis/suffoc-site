@@ -250,8 +250,8 @@ content:
     type: object
     description: Pick from Club members. If someone isn't there yet, add them under Club members first, or use Other officials.
     fields:
-      - name: organiser
-        label: Organiser
+      - name: planner
+        label: Planner
         type: select
         options:
           values:
@@ -275,8 +275,8 @@ content:
           - "Simon Hooton"
           - "Will Harrison"
           # END members
-      - name: planner
-        label: Planner
+      - name: organiser
+        label: Organiser
         type: select
         options:
           values:
@@ -362,6 +362,26 @@ content:
         - name: name
           label: Name
           type: string
+  - name: comments
+    label: OFFICIALS' COMMENTS (add after the event)
+    type: object
+    description: Comments from the people who ran the event. Leave empty if you haven't been sent any. A Comments button appears next to the results once any of these have text.
+    fields:
+    - name: planner
+      label: Planner's comments
+      type: rich-text
+      options:
+        format: html
+    - name: organiser
+      label: Organiser's comments
+      type: rich-text
+      options:
+        format: html
+    - name: controller
+      label: Controller's comments
+      type: rich-text
+      options:
+        format: html
   - name: documents
     label: DOCUMENTS AND LINKS
     type: object
@@ -413,26 +433,6 @@ content:
       - name: url
         label: Web address
         type: string
-  - name: comments
-    label: EVENT COMMENTS (add after the event)
-    type: object
-    description: Comments from the people who ran the event. Leave empty if you haven't been sent any. A Comments button appears next to the results once any of these have text.
-    fields:
-    - name: planner
-      label: Planner's comments
-      type: rich-text
-      options:
-        format: html
-    - name: organiser
-      label: Organiser's comments
-      type: rich-text
-      options:
-        format: html
-    - name: controller
-      label: Controller's comments
-      type: rich-text
-      options:
-        format: html
 - name: levels
   label: Event levels
   type: collection
