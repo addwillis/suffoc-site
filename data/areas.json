@@ -1,6 +1,12 @@
 {
   "areas": [
     {
+      "name": "Alton Water",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 139364",
+      "id": "alton-water"
+    },
+    {
       "id": "brandon",
       "name": "Brandon Country Park",
       "lat": 52.449,

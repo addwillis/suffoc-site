@@ -65,6 +65,7 @@ content:
     options:
       values:
       # BEGIN areas
+      - "Alton Water"
       - "Brandon Country Park"
       - "Bury St Edmunds"
       - "Clare"
@@ -519,6 +520,7 @@ content:
     options:
       values:
       # BEGIN areas
+      - "Alton Water"
       - "Brandon Country Park"
       - "Bury St Edmunds"
       - "Clare"
