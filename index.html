@@ -260,6 +260,16 @@ dl.facts dd a:hover{color:var(--sky)}
 .person{display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;margin-top:.6rem}
 .personimg{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 6px 16px rgba(11,42,85,.2)}
 .rrow .pill{margin-bottom:.3rem}
+.alisthead{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin:1.2rem 0 .4rem}
+.asearch{flex:1 1 220px;max-width:340px;font:inherit;padding:.55rem .9rem;border:1.5px solid var(--line);border-radius:999px;background:#fff;color:var(--ink)}
+.afilters{display:flex;flex-wrap:wrap;gap:8px}
+.alist{list-style:none;margin:0;padding:0}
+.alist li[hidden]{display:none}
+.alist li.l{font-weight:700;color:var(--navy);padding:1rem .2rem .25rem;border-bottom:2px solid var(--line)}
+.alist li.a a{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:.7rem .2rem;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:500}
+.alist li.a a:hover{background:var(--card)}
+.alist .m{color:var(--muted);font-size:.9rem;white-space:nowrap;font-weight:400}
+.alist .tag{font-style:normal;font-size:.78rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.05rem .5rem;margin-left:.4rem;white-space:nowrap}
 .chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:1rem 0 0;padding:0}
 .chips li{background:var(--card);border:1px solid var(--line);border-radius:999px;font-weight:500}
 .chips li a{display:block;padding:.3rem .8rem;text-decoration:none;color:var(--ink)}
@@ -337,7 +347,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 143';
+const BUILD = 'build 144';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -708,7 +718,7 @@ function mapBlock(mode){
   return `<div class="map"><div class="leafmap" data-map="all">${mapSVG()}${FALLBACK_NOTE}</div>
     <div class="legend"><span><i></i>SUFFOC map</span><span><i class="osm"></i>OpenStreetMap</span></div>
   </div>
-  ${(() => { const chips = osm => Object.entries(AREAS).filter(([k, a]) => !a.auto && !!a.osm === osm).map(([k, a]) => `<li><a href="#area-${esc(k)}">${esc(a.name)}</a></li>`).join(''); const own = chips(false), pub = chips(true); return (own ? `<ul class="chips">${own}</ul>` : '') + (pub ? `<p class="meta" style="margin:1.2rem 0 .3rem">Areas using OpenStreetMap, not a surveyed orienteering map:</p><ul class="chips">${pub}</ul>` : ''); })()}`;
+  ${areaList()}`;
 }
 
 /* Real map (Leaflet + OpenStreetMap). If Leaflet cannot load, the schematic SVG above stays as a fallback. */
@@ -740,6 +750,43 @@ function initPermMaps(){
       LMAPS.push(map);
     } catch (err) { el.innerHTML = fallback; }
   });
+}
+/* Mapped areas list: one line per area with how many events we have there and the latest year, searchable and filterable. */
+function areaList(){
+  const rows = Object.entries(AREAS).filter(([k, a]) => !a.auto).map(([k, a]) => {
+    const ev = EVENTS.filter(e => e.area === k), yr = ev.length ? Math.max(...ev.map(e => +e.date.slice(0, 4))) : 0;
+    return { k:k, name:a.name, osm:!!a.osm, n:ev.length, yr:yr };
+  }).sort((x, y) => String(x.name).localeCompare(String(y.name)));
+  if (!rows.length) return '';
+  const letters = rows.length > 15;
+  let last = '';
+  const items = rows.map(r => {
+    const L = String(r.name).charAt(0).toUpperCase(), head = letters && L !== last ? `<li class="l" data-l="${esc(L)}" aria-hidden="true">${esc(L)}</li>` : '';
+    last = L;
+    const meta = r.n ? r.n + (r.n === 1 ? ' event' : ' events') + (r.yr ? ' &middot; ' + r.yr : '') : 'No events yet';
+    return head + `<li class="a" data-n="${esc(String(r.name).toLowerCase())}" data-t="${r.osm ? 'osm' : 'own'}"><a href="#area-${esc(r.k)}"><span>${esc(r.name)}${r.osm ? ' <em class="tag">OpenStreetMap</em>' : ''}</span><span class="m">${meta}</span></a></li>`;
+  }).join('');
+  const anyOsm = rows.some(r => r.osm);
+  return `<div class="alisthead"><input class="asearch" id="asearch" type="search" placeholder="Find an area" aria-label="Find an area" autocomplete="off">
+    ${anyOsm ? `<div class="afilters" id="afilters"><button type="button" class="btn small gold" data-f="all">All</button><button type="button" class="btn small line" data-f="own">SUFFOC map</button><button type="button" class="btn small line" data-f="osm">OpenStreetMap</button></div>` : ''}</div>
+  <ul class="alist" id="alist">${items}</ul><p class="empty" id="anone" hidden>No areas match.</p>`;
+}
+function initAreaList(){
+  const ul = document.getElementById('alist'); if (!ul) return;
+  const box = document.getElementById('asearch'), fb = document.getElementById('afilters'), none = document.getElementById('anone');
+  let f = 'all';
+  const apply = () => {
+    const q = box.value.trim().toLowerCase(); let shown = 0, lastHead = null, headHas = false;
+    ul.querySelectorAll('li').forEach(li => {
+      if (li.classList.contains('l')) { if (lastHead) lastHead.hidden = !headHas; lastHead = li; headHas = false; return; }
+      const ok = (!q || li.dataset.n.indexOf(q) >= 0) && (f === 'all' || li.dataset.t === f);
+      li.hidden = !ok; if (ok) { shown++; headHas = true; }
+    });
+    if (lastHead) lastHead.hidden = !headHas;
+    none.hidden = shown > 0;
+  };
+  box.addEventListener('input', apply);
+  if (fb) fb.addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; f = b.dataset.f; fb.querySelectorAll('button').forEach(x => x.className = 'btn small ' + (x === b ? 'gold' : 'line')); apply(); });
 }
 function initMaps(){
   LMAPS.forEach(m => { try { m.remove(); } catch(e){} });
@@ -1449,6 +1496,7 @@ function route(){
   view.innerHTML = html;
   cleanLinks(view);
   initMaps();
+  initAreaList();
   initPermMaps();
   document.querySelectorAll('.nav a[data-route]').forEach(a => {
     if (a.dataset.route === key) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
