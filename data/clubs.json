@@ -1,0 +1,27 @@
+{
+  "clubs": [
+    {
+      "name": "CHIG",
+      "id": "chig"
+    },
+    {
+      "name": "HAVOC",
+      "id": "havoc"
+    },
+    {
+      "name": "NOR",
+      "fullName": "Norfolk Orienteering Club",
+      "website": "https://www.norfolkoc.co.uk/",
+      "id": "nor"
+    },
+    {
+      "name": "SMOC",
+      "id": "smoc"
+    },
+    {
+      "name": "WAOC",
+      "fullName": "West Anglian Orienteering Club",
+      "id": "waoc"
+    }
+  ]
+}

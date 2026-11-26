@@ -415,6 +415,33 @@ content:
     label: Name
     type: string
     required: true
+- name: clubs
+  label: Other clubs
+  type: collection
+  path: data/clubs
+  format: json
+  filename: '{primary}.json'
+  view:
+    primary: name
+    fields: [name, fullName]
+  fields:
+  - name: name
+    label: Short name
+    type: string
+    required: true
+    description: The short name used on the site, for example NOR or WAOC.
+  - name: fullName
+    label: Full name
+    type: string
+    description: For example Norfolk Orienteering Club.
+  - name: website
+    label: Website
+    type: string
+    description: The full web address, starting https://
+  - name: notes
+    label: About the club (optional)
+    type: text
+    description: A line or two, for example where they usually run.
 - name: areas
   label: Mapped areas
   type: collection
@@ -941,8 +968,17 @@ content:
         # END levels
     - name: club
       label: Host club
-      type: string
-      description: For example West Anglian Orienteering Club.
+      type: select
+      description: Pick from Other clubs. If the club is not listed, add it first using Other clubs in the menu.
+      options:
+        values:
+        # BEGIN clubs
+        - "CHIG"
+        - "HAVOC"
+        - "NOR"
+        - "SMOC"
+        - "WAOC"
+        # END clubs
     - name: startFrom
       label: Start times from (optional)
       type: string
@@ -993,6 +1029,19 @@ content:
     - name: venue
       label: Venue (optional)
       type: string
+    - name: club
+      label: Host club (optional)
+      type: select
+      description: Pick from Other clubs if another club hosted it.
+      options:
+        values:
+        # BEGIN clubs
+        - "CHIG"
+        - "HAVOC"
+        - "NOR"
+        - "SMOC"
+        - "WAOC"
+        # END clubs
     - name: eventLink
       label: Event page link (optional)
       type: string

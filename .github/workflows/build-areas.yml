@@ -5,7 +5,7 @@ name: Build areas, members and events lists
 on:
   push:
     branches: [main]
-    paths: ['data/areas/**', 'data/members/**', 'data/events/**', 'data/levels/**', 'data/series/**', 'data/permanent/**']
+    paths: ['data/areas/**', 'data/members/**', 'data/events/**', 'data/levels/**', 'data/series/**', 'data/permanent/**', 'data/clubs/**']
   workflow_dispatch:
 permissions:
   contents: write

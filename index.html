@@ -335,7 +335,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 137';
+const BUILD = 'build 138';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -409,7 +409,10 @@ function loadData(areas, events){
   });
 }
 let CURKEY = '';
-let LEAGUE = {}, CHAMPS = [], CHAMPRULES = '';
+let LEAGUE = {}, CHAMPS = [], CHAMPRULES = '', CLUBS = [];
+/* Other clubs: picked from the Other clubs list, so the same club always reads and links the same way. */
+const clubByName = s => { const k = String(s || '').trim().toLowerCase(); return k ? CLUBS.find(c => String(c.name || '').trim().toLowerCase() === k || String(c.fullName || '').trim().toLowerCase() === k) : null; };
+const clubTag = s => { const n = String(s || '').trim(); if (!n) return ''; const c = clubByName(n); return c ? `<a class="pill" href="#otherclub-${esc(c.id)}">${esc(c.name)}</a> ` : `<span class="pill">${esc(n)}</span> `; };
 const subOf = (key, fallback) => String((PAGETEXT[key + '_sub'] || fallback) || '').trim();
 let NEWS = [], MEMBERS = {}, PERM = [], PAGETEXT = {}, AGM = [];
 const personKey = v => String(v == null ? '' : v).replace(/^.*\//, '').replace(/\.json$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -834,6 +837,7 @@ function pageHead(title, intro, icon, sub){
 }
 
 const VIEWS = {
+  otherclubs(){ return otherClubsPage(); },
   home(){
     return `<section class="hero">
       <svg class="contours" viewBox="0 0 800 400" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
@@ -1212,7 +1216,7 @@ function leagueCard(i, past){
   return `<article class="event">
     <div class="datebox" aria-hidden="true"><span class="wd">${wd}</span><span class="day">${d.getDate()}</span><span class="mon">${mon}</span></div>
     <div>
-      ${i.own ? pills(i.ev, true) : ((i.club ? '<span class="pill">' + esc(i.club) + '</span> ' : '') + (i.level ? '<span class="pill">' + esc(i.level) + '</span>' : ''))}
+      ${i.own ? pills(i.ev, true) : (clubTag(i.club) + (i.level ? '<span class="pill">' + esc(i.level) + '</span>' : ''))}
       <h3>${href ? `<a class="title-link" href="${esc(href)}" ${i.own ? '' : ext}>${esc(i.title)}</a>` : esc(i.title)}</h3>
       ${(() => { const t = i.own ? timeRange(i.ev) : (i.startFrom && i.closes ? i.startFrom + '\u2013' + i.closes : i.startFrom || (i.closes ? 'closes ' + i.closes : '')); const bits = [t, i.note].filter(Boolean); return bits.length ? '<p class="meta">' + bits.map(esc).join(' &middot; ') + '</p>' : ''; })()}
       ${href && !past ? `<div class="links"><a class="btn small gold" href="${esc(href)}" ${i.own ? '' : ext}>${i.own ? 'Event page' : 'Event details'}</a></div>` : ''}
@@ -1229,10 +1233,43 @@ function leaguePage(){
   return `${pageHead('League', 'Club league events, rules and standings.', 'league', true)}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
+    ${CLUBS.length ? '<p class="meta" style="margin:.8rem 0 0">Hosted by other clubs? See <a href="#otherclubs">neighbouring clubs</a>.</p>' : ''}
     ${rules || table ? `<div class="btns" style="margin:1rem 0 0">${table ? `<a class="btn gold" href="${esc(table)}" ${ext}>League table</a>` : ''}${rules ? `<a class="btn ${table ? 'line' : 'gold'}" href="${esc(rules)}" ${ext}>League rules</a>` : ''}</div>` : ''}
     <div class="section-head" style="margin-top:1.8rem"><h2>Upcoming league events</h2></div>
     ${up.length ? `<div class="events">${up.map(i => leagueCard(i, false)).join('')}</div>` : '<div class="empty">No league events are listed yet. Check back soon.</div>'}
     ${years.map((y, n) => `<details class="year"${n === 0 ? ' open' : ''}><summary>${y}</summary><div class="events" style="margin-top:.8rem">${done.filter(i => i.date.slice(0, 4) === y).map(i => leagueCard(i, true)).join('')}</div></details>`).join('')}
+  </section></div>`;
+}
+/* Other clubs: a list page, and one page per club showing the league and championship events they host. */
+function otherClubsPage(){
+  const all = leagueItems().filter(i => !i.own);
+  const tiles = CLUBS.slice().sort((a, b) => String(a.name).localeCompare(String(b.name))).map(c => {
+    const n = all.filter(i => leagueIsUp(i) && clubByName(i.club) === c).length;
+    return `<a class="tile" href="#otherclub-${esc(c.id)}"><h3>${ct('club', esc(c.name))}</h3><p>${esc(c.fullName || '')}${n ? (c.fullName ? '. ' : '') + n + ' upcoming league event' + (n > 1 ? 's' : '') : ''}</p></a>`;
+  }).join('');
+  return `${pageHead('Neighbouring clubs', 'Clubs whose events count for our league and championships.', 'club', true)}
+  <div class="wrap"><section class="section">
+    <a class="back" href="#club-league">&larr; Back to League</a>
+    ${tiles ? `<div class="tiles" style="margin-top:1rem">${tiles}</div>` : '<div class="empty">Clubs will be added here.</div>'}
+  </section></div>`;
+}
+function otherClubPage(id){
+  const c = CLUBS.find(x => x.id === id);
+  if (!c) return `<div class="wrap"><section class="section"><a class="back" href="#otherclubs">&larr; Back to clubs</a><div class="empty">That club was not found.</div></section></div>`;
+  const mine = leagueItems().filter(i => !i.own && clubByName(i.club) === c);
+  const up = mine.filter(leagueIsUp), done = mine.filter(i => !leagueIsUp(i)).sort((a, b) => parseDate(b.date) - parseDate(a.date));
+  const years = [...new Set(done.map(i => i.date.slice(0, 4)))];
+  const champs = CHAMPS.filter(x => clubByName(x.club) === c);
+  const site = String(c.website || '').trim();
+  return `${pageHead(c.fullName || c.name, c.fullName ? c.name : 'Events this club hosts that count for our league and championships.', 'club', true)}
+  <div class="wrap"><section class="section">
+    <a class="back" href="#otherclubs">&larr; Back to clubs</a>
+    ${site ? `<div class="btns" style="margin:1rem 0 0"><a class="btn gold" href="${esc(site)}" ${ext}>Visit ${esc(c.name)} website</a></div>` : ''}
+    ${c.notes ? `<p style="margin:1rem 0 0">${esc(c.notes)}</p>` : ''}
+    <div class="section-head" style="margin-top:1.8rem"><h2>Upcoming league events</h2></div>
+    ${up.length ? `<div class="events">${up.map(i => leagueCard(i, false)).join('')}</div>` : '<div class="empty">No league events from this club are listed at the moment.</div>'}
+    ${years.map((y, n) => `<details class="year"${n === 0 ? ' open' : ''}><summary>${y}</summary><div class="events" style="margin-top:.8rem">${done.filter(i => i.date.slice(0, 4) === y).map(i => leagueCard(i, true)).join('')}</div></details>`).join('')}
+    ${champs.length ? `<div class="section-head" style="margin-top:1.8rem"><h2>Club championships held here</h2></div><div class="tiles">${champs.map(x => `<a class="tile" href="#club-championships"><h3>${esc(x.year)}${x.event ? ' &middot; ' + esc(x.event) : ''}</h3><p>${esc(x.venue || '')}</p></a>`).join('')}</div>` : ''}
   </section></div>`;
 }
 /* Club championships: one entry per year, winners picked from the members list. */
@@ -1244,7 +1281,7 @@ function championshipsPage(){
     const res = c.resultsFile ? url(c.resultsFile) : String(c.resultsLink || '').trim();
     const winners = asList(c.winners).filter(w => w).map(w => ({ cls:String(w.class || '').trim(), w:champWinner(w) })).filter(x => x.w.name);
     return `<article class="card" style="margin-top:1rem"><h3>${esc(c.year)}${c.event ? ' &middot; ' + (c.eventLink ? `<a class="title-link" href="${esc(c.eventLink)}" ${ext}>${esc(c.event)}</a>` : esc(c.event)) : ''}</h3>
-      ${d || c.venue ? `<p class="meta">${[d, c.venue].filter(Boolean).map(esc).join(' &middot; ')}</p>` : ''}
+      ${c.club ? clubTag(c.club) : ''}${d || c.venue ? `<p class="meta">${[d, c.venue].filter(Boolean).map(esc).join(' &middot; ')}</p>` : ''}
       ${winners.length ? `<dl class="facts" style="margin:.8rem 0 0">${winners.map(x => `<dt>${esc(x.cls)}</dt><dd>${x.w.mid ? `<a href="#person-${esc(x.w.mid)}">${esc(x.w.name)}</a>` : esc(x.w.name)}</dd>`).join('')}</dl>` : ''}
       ${res ? `<div class="links" style="margin-top:.9rem"><a class="btn small line" href="${esc(res)}" ${ext}>Results</a></div>` : ''}
       ${c.note ? `<p class="meta" style="margin-top:.7rem">${esc(c.note)}</p>` : ''}
@@ -1291,11 +1328,13 @@ const view = document.getElementById('view');
 const nav = document.getElementById('nav');
 const menuBtn = document.getElementById('menuBtn');
 /* Clean URLs. Internally pages are still named like 'event-tunstall'; these turn that into /events/tunstall and back. */
-const isRoute = n => n === 'home' || !!VIEWS[n] || /^(club|person|tag|area|news|event|comments|permanent)-./.test(n);
+const isRoute = n => n === 'home' || !!VIEWS[n] || /^(club|person|tag|area|news|event|comments|permanent|otherclub)-./.test(n);
 function nameToPath(n){
   let m;
   if (!n || n === 'home') return '';
   if (n === 'maprunnew') return 'maprun/new';
+  if (n === 'otherclubs') return 'clubs';
+  if ((m = n.match(/^otherclub-(.+)$/))) return 'clubs/' + m[1];
   if ((m = n.match(/^event-(.+)$/))) return 'events/' + m[1];
   if ((m = n.match(/^permanent-(.+)$/))) return 'permanent/' + m[1];
   if ((m = n.match(/^comments-(.+)$/))) return 'events/' + m[1] + '/comments';
@@ -1318,6 +1357,7 @@ function pathToName(p){
   if (s[0] === 'people' && s.length > 1) return 'person-' + rest;
   if (s[0] === 'permanent' && s.length > 1) return 'permanent-' + rest;
   if (s[0] === 'maprun' && s[1] === 'new') return 'maprunnew';
+  if (s[0] === 'clubs') return s.length > 1 ? 'otherclub-' + rest : 'otherclubs';
   return s[0];
 }
 function currentName(){
@@ -1385,6 +1425,7 @@ function route(){
   CURKEY = h.startsWith('club-') ? h.slice(5) : h;
   let key = 'home', html;
   if (h.startsWith('club-')) { key = 'club'; html = introText(h.slice(5), clubPage(h.slice(5))); }
+  else if (h.startsWith('otherclub-')) { key = 'club'; html = otherClubPage(h.slice(10)); }
   else if (h.startsWith('person-')) { key = 'club'; html = personPage(h.slice(7)); }
   else if (/^tag-(level|series)-/.test(h)) { key = 'events'; html = tagPage(h.split('-')[1], h.replace(/^tag-(level|series)-/, '')); }
   else if (h.startsWith('area-')) { key = 'events'; html = areaPage(h.slice(5)); }
@@ -1392,7 +1433,7 @@ function route(){
   else if (h.startsWith('permanent-')) { key = 'anytime'; html = permanentPage(h.slice(10)); }
   else if (h.startsWith('comments-')) { key = 'results'; html = commentsPage(h.slice(9)); }
   else if (h.startsWith('event-')) { key = 'events'; html = eventPage(h.slice(6)); }
-  else if (VIEWS[h]) { key = h === 'mapped' ? 'events' : ((h === 'permanent' || h === 'maprun' || h === 'maprunnew') ? 'anytime' : h); html = introText(h, VIEWS[h]()); }
+  else if (VIEWS[h]) { key = h === 'otherclubs' ? 'club' : h === 'mapped' ? 'events' : ((h === 'permanent' || h === 'maprun' || h === 'maprunnew') ? 'anytime' : h); html = introText(h, VIEWS[h]()); }
   else { html = VIEWS.home(); }
   view.innerHTML = html;
   cleanLinks(view);
@@ -1419,8 +1460,9 @@ Promise.all([
   fetch('data/pagetext.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/agm.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/league.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-  fetch('data/championships.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-]).then(([a, e, n, m, pm, pt, ag, lg, ch]) => { CHAMPRULES = (ch && ch.rules) || ''; CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+  fetch('data/championships.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  fetch('data/clubs.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([a, e, n, m, pm, pt, ag, lg, ch, cl]) => { CLUBS = asList(cl).filter(x => x && x.name); CHAMPRULES = (ch && ch.rules) || ''; CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>

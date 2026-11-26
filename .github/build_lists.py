@@ -1,6 +1,6 @@
 """Rebuilds the lists the website reads from the one-file-per-item folders, and refreshes the
 Area / Organiser / Planner / Controller dropdown choices in .pages.yml. Run by the GitHub Action
-in .github/workflows/build-areas.yml whenever something in data/areas, data/members or data/events changes."""
+in .github/workflows/build-areas.yml whenever something in data/areas, data/members, data/clubs or data/events changes."""
 import glob, json, os, re
 
 def load(folder):
@@ -12,7 +12,7 @@ def load(folder):
     return items
 
 lists = {}
-for folder in ('areas', 'members', 'events', 'levels', 'series', 'permanent'):
+for folder in ('areas', 'members', 'events', 'levels', 'series', 'permanent', 'clubs'):
     lists[folder] = load(folder)
     if folder in ('levels', 'series'): continue  # only used for the form dropdown
     with open('data/%s.json' % folder, 'w', encoding='utf-8') as out:
@@ -21,7 +21,7 @@ for folder in ('areas', 'members', 'events', 'levels', 'series', 'permanent'):
 
 # dropdown choices in the CMS form: between "# BEGIN x" and "# END x" markers
 yml = open('.pages.yml', encoding='utf-8').read()
-for name in ('areas', 'members', 'levels', 'series'):
+for name in ('areas', 'members', 'levels', 'series', 'clubs'):
     def key(i):
         try: o = float(i.get('order'))
         except (TypeError, ValueError): o = 1e9
