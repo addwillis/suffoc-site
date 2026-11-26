@@ -63,6 +63,16 @@
       "id": "gareth-radcliffe"
     },
     {
+      "name": "John Liston",
+      "roles": [
+        {
+          "role": "Safety Liasion Officer",
+          "email": "safety@suffoc.co.uk"
+        }
+      ],
+      "id": "john-liston"
+    },
+    {
       "name": "Louise Walker",
       "roles": [
         {
