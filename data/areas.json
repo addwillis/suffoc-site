@@ -144,6 +144,12 @@
       "id": "haughley-park"
     },
     {
+      "name": "Haverhill",
+      "mapType": "SUFFOC map",
+      "gridRef": "TL 686 448",
+      "id": "haverhill"
+    },
+    {
       "name": "King's Forest",
       "mapType": "SUFFOC map",
       "gridRef": "TL 821760",
