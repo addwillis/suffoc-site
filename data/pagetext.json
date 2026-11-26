@@ -49,7 +49,53 @@
     "text": "<p></p>"
   },
   "committee": {
-    "sub": "The people who run the club."
+    "sub": "The people who run the club.",
+    "committee": [
+      {
+        "member": "Sarah Mansel"
+      },
+      {
+        "member": "Rod Mansel"
+      },
+      {
+        "member": "Andrew Elliott"
+      },
+      {
+        "member": "Gareth Radcliffe"
+      },
+      {
+        "member": "Sally Wilkinson"
+      },
+      {
+        "member": "Martin Hore"
+      },
+      {
+        "member": "Adam Willis"
+      },
+      {
+        "member": "Louise Walker"
+      },
+      {
+        "member": "Hannah Constable-Simmonds"
+      },
+      {
+        "member": "John Liston"
+      },
+      {
+        "member": "Ethan Radcliffe"
+      }
+    ],
+    "coaches": [
+      {
+        "member": "Simon Hooton"
+      },
+      {
+        "member": "Will Harrison"
+      },
+      {
+        "member": "Clive Wilkinson"
+      }
+    ]
   },
   "league": {
     "sub": "Club league events, rules and standings."
