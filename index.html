@@ -356,7 +356,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 146';
+const BUILD = 'build 147';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -772,7 +772,7 @@ function areaList(){
   const anyOsm = areaRows().some(r => r.osm);
   return `<div class="alisthead"><input class="asearch" id="asearch" type="search" placeholder="Find an area" aria-label="Find an area" autocomplete="off">
     ${anyOsm ? `<div class="afilters" id="afilters"><button type="button" class="btn small gold" data-f="all">All</button><button type="button" class="btn small line" data-f="own">SUFFOC map</button><button type="button" class="btn small line" data-f="osm">OpenStreetMap</button></div>` : ''}</div>
-  <div class="afilters asort" id="asort"><span class="m">Sort</span><button type="button" class="btn small gold" data-s="az">A&ndash;Z</button><button type="button" class="btn small line" data-s="events">Most events</button><button type="button" class="btn small line" data-s="recent">Most recent</button></div>
+  <div class="afilters asort" id="asort"><span class="m">Sort</span><button type="button" class="btn small gold" data-s="az">A&ndash;Z</button>${areaRows().some(r => r.town) ? '<button type="button" class="btn small line" data-s="region">Region</button>' : ''}<button type="button" class="btn small line" data-s="events">Most events</button><button type="button" class="btn small line" data-s="recent">Most recent</button></div>
   <ul class="alist" id="alist"></ul><p class="empty" id="anone" hidden>No areas match.</p>`;
 }
 function initAreaList(){
@@ -788,12 +788,12 @@ function initAreaList(){
     let out = '';
     if (s === 'events') out = rows.slice().sort((a, b) => b.n - a.n || b.yr - a.yr || byName(a, b)).map(r => li(r, true)).join('');
     else if (s === 'recent') out = rows.slice().sort((a, b) => b.yr - a.yr || b.n - a.n || byName(a, b)).map(r => li(r, true)).join('');
-    else if (hasTowns) {
+    else if (s === 'region' && hasTowns) {
       const names = [...new Set(rows.map(r => r.town).filter(Boolean))].sort((a, b) => a.localeCompare(b)), groups = names.map(t => [t, rows.filter(r => r.town === t)]);
       const rest = rows.filter(r => !r.town); if (rest.length) groups.push([names.length ? 'Other' : '', rest]);
       out = groups.map(g => (g[0] ? `<li class="l">${esc(g[0])} <span class="m">&middot; ${g[1].length} ${g[1].length === 1 ? 'area' : 'areas'}</span></li>` : '') + g[1].sort(byName).map(r => li(r, false)).join('')).join('');
     } else {
-      let last = ''; out = rows.slice().sort(byName).map(r => { const L = r.name.charAt(0).toUpperCase(), hd = rows.length > 15 && L !== last ? `<li class="l">${esc(L)}</li>` : ''; last = L; return hd + li(r, false); }).join('');
+      let last = ''; out = rows.slice().sort(byName).map(r => { const L = r.name.charAt(0).toUpperCase(), hd = rows.length > 15 && L !== last ? `<li class="l">${esc(L)}</li>` : ''; last = L; return hd + li(r, true); }).join('');
     }
     ul.innerHTML = out; none.hidden = rows.length > 0;
     cleanLinks(ul);
