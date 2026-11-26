@@ -31,6 +31,12 @@
       "id": "bourne-park"
     },
     {
+      "name": "Bramford",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 128465",
+      "id": "bramford"
+    },
+    {
       "name": "Brandon Country Park",
       "mapType": "Other club's map",
       "lat": 52.449,
