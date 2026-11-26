@@ -1,9 +1,6 @@
 {
-  "id": "tunstall",
   "name": "Tunstall Forest",
+  "mapType": "SUFFOC map",
   "lat": 52.1211,
-  "lon": 1.5036,
-  "label_dx": 14,
-  "label_dy": 5,
-  "label_anchor": "start"
+  "lon": 1.5036
 }
