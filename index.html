@@ -227,6 +227,8 @@ dl.facts dd a:hover{color:var(--sky)}
 .leaflet-container{font-family:var(--body)}
 .lpin{display:block;width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid var(--navy);box-sizing:border-box;box-shadow:0 1px 5px rgba(0,0,0,.45)}
 .lpin.up{background:var(--gold)}
+.lpin.osm{border-color:#7b8aa0;background:#dde4ef}
+.legend i.osm{border-color:#7b8aa0;background:#dde4ef}
 .ctl{position:relative;width:30px;height:30px}
 .ctl .ring{position:absolute;inset:0;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box}
 .dbadge{position:relative;width:48px;height:48px;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.35);color:var(--course);font-family:var(--display);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
@@ -335,7 +337,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 141';
+const BUILD = 'build 142';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -384,7 +386,7 @@ function loadData(areas, events){
   AREAS = {};
   areas.forEach(a => { let lat = parseFloat(a.lat), lon = parseFloat(a.lon);
     if (!isFinite(lat) || !isFinite(lon)) { const g = gridToLatLon(a.gridRef); lat = g ? g.lat : NaN; lon = g ? g.lon : NaN; }
-    AREAS[a.id] = { name:a.name, lat:lat, lon:lon, dx:+(a.label_dx||14), dy:+(a.label_dy||0), anchor:a.label_anchor||'start' }; });
+    AREAS[a.id] = { name:a.name, osm:String(a.mapType || '').toLowerCase() === 'openstreetmap', lat:lat, lon:lon, dx:+(a.label_dx||14), dy:+(a.label_dy||0), anchor:a.label_anchor||'start' }; });
   const ok = e => e && e.title && /^\d{4}-\d{2}-\d{2}$/.test(String(e.date || '').trim());
   SKIPPED = events.filter(e => !ok(e)).map(e => (e && e.title) || '(no name)');
   events = events.filter(ok);
@@ -704,9 +706,9 @@ function mapBlock(mode){
       <div class="legend"><span><i class="course"></i>Upcoming events, each marked with its date</span></div></div>`;
   }
   return `<div class="map"><div class="leafmap" data-map="all">${mapSVG()}${FALLBACK_NOTE}</div>
-    <div class="legend"><span><i></i>Area the club has mapped</span></div>
+    <div class="legend"><span><i></i>SUFFOC map</span><span><i class="osm"></i>OpenStreetMap</span></div>
   </div>
-  <ul class="chips">${Object.entries(AREAS).filter(([k, a]) => !a.auto).map(([k, a]) => `<li><a href="#area-${esc(k)}">${esc(a.name)}</a></li>`).join('')}</ul>`;
+  ${(() => { const chips = osm => Object.entries(AREAS).filter(([k, a]) => !a.auto && !!a.osm === osm).map(([k, a]) => `<li><a href="#area-${esc(k)}">${esc(a.name)}</a></li>`).join(''); const own = chips(false), pub = chips(true); return (own ? `<ul class="chips">${own}</ul>` : '') + (pub ? `<p class="meta" style="margin:1.2rem 0 .3rem">Areas using OpenStreetMap, not a surveyed orienteering map:</p><ul class="chips">${pub}</ul>` : ''); })()}`;
 }
 
 /* Real map (Leaflet + OpenStreetMap). If Leaflet cannot load, the schematic SVG above stays as a fallback. */
@@ -779,7 +781,7 @@ function initMaps(){
         } else if (key !== 'all' && up.has(k)) {
           icon = L.divIcon({ className:'', html:'<div class="ctl"><span class="ring"></span></div>', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-16] });
         } else {
-          icon = L.divIcon({ className:'', html:'<span class="lpin"></span>', iconSize:[22,22], iconAnchor:[11,11], popupAnchor:[0,-12] });
+          icon = L.divIcon({ className:'', html:'<span class="lpin' + (a.osm ? ' osm' : '') + '"></span>', iconSize:[22,22], iconAnchor:[11,11], popupAnchor:[0,-12] });
         }
         const evs = (key === 'upcoming' ? groups[k].evs.slice() : EVENTS.filter(e => e.area === k)).sort((x, y) => key === 'upcoming' ? parseDate(x.date) - parseDate(y.date) : parseDate(y.date) - parseDate(x.date));
         const html = evs.length && key !== 'all' ? evs.map(e => {
@@ -879,7 +881,7 @@ const VIEWS = {
     </div>`;
   },
   mapped(){
-    return `${pageHead('Mapped areas', 'Every area the club has made a map for.', 'mapped', true)}
+    return `${pageHead('Mapped areas', 'Areas we run events in, and which have a surveyed orienteering map.', 'mapped', true)}
     <div class="wrap">
       <section class="section"><a class="back" href="#events">&larr; Back to Events</a><div style="height:1rem"></div>${mapBlock()}</section>
     </div>`;
@@ -956,7 +958,7 @@ function timingsRows(e){
 /* "More ways to get out" tiles, shown at the bottom of the Events page and each event page. */
 function exploreTiles(){
   const t = [
-    ['#mapped', 'Mapped areas', subOf('mapped', 'Every area the club has made a map for.'), 'mapped'],
+    ['#mapped', 'Mapped areas', subOf('mapped', 'Areas we run events in, and which have a surveyed orienteering map.'), 'mapped'],
     ['#maprun', 'MapRun', subOf('maprun', 'Virtual controls on your phone, any time.'), 'phone'],
     ['#permanent', 'Permanent Orienteering Courses', subOf('permanent', 'Courses you can follow at any time, with a map to download.'), 'post']
   ];
@@ -982,6 +984,7 @@ function areaPage(id){
   return `<section class="pagehead"><div class="wrap">
       <a class="back" href="#mapped">&larr; Back to Mapped areas</a>
       <h1 class="event-title">${esc(a.name)}</h1>
+      <p class="meta" style="margin:.5rem 0 0">${a.osm ? 'Uses OpenStreetMap data. This is not a surveyed orienteering map.' : 'A surveyed SUFFOC orienteering map.'}</p>
       ${q ? `<div class="links" style="margin-top:.8rem"><a class="btn small line" href="https://www.google.com/maps/search/?api=1&query=${q}" ${ext}>Open in Google Maps</a>
         <a class="btn small line" href="https://www.openstreetmap.org/?mlat=${a.lat}&mlon=${a.lon}#map=14/${a.lat}/${a.lon}" ${ext}>OpenStreetMap</a></div>` : ''}
     </div></section>

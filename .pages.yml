@@ -476,6 +476,14 @@ content:
     label: Name
     type: string
     required: true
+  - name: mapType
+    label: Map type
+    type: select
+    description: SUFFOC map means an orienteering map our mapping officer surveyed and checked. OpenStreetMap means the event uses public OpenStreetMap data, like the MapRun nights. Leave empty for SUFFOC map.
+    options:
+      values:
+      - "SUFFOC map"
+      - "OpenStreetMap"
   - name: gridRef
     label: Grid reference (OS)
     type: string
