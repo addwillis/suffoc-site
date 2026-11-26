@@ -19,6 +19,12 @@
       "id": "beccles-common"
     },
     {
+      "name": "Belstead Brook",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 128420",
+      "id": "belstead-brook"
+    },
+    {
       "name": "Brandon Country Park",
       "mapType": "Other club's map",
       "lat": 52.449,
