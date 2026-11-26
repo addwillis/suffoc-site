@@ -189,6 +189,8 @@
     },
     {
       "name": "Martlesham Heath",
+      "town": "Ipswich",
+      "mapType": "SUFFOC map",
       "gridRef": "TM 244452",
       "id": "martlesham-heath"
     },
