@@ -188,6 +188,11 @@
       "id": "knettishall-heath"
     },
     {
+      "name": "Martlesham Heath",
+      "gridRef": "TM 244452",
+      "id": "martlesham-heath"
+    },
+    {
       "name": "Needham Market",
       "mapType": "SUFFOC map",
       "lat": 52.15,
