@@ -44,6 +44,12 @@
       "id": "brandon"
     },
     {
+      "name": "Broom Hill and The Dales",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 154459",
+      "id": "broom-hill-and-the-dales"
+    },
+    {
       "name": "Bury St Edmunds",
       "mapType": "SUFFOC map",
       "lat": 52.245969,
