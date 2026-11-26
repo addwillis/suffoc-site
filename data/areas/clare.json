@@ -1,5 +1,5 @@
 {
   "name": "Clare",
-  "lat": 52.08,
-  "lon": 0.583
+  "mapType": "SUFFOC map",
+  "gridRef": " TL 770451"
 }
