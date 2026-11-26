@@ -265,7 +265,10 @@ dl.facts dd a:hover{color:var(--sky)}
 .afilters{display:flex;flex-wrap:wrap;gap:8px}
 .alist{list-style:none;margin:0;padding:0}
 .alist li[hidden]{display:none}
-.alist li.l{font-weight:700;color:var(--navy);padding:1rem .2rem .25rem;border-bottom:2px solid var(--line)}
+.alist li.l{font-weight:700;color:var(--navy);padding:1.1rem .2rem .3rem;border-bottom:2px solid var(--line)}
+.alist li.l .m{font-weight:400}
+.asort{align-items:center;margin:.2rem 0 .4rem}
+.asort .m{color:var(--muted);font-size:.9rem}
 .alist li.a a{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:.7rem .2rem;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:500}
 .alist li.a a:hover{background:var(--card)}
 .alist .m{color:var(--muted);font-size:.9rem;white-space:nowrap;font-weight:400}
@@ -347,7 +350,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 144';
+const BUILD = 'build 145';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -396,7 +399,7 @@ function loadData(areas, events){
   AREAS = {};
   areas.forEach(a => { let lat = parseFloat(a.lat), lon = parseFloat(a.lon);
     if (!isFinite(lat) || !isFinite(lon)) { const g = gridToLatLon(a.gridRef); lat = g ? g.lat : NaN; lon = g ? g.lon : NaN; }
-    AREAS[a.id] = { name:a.name, osm:String(a.mapType || '').toLowerCase() === 'openstreetmap', auto:/^other/i.test(String(a.mapType || '').trim()), lat:lat, lon:lon, dx:+(a.label_dx||14), dy:+(a.label_dy||0), anchor:a.label_anchor||'start' }; });
+    AREAS[a.id] = { name:a.name, town:String(a.town || '').trim(), osm:String(a.mapType || '').toLowerCase() === 'openstreetmap', auto:/^other/i.test(String(a.mapType || '').trim()), lat:lat, lon:lon, dx:+(a.label_dx||14), dy:+(a.label_dy||0), anchor:a.label_anchor||'start' }; });
   const ok = e => e && e.title && /^\d{4}-\d{2}-\d{2}$/.test(String(e.date || '').trim());
   SKIPPED = events.filter(e => !ok(e)).map(e => (e && e.title) || '(no name)');
   events = events.filter(ok);
@@ -751,42 +754,48 @@ function initPermMaps(){
     } catch (err) { el.innerHTML = fallback; }
   });
 }
-/* Mapped areas list: one line per area with how many events we have there and the latest year, searchable and filterable. */
+/* Mapped areas list: one line per area with how many events we have there and the latest year. Searchable, filterable by map type, sortable, and grouped by town or region when towns are set. */
+function areaRows(){
+  return Object.entries(AREAS).filter(([k, a]) => !a.auto).map(([k, a]) => {
+    const ev = EVENTS.filter(e => e.area === k);
+    return { k:k, name:String(a.name), osm:!!a.osm, town:String(a.town || '').trim(), n:ev.length, yr:ev.length ? Math.max(...ev.map(e => +e.date.slice(0, 4))) : 0 };
+  });
+}
 function areaList(){
-  const rows = Object.entries(AREAS).filter(([k, a]) => !a.auto).map(([k, a]) => {
-    const ev = EVENTS.filter(e => e.area === k), yr = ev.length ? Math.max(...ev.map(e => +e.date.slice(0, 4))) : 0;
-    return { k:k, name:a.name, osm:!!a.osm, n:ev.length, yr:yr };
-  }).sort((x, y) => String(x.name).localeCompare(String(y.name)));
-  if (!rows.length) return '';
-  const letters = rows.length > 15;
-  let last = '';
-  const items = rows.map(r => {
-    const L = String(r.name).charAt(0).toUpperCase(), head = letters && L !== last ? `<li class="l" data-l="${esc(L)}" aria-hidden="true">${esc(L)}</li>` : '';
-    last = L;
-    const meta = r.n ? r.n + (r.n === 1 ? ' event' : ' events') + (r.yr ? ' &middot; ' + r.yr : '') : 'No events yet';
-    return head + `<li class="a" data-n="${esc(String(r.name).toLowerCase())}" data-t="${r.osm ? 'osm' : 'own'}"><a href="#area-${esc(r.k)}"><span>${esc(r.name)}${r.osm ? ' <em class="tag">OpenStreetMap</em>' : ''}</span><span class="m">${meta}</span></a></li>`;
-  }).join('');
-  const anyOsm = rows.some(r => r.osm);
+  if (!areaRows().length) return '';
+  const anyOsm = areaRows().some(r => r.osm);
   return `<div class="alisthead"><input class="asearch" id="asearch" type="search" placeholder="Find an area" aria-label="Find an area" autocomplete="off">
     ${anyOsm ? `<div class="afilters" id="afilters"><button type="button" class="btn small gold" data-f="all">All</button><button type="button" class="btn small line" data-f="own">SUFFOC map</button><button type="button" class="btn small line" data-f="osm">OpenStreetMap</button></div>` : ''}</div>
-  <ul class="alist" id="alist">${items}</ul><p class="empty" id="anone" hidden>No areas match.</p>`;
+  <div class="afilters asort" id="asort"><span class="m">Sort</span><button type="button" class="btn small gold" data-s="az">A&ndash;Z</button><button type="button" class="btn small line" data-s="events">Most events</button><button type="button" class="btn small line" data-s="recent">Most recent</button></div>
+  <ul class="alist" id="alist"></ul><p class="empty" id="anone" hidden>No areas match.</p>`;
 }
 function initAreaList(){
   const ul = document.getElementById('alist'); if (!ul) return;
-  const box = document.getElementById('asearch'), fb = document.getElementById('afilters'), none = document.getElementById('anone');
-  let f = 'all';
-  const apply = () => {
-    const q = box.value.trim().toLowerCase(); let shown = 0, lastHead = null, headHas = false;
-    ul.querySelectorAll('li').forEach(li => {
-      if (li.classList.contains('l')) { if (lastHead) lastHead.hidden = !headHas; lastHead = li; headHas = false; return; }
-      const ok = (!q || li.dataset.n.indexOf(q) >= 0) && (f === 'all' || li.dataset.t === f);
-      li.hidden = !ok; if (ok) { shown++; headHas = true; }
-    });
-    if (lastHead) lastHead.hidden = !headHas;
-    none.hidden = shown > 0;
+  const box = document.getElementById('asearch'), fb = document.getElementById('afilters'), sb = document.getElementById('asort'), none = document.getElementById('anone');
+  const all = areaRows(), hasTowns = all.some(r => r.town);
+  let f = 'all', s = 'az';
+  const li = (r, showTown) => `<li class="a"><a href="#area-${esc(r.k)}"><span>${esc(r.name)}${r.osm ? ' <em class="tag">OpenStreetMap</em>' : ''}${showTown && r.town ? ' <em class="tag">' + esc(r.town) + '</em>' : ''}</span><span class="m">${r.n ? r.n + (r.n === 1 ? ' event' : ' events') + (r.yr ? ' &middot; ' + r.yr : '') : 'No events yet'}</span></a></li>`;
+  const byName = (a, b) => a.name.localeCompare(b.name);
+  const draw = () => {
+    const q = box.value.trim().toLowerCase();
+    const rows = all.filter(r => (!q || (r.name + ' ' + r.town).toLowerCase().indexOf(q) >= 0) && (f === 'all' || (f === 'osm') === r.osm));
+    let out = '';
+    if (s === 'events') out = rows.slice().sort((a, b) => b.n - a.n || b.yr - a.yr || byName(a, b)).map(r => li(r, true)).join('');
+    else if (s === 'recent') out = rows.slice().sort((a, b) => b.yr - a.yr || b.n - a.n || byName(a, b)).map(r => li(r, true)).join('');
+    else if (hasTowns) {
+      const names = [...new Set(rows.map(r => r.town).filter(Boolean))].sort((a, b) => a.localeCompare(b)), groups = names.map(t => [t, rows.filter(r => r.town === t)]);
+      const rest = rows.filter(r => !r.town); if (rest.length) groups.push([names.length ? 'Other' : '', rest]);
+      out = groups.map(g => (g[0] ? `<li class="l">${esc(g[0])} <span class="m">&middot; ${g[1].length} ${g[1].length === 1 ? 'area' : 'areas'}</span></li>` : '') + g[1].sort(byName).map(r => li(r, false)).join('')).join('');
+    } else {
+      let last = ''; out = rows.slice().sort(byName).map(r => { const L = r.name.charAt(0).toUpperCase(), hd = rows.length > 15 && L !== last ? `<li class="l">${esc(L)}</li>` : ''; last = L; return hd + li(r, false); }).join('');
+    }
+    ul.innerHTML = out; none.hidden = rows.length > 0;
+    cleanLinks(ul);
   };
-  box.addEventListener('input', apply);
-  if (fb) fb.addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; f = b.dataset.f; fb.querySelectorAll('button').forEach(x => x.className = 'btn small ' + (x === b ? 'gold' : 'line')); apply(); });
+  box.addEventListener('input', draw);
+  const pick = (box2, attr, set) => { if (box2) box2.addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; set(b.dataset[attr]); box2.querySelectorAll('button').forEach(x => x.className = 'btn small ' + (x === b ? 'gold' : 'line')); draw(); }); };
+  pick(fb, 'f', v => { f = v; }); pick(sb, 's', v => { s = v; });
+  draw();
 }
 function initMaps(){
   LMAPS.forEach(m => { try { m.remove(); } catch(e){} });

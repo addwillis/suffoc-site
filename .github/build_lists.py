@@ -12,7 +12,7 @@ def load(folder):
     return items
 
 lists = {}
-for folder in ('areas', 'members', 'events', 'levels', 'series', 'permanent', 'clubs'):
+for folder in ('areas', 'members', 'events', 'levels', 'series', 'permanent', 'clubs', 'towns'):
     lists[folder] = load(folder)
     if folder in ('levels', 'series'): continue  # only used for the form dropdown
     with open('data/%s.json' % folder, 'w', encoding='utf-8') as out:
@@ -21,7 +21,7 @@ for folder in ('areas', 'members', 'events', 'levels', 'series', 'permanent', 'c
 
 # dropdown choices in the CMS form: between "# BEGIN x" and "# END x" markers
 yml = open('.pages.yml', encoding='utf-8').read()
-for name in ('areas', 'members', 'levels', 'series', 'clubs'):
+for name in ('areas', 'members', 'levels', 'series', 'clubs', 'towns'):
     def key(i):
         try: o = float(i.get('order'))
         except (TypeError, ValueError): o = 1e9

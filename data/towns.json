@@ -1,0 +1,12 @@
+{
+  "towns": [
+    {
+      "name": "Bury St Edmunds",
+      "id": "bury"
+    },
+    {
+      "name": "Ipswich",
+      "id": "ipswich"
+    }
+  ]
+}

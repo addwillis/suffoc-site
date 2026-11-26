@@ -471,6 +471,21 @@ content:
     label: About the club (optional)
     type: text
     description: A line or two, for example where they usually run.
+- name: towns
+  label: Towns and regions
+  type: collection
+  path: data/towns
+  format: json
+  filename: '{primary}.json'
+  view:
+    primary: name
+    fields: [name]
+  fields:
+  - name: name
+    label: Name
+    type: string
+    required: true
+    description: A town or region that groups mapped areas, for example Ipswich or Bury St Edmunds.
 - name: areas
   label: Mapped areas
   type: collection
@@ -485,6 +500,16 @@ content:
     label: Name
     type: string
     required: true
+  - name: town
+    label: Town or region
+    type: select
+    description: Groups this area with others on the Mapped areas page. If it isn't listed, add it under Towns and regions first. Optional.
+    options:
+      values:
+      # BEGIN towns
+      - "Bury St Edmunds"
+      - "Ipswich"
+      # END towns
   - name: mapType
     label: Map type
     type: select
