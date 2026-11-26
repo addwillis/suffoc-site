@@ -223,6 +223,12 @@
       "id": "orwell-country-park"
     },
     {
+      "name": "Rendlesham Forest",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM356500",
+      "id": "rendlesham-forest"
+    },
+    {
       "name": "Sudbury",
       "mapType": "SUFFOC map",
       "lat": 52.038,
