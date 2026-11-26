@@ -106,6 +106,12 @@
       "id": "elmswell"
     },
     {
+      "name": "Eye",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 145739",
+      "id": "eye"
+    },
+    {
       "name": "Hardwick",
       "mapType": "SUFFOC map",
       "gridRef": "TL 85408 62584",
