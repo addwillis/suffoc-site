@@ -24,6 +24,8 @@
     },
     {
       "name": "Combs Ford",
+      "mapType": "OpenStreetMap",
+      "gridRef": "TM050579",
       "id": "combs-ford"
     },
     {
