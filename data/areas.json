@@ -209,6 +209,13 @@
       "id": "needham"
     },
     {
+      "name": "Nowton Park",
+      "town": "Bury St Edmunds",
+      "mapType": "SUFFOC map",
+      "gridRef": "TL 864623",
+      "id": "nowton-park"
+    },
+    {
       "name": "Sudbury",
       "mapType": "SUFFOC map",
       "lat": 52.038,
