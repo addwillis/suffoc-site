@@ -195,6 +195,13 @@
       "id": "martlesham-heath"
     },
     {
+      "name": "Moreton Hall",
+      "town": "Bury St Edmunds",
+      "mapType": "SUFFOC map",
+      "gridRef": "TL 873641",
+      "id": "moreton-hall"
+    },
+    {
       "name": "Needham Market",
       "mapType": "SUFFOC map",
       "lat": 52.15,
