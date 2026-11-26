@@ -906,6 +906,74 @@ content:
       label: Picture
       type: image
       description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+- name: committeeorder
+  label: Committee page order
+  type: file
+  path: data/committee.json
+  format: json
+  fields:
+  - name: committee
+    label: Committee
+    type: object
+    list: true
+    description: Drag to put people in the order you want. Add someone with the Add button and pick them from the list.
+    fields:
+    - name: member
+      label: Club member
+      type: select
+      options:
+        values:
+        # BEGIN members
+        - "Adam Willis"
+        - "Andrew Elliott"
+        - "Clive Wilkinson"
+        - "David Hodkinson"
+        - "Ethan Radcliffe"
+        - "Gareth Radcliffe"
+        - "Hannah Constable-Simmonds"
+        - "John Liston"
+        - "Louise Walker"
+        - "Martin Hore"
+        - "Mike Bickle"
+        - "Paul Beckett"
+        - "Phil Halford"
+        - "Rod Mansel"
+        - "Sally Wilkinson"
+        - "Sarah Mansel"
+        - "Simon Hooton"
+        - "Will Harrison"
+        # END members
+  - name: officials
+    label: Coaches and other officials
+    type: object
+    list: true
+    description: Drag to reorder. Their roles come from their own member entry.
+    fields:
+    - name: member
+      label: Club member
+      type: select
+      options:
+        values:
+        # BEGIN members
+        - "Adam Willis"
+        - "Andrew Elliott"
+        - "Clive Wilkinson"
+        - "David Hodkinson"
+        - "Ethan Radcliffe"
+        - "Gareth Radcliffe"
+        - "Hannah Constable-Simmonds"
+        - "John Liston"
+        - "Louise Walker"
+        - "Martin Hore"
+        - "Mike Bickle"
+        - "Paul Beckett"
+        - "Phil Halford"
+        - "Rod Mansel"
+        - "Sally Wilkinson"
+        - "Sarah Mansel"
+        - "Simon Hooton"
+        - "Will Harrison"
+        # END members
 - name: agm
   label: AGM minutes
   type: file

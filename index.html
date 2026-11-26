@@ -335,7 +335,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 138';
+const BUILD = 'build 139';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -409,7 +409,7 @@ function loadData(areas, events){
   });
 }
 let CURKEY = '';
-let LEAGUE = {}, CHAMPS = [], CHAMPRULES = '', CLUBS = [];
+let LEAGUE = {}, CHAMPS = [], CHAMPRULES = '', CLUBS = [], COMMITTEE = {};
 /* Other clubs: picked from the Other clubs list, so the same club always reads and links the same way. */
 const clubByName = s => { const k = String(s || '').trim().toLowerCase(); return k ? CLUBS.find(c => String(c.name || '').trim().toLowerCase() === k || String(c.fullName || '').trim().toLowerCase() === k) : null; };
 const clubTag = s => { const n = String(s || '').trim(); if (!n) return ''; const c = clubByName(n); return c ? `<a class="pill" href="#otherclub-${esc(c.id)}">${esc(c.name)}</a> ` : `<span class="pill">${esc(n)}</span> `; };
@@ -1185,8 +1185,16 @@ function rolesHTML(m){
 function committeePage(){
   const rank = r => { r = String(r || '').toLowerCase(); const i = ['chair', 'vice', 'secretary', 'treasurer'].findIndex(k => r.indexOf(k) === 0); return i < 0 ? 9 : i; };
   const best = m => Math.min(9, ...m.roles.map(r => rank(r.role)));
-  const list = Object.keys(MEMBERS).map(k => Object.assign({ id: k }, MEMBERS[k])).filter(m => m.roles.length)
+  const holders = Object.keys(MEMBERS).map(k => Object.assign({ id: k }, MEMBERS[k])).filter(m => m.roles.length)
     .sort((a, b) => best(a) - best(b) || a.roles.map(r => r.role).join().localeCompare(b.roles.map(r => r.role).join()) || String(a.name).localeCompare(String(b.name)));
+  /* The order comes from the Committee page order list, which is dragged into place. Without one, fall back to sorting by role. */
+  const pick = l => asList(l).map(x => { const id = x && x.member ? memberId(x.member) : null; return id ? Object.assign({ id: id }, MEMBERS[id]) : null; }).filter(Boolean);
+  let groups;
+  const com = pick(COMMITTEE.committee), off = pick(COMMITTEE.officials);
+  if (com.length || off.length) {
+    const seen = new Set(com.concat(off).map(m => m.id));
+    groups = [{ title:'Committee', list:com }, { title:'Coaches and other officials', list:off.concat(holders.filter(m => !seen.has(m.id))) }].filter(g => g.list.length);
+  } else groups = [{ title:'', list:holders }];
   const initials = n => String(n).split(/\s+/).filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
   const sentence = m => { const parts = m.roles.map(r => esc(r.role)); return parts.length < 2 ? parts.join('') : parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1]; };
   const card = m => `<a class="mcard" href="#person-${esc(m.id)}">
@@ -1196,7 +1204,7 @@ function committeePage(){
   return `${pageHead('Committee', 'The people who run the club.', 'committee', true)}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
-    ${list.length ? `<div class="committee">${list.map(card).join('')}</div>` : '<div class="empty">The committee will be listed here soon.</div>'}
+    ${groups.length ? groups.map(g => `${g.title && groups.length > 1 ? `<div class="section-head" style="margin-top:1.8rem"><h2>${esc(g.title)}</h2></div>` : ''}<div class="committee">${g.list.map(card).join('')}</div>`).join('') : '<div class="empty">The committee will be listed here soon.</div>'}
   </section></div>`;
 }
 /* Club league: our own events ticked "Counts for the club league", plus other clubs' events listed in the Club league entry. */
@@ -1461,8 +1469,9 @@ Promise.all([
   fetch('data/agm.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/league.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/championships.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-  fetch('data/clubs.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-]).then(([a, e, n, m, pm, pt, ag, lg, ch, cl]) => { CLUBS = asList(cl).filter(x => x && x.name); CHAMPRULES = (ch && ch.rules) || ''; CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+  fetch('data/clubs.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  fetch('data/committee.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([a, e, n, m, pm, pt, ag, lg, ch, cl, co]) => { COMMITTEE = (co && typeof co === 'object' && !Array.isArray(co)) ? co : {}; CLUBS = asList(cl).filter(x => x && x.name); CHAMPRULES = (ch && ch.rules) || ''; CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>
