@@ -19,13 +19,11 @@
       "id": "beccles-common"
     },
     {
-      "id": "brandon",
       "name": "Brandon Country Park",
+      "mapType": "Other club's map",
       "lat": 52.449,
       "lon": 0.625,
-      "label_dx": 14,
-      "label_dy": 0,
-      "label_anchor": "start"
+      "id": "brandon"
     },
     {
       "name": "Bury St Edmunds",
