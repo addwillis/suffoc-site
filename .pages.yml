@@ -242,6 +242,7 @@ content:
           - "Rod Mansel"
           - "Sally Wilkinson"
           - "Sarah Mansel"
+          - "Simon Hooton"
           # END members
       - name: planner
         label: Planner
@@ -265,6 +266,7 @@ content:
           - "Rod Mansel"
           - "Sally Wilkinson"
           - "Sarah Mansel"
+          - "Simon Hooton"
           # END members
       - name: controller
         label: Controller
@@ -288,6 +290,7 @@ content:
           - "Rod Mansel"
           - "Sally Wilkinson"
           - "Sarah Mansel"
+          - "Simon Hooton"
           # END members
       - name: riskAssessor
         label: Risk Assessor
@@ -311,6 +314,7 @@ content:
           - "Rod Mansel"
           - "Sally Wilkinson"
           - "Sarah Mansel"
+          - "Simon Hooton"
           # END members
       - name: others
         label: Other officials (optional)
@@ -1103,6 +1107,7 @@ content:
           - "Rod Mansel"
           - "Sally Wilkinson"
           - "Sarah Mansel"
+          - "Simon Hooton"
           # END members
       - name: otherName
         label: Winner not in the members list

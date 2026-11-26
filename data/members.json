@@ -176,6 +176,16 @@
       ],
       "photo": "/images/sarah-mansel.jpg",
       "id": "sarah-mansel"
+    },
+    {
+      "name": "Simon Hooton",
+      "roles": [
+        {
+          "role": "Coach",
+          "email": "coach_simon@suffoc.co.uk"
+        }
+      ],
+      "id": "simon-hooton"
     }
   ]
 }
