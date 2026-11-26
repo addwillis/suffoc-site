@@ -25,6 +25,12 @@
       "id": "belstead-brook"
     },
     {
+      "name": "Bourne Park",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 151420",
+      "id": "bourne-park"
+    },
+    {
       "name": "Brandon Country Park",
       "mapType": "Other club's map",
       "lat": 52.449,
