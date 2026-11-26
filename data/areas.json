@@ -13,6 +13,12 @@
       "id": "barnham-cross-common"
     },
     {
+      "name": "Beccles Common",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 428904",
+      "id": "beccles-common"
+    },
+    {
       "id": "brandon",
       "name": "Brandon Country Park",
       "lat": 52.449,

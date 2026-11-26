@@ -67,6 +67,7 @@ content:
       # BEGIN areas
       - "Alton Water"
       - "Barnham Cross Common"
+      - "Beccles Common"
       - "Brandon Country Park"
       - "Bury St Edmunds"
       - "Clare"
@@ -523,6 +524,7 @@ content:
       # BEGIN areas
       - "Alton Water"
       - "Barnham Cross Common"
+      - "Beccles Common"
       - "Brandon Country Park"
       - "Bury St Edmunds"
       - "Clare"
