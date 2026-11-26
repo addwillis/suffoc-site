@@ -356,7 +356,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 147';
+const BUILD = 'build 148';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -1420,11 +1420,12 @@ function nameToPath(n){
   if (!n || n === 'home') return '';
   if (n === 'maprunnew') return 'maprun/new';
   if (n === 'otherclubs') return 'clubs';
+  if (n === 'mapped') return 'areas';
   if ((m = n.match(/^otherclub-(.+)$/))) return 'clubs/' + m[1];
   if ((m = n.match(/^event-(.+)$/))) return 'events/' + m[1];
   if ((m = n.match(/^permanent-(.+)$/))) return 'permanent/' + m[1];
   if ((m = n.match(/^comments-(.+)$/))) return 'events/' + m[1] + '/comments';
-  if ((m = n.match(/^area-(.+)$/))) return 'mapped/' + m[1];
+  if ((m = n.match(/^area-(.+)$/))) return 'areas/' + m[1];
   if ((m = n.match(/^news-(.+)$/))) return 'news/' + m[1];
   if ((m = n.match(/^club-(.+)$/))) return 'club/' + m[1];
   if ((m = n.match(/^person-(.+)$/))) return 'people/' + m[1];
@@ -1437,7 +1438,8 @@ function pathToName(p){
   const s = p.split('/'), rest = s.slice(1).join('/');
   if (s[0] === 'events' && s.length === 3 && s[2] === 'comments' && !/^(level|series)$/.test(s[1])) return 'comments-' + s[1];
   if (s[0] === 'events' && s.length > 1) return /^(level|series)$/.test(s[1]) && s[2] ? 'tag-' + s[1] + '-' + s.slice(2).join('/') : 'event-' + rest;
-  if (s[0] === 'mapped' && s.length > 1) return 'area-' + rest;
+  if ((s[0] === 'areas' || s[0] === 'mapped') && s.length > 1) return 'area-' + rest;
+  if (s[0] === 'areas') return 'mapped';
   if (s[0] === 'news' && s.length > 1) return 'news-' + rest;
   if (s[0] === 'club' && s.length > 1) return 'club-' + rest;
   if (s[0] === 'people' && s.length > 1) return 'person-' + rest;
@@ -1450,7 +1452,9 @@ function currentName(){
   if (location.hash.length > 1 && isRoute(location.hash.slice(1))) { /* an older #address: move to the clean one */
     history.replaceState(null, '', BASE + nameToPath(location.hash.slice(1)));
   }
-  return pathToName(decodeURIComponent(location.pathname.slice(BASE.length)));
+  const raw = decodeURIComponent(location.pathname.slice(BASE.length)), nm = pathToName(raw);
+  if (/^mapped(\/|$)/.test(raw)) history.replaceState(null, '', BASE + nameToPath(nm) + location.search + location.hash);  /* old /mapped addresses move to /areas */
+  return nm;
 }
 function go(name){ history.pushState(null, '', BASE + nameToPath(name)); route(); }
 document.addEventListener('click', ev => {
