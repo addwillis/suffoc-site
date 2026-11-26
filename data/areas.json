@@ -68,6 +68,7 @@
     },
     {
       "name": "Christchurch Park",
+      "town": "Ipswich",
       "mapType": "SUFFOC map",
       "gridRef": "TM 165449",
       "id": "christchurch-park"
