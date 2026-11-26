@@ -20,12 +20,14 @@
     },
     {
       "name": "Belstead Brook",
+      "town": "Ipswich",
       "mapType": "SUFFOC map",
       "gridRef": "TM 128420",
       "id": "belstead-brook"
     },
     {
       "name": "Bourne Park",
+      "town": "Ipswich",
       "mapType": "SUFFOC map",
       "gridRef": "TM 151420",
       "id": "bourne-park"
@@ -45,6 +47,7 @@
     },
     {
       "name": "Broom Hill and The Dales",
+      "town": "Ipswich",
       "mapType": "SUFFOC map",
       "gridRef": "TM 154459",
       "id": "broom-hill-and-the-dales"
@@ -58,6 +61,7 @@
     },
     {
       "name": "Chantry Park",
+      "town": "Ipswich",
       "mapType": "SUFFOC map",
       "gridRef": "TM137437",
       "id": "chantry-park"
