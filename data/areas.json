@@ -251,6 +251,12 @@
       "name": "Sutton Common",
       "mapType": "SUFFOC map",
       "gridRef": "TM 306476",
+      "id": "sutton-common-1"
+    },
+    {
+      "name": "Sutton Common",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 306476",
       "id": "sutton-common"
     },
     {
