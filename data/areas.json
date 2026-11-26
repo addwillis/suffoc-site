@@ -150,6 +150,13 @@
       "id": "haverhill"
     },
     {
+      "name": "Holywells and Landseer Parks",
+      "town": "Ipswich",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 176425",
+      "id": "holywells-and-landseer-parks"
+    },
+    {
       "name": "King's Forest",
       "mapType": "SUFFOC map",
       "gridRef": "TL 821760",
