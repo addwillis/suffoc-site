@@ -137,6 +137,12 @@
       "id": "hardwick"
     },
     {
+      "name": "Haughley Park",
+      "mapType": "SUFFOC map",
+      "gridRef": "TL 992618",
+      "id": "haughley-park"
+    },
+    {
       "name": "King's Forest",
       "mapType": "SUFFOC map",
       "gridRef": "TL 821760",
