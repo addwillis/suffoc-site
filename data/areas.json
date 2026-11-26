@@ -170,6 +170,13 @@
       "id": "ipswich-high-school"
     },
     {
+      "name": "Kesgrave",
+      "town": "Ipswich",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 231450",
+      "id": "kesgrave"
+    },
+    {
       "name": "King's Forest",
       "mapType": "SUFFOC map",
       "gridRef": "TL 821760",
