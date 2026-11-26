@@ -1,6 +1,5 @@
 {
   "name": "Hardwick",
   "mapType": "SUFFOC map",
-  "lat": 52.222,
-  "lon": 0.708
+  "gridRef": "TL 85408 62584"
 }
