@@ -248,6 +248,12 @@
       "id": "sudbury"
     },
     {
+      "name": "Sutton Common",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 306476",
+      "id": "sutton-common"
+    },
+    {
       "name": "Tunstall Forest",
       "mapType": "SUFFOC map",
       "lat": 52.1211,

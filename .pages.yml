@@ -103,6 +103,7 @@ content:
       - "Royal Hospital School"
       - "Shrubland Park"
       - "Sudbury"
+      - "Sutton Common"
       - "Tunstall Forest"
       # END areas
   - name: about
@@ -610,6 +611,7 @@ content:
       - "Royal Hospital School"
       - "Shrubland Park"
       - "Sudbury"
+      - "Sutton Common"
       - "Tunstall Forest"
       # END areas
   - name: description
