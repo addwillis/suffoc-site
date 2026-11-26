@@ -36,13 +36,11 @@
       "id": "elmswell"
     },
     {
-      "id": "hardwick",
       "name": "Hardwick",
+      "mapType": "SUFFOC map",
       "lat": 52.222,
       "lon": 0.708,
-      "label_dx": -14,
-      "label_dy": 16,
-      "label_anchor": "end"
+      "id": "hardwick"
     },
     {
       "id": "kings-forest",
