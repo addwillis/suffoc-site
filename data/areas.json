@@ -259,6 +259,12 @@
       "lat": 52.1211,
       "lon": 1.5036,
       "id": "tunstall"
+    },
+    {
+      "name": "West Harling Heath",
+      "mapType": "SUFFOC map",
+      "gridRef": "TL966837",
+      "id": "west-harling-heath"
     }
   ]
 }

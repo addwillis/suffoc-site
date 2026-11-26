@@ -105,6 +105,7 @@ content:
       - "Sudbury"
       - "Sutton Common"
       - "Tunstall Forest"
+      - "West Harling Heath"
       # END areas
   - name: about
     label: EVENT OVERVIEW
@@ -613,6 +614,7 @@ content:
       - "Sudbury"
       - "Sutton Common"
       - "Tunstall Forest"
+      - "West Harling Heath"
       # END areas
   - name: description
     label: ABOUT THE COURSE
