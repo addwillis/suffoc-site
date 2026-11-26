@@ -229,6 +229,12 @@
       "id": "rendlesham-forest"
     },
     {
+      "name": "Royal Hospital School",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 166 351",
+      "id": "royal-hospital-school"
+    },
+    {
       "name": "Sudbury",
       "mapType": "SUFFOC map",
       "lat": 52.038,
