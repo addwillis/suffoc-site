@@ -216,6 +216,13 @@
       "id": "nowton-park"
     },
     {
+      "name": "Orwell Country Park",
+      "town": "Ipswich",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 186405",
+      "id": "orwell-country-park"
+    },
+    {
       "name": "Sudbury",
       "mapType": "SUFFOC map",
       "lat": 52.038,
