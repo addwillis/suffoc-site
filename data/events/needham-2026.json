@@ -3,7 +3,23 @@
   "date": "2026-07-05",
   "level": "Local",
   "series": "Simon Peck Summer Series",
-  "area": "Needham Lakes",
+  "league": false,
+  "area": "Needham Market",
+  "about": "<p></p>",
+  "fees": {
+    "chipHire": "£1",
+    "siacHire": "£3"
+  },
+  "officials": {
+    "planner": "Gareth Radcliffe",
+    "organiser": "Simon Hooton",
+    "controller": "Clive Wilkinson"
+  },
+  "comments": {
+    "planner": "<p></p>",
+    "organiser": "<p></p>",
+    "controller": "<p></p>"
+  },
   "resultLinks": {
     "results": "http://www.suffoc.co.uk/results/2026/Needham/index.html",
     "winsplits": "https://obasen.orientering.se/winsplits/online/en/show_event.asp?id=113907",
