@@ -93,6 +93,12 @@
       "id": "combs-ford"
     },
     {
+      "name": "Culford School",
+      "mapType": "SUFFOC map",
+      "gridRef": "TL 837703",
+      "id": "culford-school"
+    },
+    {
       "name": "Elmswell",
       "mapType": "OpenStreetMap",
       "lat": 52.237019,
