@@ -125,6 +125,12 @@
       "id": "foxhall-woods"
     },
     {
+      "name": "Gunton Denes and Dip Farm",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 547957",
+      "id": "gunton-denes-and-dip-farm"
+    },
+    {
       "name": "Hardwick",
       "mapType": "SUFFOC map",
       "gridRef": "TL 85408 62584",
