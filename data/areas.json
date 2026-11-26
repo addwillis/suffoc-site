@@ -112,6 +112,12 @@
       "id": "eye"
     },
     {
+      "name": "Finborough",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 015581",
+      "id": "finborough"
+    },
+    {
       "name": "Hardwick",
       "mapType": "SUFFOC map",
       "gridRef": "TL 85408 62584",
