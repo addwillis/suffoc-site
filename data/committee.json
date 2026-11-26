@@ -16,16 +16,19 @@
       "member": "Sally Wilkinson"
     },
     {
-      "member": "Hannah Constable-Simmonds"
+      "member": "Martin Hore"
+    },
+    {
+      "member": "Adam Willis"
     },
     {
       "member": "Louise Walker"
     },
     {
-      "member": "Martin Hore"
+      "member": "Hannah Constable-Simmonds"
     },
     {
-      "member": "Adam Willis"
+      "member": "John Liston"
     },
     {
       "member": "Ethan Radcliffe"
@@ -33,16 +36,13 @@
   ],
   "officials": [
     {
-      "member": "John Liston"
-    },
-    {
-      "member": "Clive Wilkinson"
-    },
-    {
       "member": "Simon Hooton"
     },
     {
       "member": "Will Harrison"
+    },
+    {
+      "member": "Clive Wilkinson"
     }
   ]
 }
