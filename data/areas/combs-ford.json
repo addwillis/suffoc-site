@@ -1,3 +1,5 @@
 {
-  "name": "Combs Ford"
+  "name": "Combs Ford",
+  "mapType": "OpenStreetMap",
+  "gridRef": "TM050579"
 }
