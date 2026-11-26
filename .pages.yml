@@ -243,6 +243,7 @@ content:
           - "Sally Wilkinson"
           - "Sarah Mansel"
           - "Simon Hooton"
+          - "Will Harrison"
           # END members
       - name: planner
         label: Planner
@@ -267,6 +268,7 @@ content:
           - "Sally Wilkinson"
           - "Sarah Mansel"
           - "Simon Hooton"
+          - "Will Harrison"
           # END members
       - name: controller
         label: Controller
@@ -291,6 +293,7 @@ content:
           - "Sally Wilkinson"
           - "Sarah Mansel"
           - "Simon Hooton"
+          - "Will Harrison"
           # END members
       - name: riskAssessor
         label: Risk Assessor
@@ -315,6 +318,7 @@ content:
           - "Sally Wilkinson"
           - "Sarah Mansel"
           - "Simon Hooton"
+          - "Will Harrison"
           # END members
       - name: others
         label: Other officials (optional)
@@ -1108,6 +1112,7 @@ content:
           - "Sally Wilkinson"
           - "Sarah Mansel"
           - "Simon Hooton"
+          - "Will Harrison"
           # END members
       - name: otherName
         label: Winner not in the members list
