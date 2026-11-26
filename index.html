@@ -337,7 +337,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 142';
+const BUILD = 'build 143';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -386,7 +386,7 @@ function loadData(areas, events){
   AREAS = {};
   areas.forEach(a => { let lat = parseFloat(a.lat), lon = parseFloat(a.lon);
     if (!isFinite(lat) || !isFinite(lon)) { const g = gridToLatLon(a.gridRef); lat = g ? g.lat : NaN; lon = g ? g.lon : NaN; }
-    AREAS[a.id] = { name:a.name, osm:String(a.mapType || '').toLowerCase() === 'openstreetmap', lat:lat, lon:lon, dx:+(a.label_dx||14), dy:+(a.label_dy||0), anchor:a.label_anchor||'start' }; });
+    AREAS[a.id] = { name:a.name, osm:String(a.mapType || '').toLowerCase() === 'openstreetmap', auto:/^other/i.test(String(a.mapType || '').trim()), lat:lat, lon:lon, dx:+(a.label_dx||14), dy:+(a.label_dy||0), anchor:a.label_anchor||'start' }; });
   const ok = e => e && e.title && /^\d{4}-\d{2}-\d{2}$/.test(String(e.date || '').trim());
   SKIPPED = events.filter(e => !ok(e)).map(e => (e && e.title) || '(no name)');
   events = events.filter(ok);

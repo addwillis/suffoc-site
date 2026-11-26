@@ -61,8 +61,7 @@ content:
   - name: area
     label: Area
     type: select
-    description: Pick from the Mapped areas list. If the place isn't there yet, add it under Mapped areas first.
-    required: true
+    description: Optional. Pick from the Mapped areas list. If the place isn't there yet, add it under Mapped areas first. Leave empty if the event has no area.
     options:
       values:
       # BEGIN areas
@@ -479,11 +478,12 @@ content:
   - name: mapType
     label: Map type
     type: select
-    description: SUFFOC map means an orienteering map our mapping officer surveyed and checked. OpenStreetMap means the event uses public OpenStreetMap data, like the MapRun nights. Leave empty for SUFFOC map.
+    description: SUFFOC map means an orienteering map our mapping officer surveyed and checked. OpenStreetMap means public OpenStreetMap data, like the MapRun nights. Other club's map is for areas we only post results for, like national events elsewhere. Those are left off the Mapped areas page. Leave empty for SUFFOC map.
     options:
       values:
       - "SUFFOC map"
       - "OpenStreetMap"
+      - "Other club's map"
   - name: gridRef
     label: Grid reference (OS)
     type: string
