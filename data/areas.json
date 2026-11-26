@@ -63,6 +63,12 @@
       "id": "chantry-park"
     },
     {
+      "name": "Christchurch Park",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 165449",
+      "id": "christchurch-park"
+    },
+    {
       "name": "Clare",
       "mapType": "SUFFOC map",
       "gridRef": " TL 770451",
