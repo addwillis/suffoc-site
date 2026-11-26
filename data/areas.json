@@ -7,6 +7,12 @@
       "id": "alton-water"
     },
     {
+      "name": "Barnham Cross Common",
+      "mapType": "SUFFOC map",
+      "gridRef": "TL 867817",
+      "id": "barnham-cross-common"
+    },
+    {
       "id": "brandon",
       "name": "Brandon Country Park",
       "lat": 52.449,
