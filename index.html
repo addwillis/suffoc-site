@@ -228,6 +228,12 @@ dl.facts dd a:hover{color:var(--sky)}
 .lpin{display:block;width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid var(--navy);box-sizing:border-box;box-shadow:0 1px 5px rgba(0,0,0,.45)}
 .lpin.up{background:var(--gold)}
 .lpin.osm{border-color:#7b8aa0;background:#dde4ef}
+.achip{position:relative;height:26px;line-height:22px;padding:0 6px;box-sizing:border-box;text-align:center;white-space:nowrap;background:var(--navy);color:#fff;font:700 13px var(--body);border:2px solid #fff;border-radius:13px;box-shadow:0 1px 5px rgba(0,0,0,.4)}
+.achip::after{content:'';position:absolute;left:50%;top:100%;margin-left:-6px;border:6px solid transparent;border-top-color:var(--navy)}
+.achip.osm{background:#7b8aa0}
+.achip.osm::after{border-top-color:#7b8aa0}
+.adot{display:block;width:16px;height:16px;border-radius:50%;background:var(--navy);border:3px solid #fff;box-sizing:border-box;box-shadow:0 1px 4px rgba(0,0,0,.45)}
+.adot.osm{background:#7b8aa0}
 .legend i.osm{border-color:#7b8aa0;background:#dde4ef}
 .ctl{position:relative;width:30px;height:30px}
 .ctl .ring{position:absolute;inset:0;border:3.5px solid var(--course);border-radius:50%;box-sizing:border-box}
@@ -350,7 +356,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 145';
+const BUILD = 'build 146';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -812,7 +818,7 @@ function initMaps(){
       map.attributionControl.setPrefix(false);
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19,
         attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
-      const pts = [];
+      const pts = [], chips = [];
       const nextBy = {};
       /* Events map: each event sits at its own location (from its grid reference), falling back to its area. Events in the same place share a pin. */
       const groups = {};
@@ -847,12 +853,25 @@ function initMaps(){
         }).join('') : '<strong>' + esc(a.name) + '</strong>';
         const nEv = EVENTS.filter(e => e.area === k).length;
         const popHtml = key === 'all' ? '<a href="#area-' + esc(k) + '"><strong>' + esc(a.name) + '</strong></a><br>' + (nEv ? nEv + ' event' + (nEv === 1 ? '' : 's') + ' &middot; ' : '') + '<a href="#area-' + esc(k) + '">See events here</a>' : html;
-        L.marker([a.lat, a.lon], { icon:icon, title:a.name }).addTo(map).bindPopup(popHtml);
+        const mk = L.marker([a.lat, a.lon], { icon:icon, title:a.name }).addTo(map).bindPopup(popHtml);
+        if (key === 'all') chips.push({ mk:mk, a:a, n:nEv });
         pts.push([a.lat, a.lon]);
       });
+      /* Mapped areas map: each area is a name label; labels that would overlap turn into small dots until you zoom in. Areas with most events keep labels first. */
+      const layoutChips = () => {
+        const placed = [];
+        chips.slice().sort((x, y) => y.n - x.n || String(x.a.name).localeCompare(String(y.a.name))).forEach(c => {
+          const p = map.latLngToContainerPoint([c.a.lat, c.a.lon]), w = Math.round(String(c.a.name).length * 7.4 + 28), r = { x1:p.x - w / 2 - 4, x2:p.x + w / 2 + 4, y1:p.y - 38, y2:p.y + 2 };
+          const hit = placed.some(q => r.x1 < q.x2 && r.x2 > q.x1 && r.y1 < q.y2 && r.y2 > q.y1);
+          const cls = c.a.osm ? ' osm' : '';
+          if (!hit) { placed.push(r); c.mk.setIcon(L.divIcon({ className:'', html:'<div class="achip' + cls + '" style="width:' + w + 'px">' + esc(c.a.name) + '</div>', iconSize:[w, 38], iconAnchor:[w / 2, 38], popupAnchor:[0, -38] })); c.mk.setZIndexOffset(500); }
+          else { c.mk.setIcon(L.divIcon({ className:'', html:'<span class="adot' + cls + '"></span>', iconSize:[16, 16], iconAnchor:[8, 8], popupAnchor:[0, -9] })); c.mk.setZIndexOffset(0); }
+        });
+      };
       if (key !== 'all' && key !== 'upcoming' && pts.length) map.setView(pts[0], evKey && evKey.loc ? 16 : 14);
       else if (pts.length) map.fitBounds(pts, { padding:[40,40], maxZoom:key === 'upcoming' ? 12 : 11 });
       else map.setView([52.2, 1.0], 9);
+      if (key === 'all') { layoutChips(); map.on('zoomend', layoutChips); }
       LMAPS.push(map);
     } catch (err) { el.innerHTML = fallback; }
   });
