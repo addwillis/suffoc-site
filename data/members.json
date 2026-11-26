@@ -64,6 +64,13 @@
     },
     {
       "name": "Louise Walker",
+      "roles": [
+        {
+          "role": "Equipment Officer",
+          "email": "equipment@suffoc.co.uk"
+        }
+      ],
+      "photo": "/images/Walker_Louise_001935_06.jpg",
       "id": "louise-walker"
     },
     {
