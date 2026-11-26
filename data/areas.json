@@ -157,6 +157,13 @@
       "id": "holywells-and-landseer-parks"
     },
     {
+      "name": "Ickworth Park",
+      "town": "Bury St Edmunds",
+      "mapType": "SUFFOC map",
+      "gridRef": "TL816614",
+      "id": "ickworth-park"
+    },
+    {
       "name": "King's Forest",
       "mapType": "SUFFOC map",
       "gridRef": "TL 821760",
