@@ -132,6 +132,7 @@
     },
     {
       "name": "Hardwick Heath",
+      "town": "Bury St Edmunds",
       "mapType": "SUFFOC map",
       "gridRef": "TL 85408 62584",
       "id": "hardwick"
