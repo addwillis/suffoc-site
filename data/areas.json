@@ -223,6 +223,15 @@
       "id": "orwell-country-park"
     },
     {
+      "name": "RAF Honington",
+      "mapType": "SUFFOC map",
+      "terrain": [
+        "Street and urban"
+      ],
+      "gridRef": "TL892743",
+      "id": "raf-honington"
+    },
+    {
       "name": "Rendlesham Forest",
       "mapType": "SUFFOC map",
       "gridRef": "TM356500",
