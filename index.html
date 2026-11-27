@@ -377,7 +377,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 166';
+const BUILD = 'build 167';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -1638,8 +1638,9 @@ Promise.all([
   fetch('data/agm.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/league.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/championships.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-  fetch('data/clubs.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-]).then(([a, e, n, m, pm, pt, ag, lg, ch, cl]) => { COMMITTEE = (pt && pt.committee && typeof pt.committee === 'object') ? pt.committee : {}; CLUBS = asList(cl).filter(x => x && x.name); CHAMPRULES = (ch && ch.rules) || ''; CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+  fetch('data/clubs.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  fetch('data/maprun.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([a, e, n, m, pm, pt, ag, lg, ch, cl, mr]) => { pt = Object.assign({}, pt, mr); COMMITTEE = (pt && pt.committee && typeof pt.committee === 'object') ? pt.committee : {}; CLUBS = asList(cl).filter(x => x && x.name); CHAMPRULES = (ch && ch.rules) || ''; CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>

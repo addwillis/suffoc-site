@@ -12,7 +12,7 @@ content:
   type: group
   items:
     - name: events
-      label: Events and results
+      label: Events and Results
       type: collection
       path: data/events
       format: json
@@ -474,7 +474,7 @@ content:
             label: Web address
             type: string
     - name: levels
-      label: Event levels
+      label: Event Levels
       type: collection
       path: data/levels
       format: json
@@ -492,7 +492,7 @@ content:
         type: number
         description: 1 comes first. National 1, Regional 2, Local 3.
     - name: series
-      label: Event series
+      label: Event Series
       type: collection
       path: data/series
       format: json
@@ -506,11 +506,11 @@ content:
         type: string
         required: true
 - name: grp_places
-  label: Places and maps
+  label: Areas
   type: group
   items:
     - name: areas
-      label: Mapped areas
+      label: Mapped Areas
       type: collection
       path: data/areas
       format: json
@@ -568,7 +568,7 @@ content:
         type: number
         description: Only needed if there is no grid reference.
     - name: towns
-      label: Towns and regions
+      label: Towns and Regions
       type: collection
       path: data/towns
       format: json
@@ -583,7 +583,7 @@ content:
         required: true
         description: A town or region that groups mapped areas, for example Ipswich or Bury St Edmunds.
     - name: terrain
-      label: Terrain types
+      label: Terrain Types
       type: collection
       path: data/terrain
       format: json
@@ -596,8 +596,55 @@ content:
         label: Name
         type: string
         required: true
+- name: grp_news
+  label: News
+  type: group
+  items:
+    - name: news
+      label: News
+      type: file
+      path: data/news.json
+      format: json
+      fields:
+      - name: news
+        label: News items
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: '{date} {title}'
+        fields:
+        - name: title
+          label: Headline
+          type: string
+        - name: date
+          label: Date
+          type: date
+          options:
+            format: yyyy-MM-dd
+        - name: image
+          label: Picture (optional)
+          type: image
+        - name: imageAlt
+          label: Picture description (optional)
+          type: string
+          description: A few words describing the picture, for people using screen readers.
+        - name: text
+          label: Main text
+          type: rich-text
+          description: The full article. The cards on the home and News pages show the first few words, with Read more taking people to the full article.
+          options:
+            format: html
+        - name: link
+          label: Link to old news page (optional)
+          type: string
+          description: Only if the article also exists on the old website.
+- name: grp_anytime
+  label: Anytime O
+  type: group
+  items:
     - name: permanent
-      label: Permanent orienteering courses
+      label: Permanent Orienteering Courses
       type: collection
       path: data/permanent
       format: json
@@ -736,8 +783,44 @@ content:
         options:
           format: html
         description: Parking, access, dogs, anything people should know.
+    - name: maprun
+      label: MapRun
+      type: file
+      path: data/maprun.json
+      format: json
+      fields:
+      - name: maprun
+        label: MAPRUN PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+        - name: text
+          label: Text
+          type: rich-text
+          options:
+            format: html
+        - name: image
+          label: Picture (optional)
+          type: image
+      - name: maprunnew
+        label: NEW TO MAPRUN PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+        - name: text
+          label: Text
+          type: rich-text
+          options:
+            format: html
+        - name: image
+          label: Picture (optional)
+          type: image
 - name: grp_people
-  label: People and clubs
+  label: People and Clubs
   type: group
   items:
     - name: members
@@ -795,7 +878,7 @@ content:
         type: image
         description: Only add this if the person is happy for it to be public.
     - name: clubs
-      label: Other clubs
+      label: Other Clubs
       type: collection
       path: data/clubs
       format: json
@@ -822,11 +905,11 @@ content:
         type: text
         description: A line or two, for example where they usually run.
 - name: grp_results
-  label: Club results and records
+  label: Club Results and Records
   type: group
   items:
     - name: league
-      label: Club league
+      label: Club League
       type: file
       path: data/league.json
       format: json
@@ -905,7 +988,7 @@ content:
           label: Note (optional)
           type: string
     - name: championships
-      label: Club championships
+      label: Club Championships
       type: file
       path: data/championships.json
       format: json
@@ -1021,7 +1104,7 @@ content:
             type: string
             description: Only if the winner isn't in People, for example an earlier year. Leave empty when you pick a member above.
     - name: agm
-      label: AGM minutes
+      label: AGM Minutes
       type: file
       path: data/agm.json
       format: json
@@ -1054,11 +1137,11 @@ content:
           type: string
           description: A few words if needed, for example approved at the 2026 AGM.
 - name: grp_pages
-  label: Pages and news
+  label: Pages
   type: group
   items:
     - name: pagetext
-      label: Page text
+      label: Page Text
       type: file
       path: data/pagetext.json
       format: json
@@ -1137,42 +1220,6 @@ content:
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: permanent
         label: PERMANENT ORIENTEERING COURSES PAGE
-        type: object
-        fields:
-        - name: sub
-          label: Subtitle
-          type: string
-          description: The line under the page title, also shown in the box that leads to this page.
-        - name: text
-          label: Main text
-          type: rich-text
-          options:
-            format: html
-          description: Text shown at the top of the page, under the title. Leave empty for none.
-        - name: image
-          label: Picture
-          type: image
-          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-      - name: maprun
-        label: MAPRUN PAGE
-        type: object
-        fields:
-        - name: sub
-          label: Subtitle
-          type: string
-          description: The line under the page title, also shown in the box that leads to this page.
-        - name: text
-          label: Main text
-          type: rich-text
-          options:
-            format: html
-          description: Text shown at the top of the page, under the title. Leave empty for none.
-        - name: image
-          label: Picture
-          type: image
-          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-      - name: maprunnew
-        label: NEW TO MAPRUN PAGE
         type: object
         fields:
         - name: sub
@@ -1471,42 +1518,3 @@ content:
           label: Picture
           type: image
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-    - name: news
-      label: News
-      type: file
-      path: data/news.json
-      format: json
-      fields:
-      - name: news
-        label: News items
-        type: object
-        list:
-          collapsible:
-            collapsed: true
-            summary: '{date} {title}'
-        fields:
-        - name: title
-          label: Headline
-          type: string
-        - name: date
-          label: Date
-          type: date
-          options:
-            format: yyyy-MM-dd
-        - name: image
-          label: Picture (optional)
-          type: image
-        - name: imageAlt
-          label: Picture description (optional)
-          type: string
-          description: A few words describing the picture, for people using screen readers.
-        - name: text
-          label: Main text
-          type: rich-text
-          description: The full article. The cards on the home and News pages show the first few words, with Read more taking people to the full article.
-          options:
-            format: html
-        - name: link
-          label: Link to old news page (optional)
-          type: string
-          description: Only if the article also exists on the old website.
