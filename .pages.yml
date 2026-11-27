@@ -786,6 +786,10 @@ content:
       - "SOS"
       - "WAOC"
       # END clubs
+  - name: phone
+    label: Phone (optional)
+    type: string
+    description: Only add this if they are happy for it to be public. Shown on their page and in contact boxes.
   - name: roles
     label: Club roles (optional, up to 4)
     type: object
@@ -992,19 +996,7 @@ content:
       type: rich-text
       options:
         format: html
-    - name: boName
-      label: 3. Contact name
-      type: string
-    - name: boPhone
-      label: 3. Contact phone
-      type: string
-    - name: boEmail
-      label: 3. Contact email
-      type: string
-    - name: boPhoto
-      label: 3. Contact photo (optional)
-      type: image
-      description: Only add this if they are happy for it to be public. Without a photo the box shows their initials.
+      description: The contact below it comes from People (anyone with another club selected and a Welfare or Safeguarding role). Nothing to type for that.
     - name: links
       label: 3. Buttons (the first one is highlighted)
       type: object

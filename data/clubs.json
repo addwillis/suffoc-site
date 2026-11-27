@@ -6,6 +6,12 @@
       "id": "baoc"
     },
     {
+      "name": "BOF",
+      "fullName": "British Orienteering",
+      "website": "https://www.britishorienteering.org.uk/",
+      "id": "bof"
+    },
+    {
       "name": "CHIG",
       "id": "chig"
     },

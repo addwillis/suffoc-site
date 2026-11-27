@@ -256,6 +256,9 @@ dl.facts dd a:hover{color:var(--sky)}
 .mcard:hover h3{text-decoration:underline;text-underline-offset:3px}
 .mcard .mimg{width:120px;height:120px;border-radius:50%;object-fit:cover;flex:none;border:4px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 6px 16px rgba(11,42,85,.2)}
 .mcard .minit{width:120px;height:120px;border-radius:50%;flex:none;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font:700 2.2rem var(--body);border:4px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 6px 16px rgba(11,42,85,.2)}
+.sgrid{display:block;margin-top:1.2rem}
+.sgside{margin:1.4rem 0 0}
+@media(min-width:900px){.sgrid{display:grid;grid-template-columns:minmax(0,1fr) 22rem;gap:2.2rem;align-items:start}.sgside{margin:0}}
 .crows{display:flex;flex-direction:column;gap:.9rem;margin:.9rem 0 0}
 .crow{display:flex;align-items:center;gap:.9rem}
 .crow .cimg,.crow .cinit{width:64px;height:64px;border-radius:50%;flex:none;border:3px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 3px 8px rgba(11,42,85,.18)}
@@ -364,7 +367,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 160';
+const BUILD = 'build 162';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -1154,7 +1157,7 @@ function personPage(id){
     </div></section>
     <div class="wrap">
       ${m.roles.length ? `<section class="section"><div class="section-head"><h2>Club Roles</h2></div>
-        <div class="card"><dl class="facts" style="margin:0">${m.roles.map(r => `<dt>${esc(r.role)}</dt><dd>${r.email ? `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ''}</dd>`).join('')}</dl></div></section>` : ''}
+        <div class="card"><dl class="facts" style="margin:0">${m.roles.map(r => `<dt>${esc(r.role)}</dt><dd>${r.email ? `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ''}</dd>`).join('')}${m.phone ? `<dt>Phone</dt><dd><a href="tel:${esc(String(m.phone).replace(/\s+/g, ''))}">${esc(m.phone)}</a></dd>` : ''}</dl></div></section>` : ''}
       ${(() => { const wins = []; CHAMPS.forEach(c => asList(c.winners).forEach(w => { if (w && w.member && memberId(w.member) === id) wins.push({ y:c.year, cls:String(w.class || '').trim(), ev:c.event }); })); return wins.length ? `<section class="section"><div class="section-head"><h2>Club Championship Wins</h2></div><div class="card"><dl class="facts" style="margin:0">${wins.map(x => `<dt>${esc(x.y)}</dt><dd>${esc([x.cls, x.ev].filter(Boolean).join(' \u00b7 '))}</dd>`).join('')}</dl></div></section>` : ''; })()}
       <section class="section"><div class="section-head"><h2>Event Official History</h2></div>
         ${mine.length ? `<div class="rlist">${mine.map(row).join('')}</div>` : '<div class="empty">No events are listed for this person yet.</div>'}</section>
@@ -1296,7 +1299,7 @@ function rolesHTML(m){
 function committeePage(){
   const rank = r => { r = String(r || '').toLowerCase(); const i = ['chair', 'vice', 'secretary', 'treasurer'].findIndex(k => r.indexOf(k) === 0); return i < 0 ? 9 : i; };
   const best = m => Math.min(9, ...m.roles.map(r => rank(r.role)));
-  const holders = Object.keys(MEMBERS).map(k => Object.assign({ id: k }, MEMBERS[k])).filter(m => m.roles.length)
+  const holders = Object.keys(MEMBERS).map(k => Object.assign({ id: k }, MEMBERS[k])).filter(m => m.roles.length && !m.club)
     .sort((a, b) => best(a) - best(b) || a.roles.map(r => r.role).join().localeCompare(b.roles.map(r => r.role).join()) || String(a.name).localeCompare(String(b.name)));
   /* The order comes from the Committee page order list, which is dragged into place. Without one, fall back to sorting by role. */
   const pick = l => asList(l).map(x => { const id = x && x.member ? memberId(x.member) : null; return id ? Object.assign({ id: id }, MEMBERS[id]) : null; }).filter(Boolean);
@@ -1439,16 +1442,19 @@ function contactRow(c){
 function safeguardingBoxes(){
   const P = k => String(PAGETEXT['safeguarding_' + k] || '').trim();
   const BO = 'https://www.britishorienteering.org.uk/';
-  const mine = roleHolders('welfare').map(x => contactRow({ name:x.m.name, href:'#person-' + x.m.id, photo:x.m.photo, role:x.r.role, email:x.r.email })).join('');
-  const bo = { name:P('boName'), phone:P('boPhone'), email:P('boEmail'), photo:P('boPhoto') };
+  /* Our own Welfare Officers: People with a Welfare role and no other club. Other clubs and bodies (British Orienteering): People with a club set and a Welfare or Safeguarding role. */
+  const hold = re => Object.keys(MEMBERS).map(k => Object.assign({ id:k }, MEMBERS[k])).map(m => ({ m:m, r:(m.roles || []).find(r => re.test(r.role)) })).filter(x => x.r);
+  const row = x => { const c = x.m.club ? clubByName(x.m.club) : null; return contactRow({ name:x.m.name, href:'#person-' + x.m.id, photo:x.m.photo, role:x.r.role + (x.m.club ? ', ' + (c && c.fullName ? c.fullName : x.m.club) : ''), email:x.r.email, phone:x.m.phone ? String(x.m.phone).trim() : '' }); };
+  const mine = hold(/welfare/i).filter(x => !x.m.club).map(row).join('');
+  const others = hold(/welfare|safeguard/i).filter(x => x.m.club).map(row).join('');
   const links = (Array.isArray(PAGETEXT.safeguarding_links) ? PAGETEXT.safeguarding_links : []).filter(l => l && l.label && l.url);
-  return `<div class="stack" style="margin:1.2rem 0">
+  return `<div class="stack sgside">
     <section class="card"><h3>${ct('safeguard', esc(P('welfareTitle') || 'Talk to our Welfare Officers'))}</h3>
       ${P('welfareText') ? '<div class="prose" style="margin:.5rem 0">' + richHTML(P('welfareText')) + '</div>' : ''}${mine ? '<div class="crows">' + mine + '</div>' : '<p class="cnote">Welfare Officers are added under People in the CMS (give them a role containing Welfare).</p>'}</section>
     <section class="card"><h3>${ct('docs', esc(P('boTitle') || 'British Orienteering'))}</h3>
-      ${P('boText') ? '<div class="prose" style="margin:.5rem 0">' + richHTML(P('boText')) + '</div>' : ''}${bo.name ? '<div class="crows">' + contactRow({ name:bo.name, photo:bo.photo, role:'Lead Safeguarding Officer', email:bo.email, phone:bo.phone }) + '</div>' : ''}
+      ${P('boText') ? '<div class="prose" style="margin:.5rem 0">' + richHTML(P('boText')) + '</div>' : ''}${others ? '<div class="crows">' + others + '</div>' : ''}
       ${links.length ? '<div class="links" style="margin-top:.8rem">' + links.map((l, i) => '<a class="btn small ' + (i ? 'line' : 'gold') + '" href="' + esc(l.url) + '" ' + ext + '>' + esc(l.label) + '</a>').join('') + '</div>' : ''}</section>
-  </div>${PAGETEXT.safeguarding_more ? '<div class="prose">' + richHTML(PAGETEXT.safeguarding_more) + '</div>' : ''}`;
+  </div>`;
 }
 function clubPage(id){
   if (id === 'committee') return committeePage();
@@ -1457,6 +1463,18 @@ function clubPage(id){
   if (id === 'championships') return championshipsPage();
   const c = CLUB.find(x => x.id === id) || (id === 'contact' ? { title:'Contact', desc:'', icon:'contact' } : null);
   if (!c) return VIEWS.club();
+  if (id === 'safeguarding') {
+    let pic = String(PAGETEXT.safeguarding_image || '').trim();
+    if (pic && !/^https?:\/\//i.test(pic)) pic = (window.BASE || '/').replace(/\/$/, '') + '/' + pic.replace(/^\/+/, '');
+    return `${pageHead(c.title, esc(c.desc || ''), c.icon, true)}
+  <div class="wrap"><section class="section">
+    <a class="back" href="#club">&larr; Back to Club</a>
+    <div class="sgrid">
+      <div class="prose">${pic ? '<img class="introimg" src="' + esc(pic) + '" alt="" loading="lazy">' : ''}${richHTML(PAGETEXT.safeguarding)}${PAGETEXT.safeguarding_more ? richHTML(PAGETEXT.safeguarding_more) : ''}</div>
+      ${safeguardingBoxes()}
+    </div>
+  </section></div>`;
+  }
   const extra = id === 'agm' ? ' The link to the Google Drive folder goes here.' : '';
   return `${pageHead(c.title, esc(c.desc || ''), c.icon || 'club', true)}
   <div class="wrap"><section class="section">
@@ -1571,7 +1589,7 @@ function route(){
   const h = currentName();
   CURKEY = h.startsWith('club-') ? h.slice(5) : h;
   let key = 'home', html;
-  if (h.startsWith('club-')) { key = 'club'; html = introText(h.slice(5), clubPage(h.slice(5))); }
+  if (h.startsWith('club-')) { key = 'club'; html = h === 'club-safeguarding' ? clubPage('safeguarding') : introText(h.slice(5), clubPage(h.slice(5))); }
   else if (h.startsWith('otherclub-')) { key = 'club'; html = otherClubPage(h.slice(10)); }
   else if (h.startsWith('person-')) { key = 'club'; html = personPage(h.slice(7)); }
   else if (/^tag-(level|series)-/.test(h)) { key = 'events'; html = tagPage(h.split('-')[1], h.replace(/^tag-(level|series)-/, '')); }
