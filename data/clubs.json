@@ -1,6 +1,11 @@
 {
   "clubs": [
     {
+      "name": "BAOC",
+      "fullName": "British Army Orienteering Club",
+      "id": "baoc"
+    },
+    {
       "name": "CHIG",
       "id": "chig"
     },
@@ -15,8 +20,19 @@
       "id": "nor"
     },
     {
+      "name": "RAFO",
+      "fullName": "Royal Air Force Orienteering",
+      "id": "raf"
+    },
+    {
       "name": "SMOC",
       "id": "smoc"
+    },
+    {
+      "name": "SOS",
+      "fullName": "Essex Stragglers Orienteering Society",
+      "website": "https://www.stragglers.info/",
+      "id": "sos"
     },
     {
       "name": "WAOC",

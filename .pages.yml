@@ -64,7 +64,8 @@ content:
   - name: area
     label: Area
     type: select
-    description: Optional. Pick from the Mapped areas list. If the place isn't there yet, add it under Mapped areas first. Leave empty if the event has no area.
+    required: true
+    description: Pick from the Mapped areas list. If the place isn't there yet, add it under Mapped areas first. For a map we don't hold, add it there with map type Other club's map.
     options:
       values:
       # BEGIN areas
@@ -212,13 +213,13 @@ content:
       type: string
       description: Type as 2026-11-22, or in words like 22 November. Late online entries are taken up to this date. Leave empty if not needed.
     - name: chipHire
-      label: Chip hire
+      label: Chip hire (optional)
       type: string
-      default: "£1"
+      description: Our usual price is £1. Leave empty if there is no hire charge.
     - name: siacHire
-      label: SIAC chip hire
+      label: SIAC chip hire (optional)
       type: string
-      default: "£3"
+      description: Our usual price is £3. Leave empty if SIAC chips aren't hired out.
     - name: note
       label: Note (optional)
       type: text
@@ -496,6 +497,20 @@ content:
     label: Name
     type: string
     required: true
+- name: terrain
+  label: Terrain types
+  type: collection
+  path: data/terrain
+  format: json
+  filename: '{primary}.json'
+  view:
+    primary: name
+    fields: [name]
+  fields:
+  - name: name
+    label: Name
+    type: string
+    required: true
 - name: clubs
   label: Other clubs
   type: collection
@@ -571,6 +586,19 @@ content:
       - "SUFFOC map"
       - "OpenStreetMap"
       - "Other club's map"
+  - name: terrain
+    label: Terrain (optional)
+    type: select
+    description: Pick everything that applies. Add or change the choices under Terrain types in the menu.
+    options:
+      multiple: true
+      values:
+      # BEGIN terrain
+      - "Forest"
+      - "Heath"
+      - "Parkland"
+      - "Street and urban"
+      # END terrain
   - name: gridRef
     label: Grid reference (OS)
     type: string
@@ -918,6 +946,24 @@ content:
       options:
         format: html
       description: Text shown at the top of the page, under the title. Leave empty for none.
+    - name: image
+      label: Picture
+      type: image
+      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+  - name: safeguarding
+    label: SAFEGUARDING AND WELFARE PAGE
+    type: object
+    fields:
+    - name: sub
+      label: Subtitle
+      type: string
+      description: The line under the page title, also shown in the box that leads to this page.
+    - name: text
+      label: Main text
+      type: rich-text
+      options:
+        format: html
+      description: Text shown on the page. The Club Welfare Officers are listed above it automatically from People (anyone with a role containing Welfare).
     - name: image
       label: Picture
       type: image

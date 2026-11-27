@@ -342,7 +342,7 @@ dl.facts dd a:hover{color:var(--sky)}
     </div>
     <ul>
       <li><a href="#club-contact">Contact</a></li>
-      <li><a href="https://www.suffoc.co.uk/safeguarding-and-welfare" target="_blank" rel="noopener">Safeguarding and Welfare</a></li>
+      <li><a href="#club-safeguarding">Safeguarding and Welfare</a></li>
       <li><a href="https://www.suffoc.co.uk/data-privacy" target="_blank" rel="noopener">Data Privacy Policy</a></li>
       <li><a href="https://www.facebook.com/SUFFOC" target="_blank" rel="noopener">Facebook</a></li>
     </ul>
@@ -356,7 +356,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 153';
+const BUILD = 'build 155';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -406,7 +406,7 @@ function loadData(areas, events){
   AREAS = {};
   areas.forEach(a => { let lat = parseFloat(a.lat), lon = parseFloat(a.lon);
     if (!isFinite(lat) || !isFinite(lon)) { const g = gridToLatLon(a.gridRef); lat = g ? g.lat : NaN; lon = g ? g.lon : NaN; }
-    AREAS[a.id] = { name:a.name, town:String(a.town || '').trim(), osm:String(a.mapType || '').toLowerCase() === 'openstreetmap', auto:/^other/i.test(String(a.mapType || '').trim()), lat:lat, lon:lon, dx:+(a.label_dx||14), dy:+(a.label_dy||0), anchor:a.label_anchor||'start' }; });
+    AREAS[a.id] = { terrain:(Array.isArray(a.terrain) ? a.terrain : [a.terrain]).map(t => String(t || '').trim()).filter(Boolean), name:a.name, town:String(a.town || '').trim(), osm:String(a.mapType || '').toLowerCase() === 'openstreetmap', auto:/^other/i.test(String(a.mapType || '').trim()), lat:lat, lon:lon, dx:+(a.label_dx||14), dy:+(a.label_dy||0), anchor:a.label_anchor||'start' }; });
   const ok = e => e && e.title && /^\d{4}-\d{2}-\d{2}$/.test(String(e.date || '').trim());
   SKIPPED = events.filter(e => !ok(e)).map(e => (e && e.title) || '(no name)');
   events = events.filter(ok);
@@ -467,6 +467,7 @@ const CLUB = [
   { id:'juniors',       title:'Juniors',           desc:'Junior orienteering and who to contact.', icon:'juniors' },
   { id:'kit',           title:'Club Kit',          desc:'Club clothing and how to get it.', icon:'kit' },
   { id:'agm',           title:'AGM Minutes',       desc:'Minutes from past AGMs.', icon:'docs' },
+  { id:'safeguarding',  title:'Safeguarding and Welfare', desc:'Who to talk to if you have a concern.', icon:'safeguard' },
   { id:'membership',    title:'Membership',        desc:'How to join and what membership includes.', icon:'membership' }
 ];
 
@@ -903,6 +904,7 @@ const ICONS = {
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
   courses:'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h8"/>',
   about:'<circle cx="12" cy="12" r="9"/><path d="M15.8 8.2l-2.1 5.5-5.5 2.1 2.1-5.5z"/><circle cx="12" cy="12" r=".8"/>',
+  safeguard:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
   docs:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>',
   newcomers:'<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>'
 };
@@ -1062,6 +1064,7 @@ function areaPage(id){
       <a class="back" href="#mapped">&larr; Back to Mapped areas</a>
       <h1 class="event-title">${esc(a.name)}</h1>
       <p class="meta" style="margin:.5rem 0 0">${a.osm ? 'Uses OpenStreetMap data. This is not a surveyed orienteering map.' : 'A surveyed SUFFOC orienteering map.'}</p>
+      ${a.terrain.length ? '<p class="meta" style="margin:.4rem 0 0">Terrain: ' + a.terrain.map(esc).join(', ') + '</p>' : ''}
       ${q ? `<div class="links" style="margin-top:.8rem"><a class="btn small line" href="https://www.google.com/maps/search/?api=1&query=${q}" ${ext}>Open in Google Maps</a>
         <a class="btn small line" href="https://www.openstreetmap.org/?mlat=${a.lat}&mlon=${a.lon}#map=14/${a.lat}/${a.lon}" ${ext}>OpenStreetMap</a></div>` : ''}
     </div></section>
@@ -1244,6 +1247,7 @@ function eventPage(id){
           ${(d.address.length || d.postcode) ? `<p style="margin:.6rem 0">${[...d.address.map(esc), esc(d.postcode)].filter(Boolean).join('<br>')}</p>` : ''}
           <dl class="facts" style="margin-bottom:1rem">
             ${areaName ? `<dt>Area</dt><dd>${areaLink ? `<a href="${esc(areaLink)}">${esc(areaName)}</a>` : esc(areaName)}</dd>` : ''}
+            ${area && area.terrain && area.terrain.length ? `<dt>Terrain</dt><dd>${area.terrain.map(esc).join(', ')}</dd>` : ''}
             ${d.gridRef ? `<dt>Grid reference</dt><dd class="code">${esc(d.gridRef)}</dd>` : ''}
             ${d.w3w ? `<dt>what3words</dt><dd class="code"><a href="https://what3words.com/${encodeURIComponent(d.w3w)}" ${ext}>///${esc(d.w3w)}</a></dd>` : ''}
           </dl>
@@ -1397,6 +1401,12 @@ function agmPage(){
     ${rows ? `<div class="tiles" style="margin-top:1rem">${rows}</div>` : (PAGETEXT.agm || PAGETEXT.agm_image ? '' : '<div class="empty">Minutes will be added here.</div>')}
   </section></div>`;
 }
+/* Welfare Officers are taken from People: anyone with a role containing "Welfare". */
+function welfareOfficers(){
+  const l = Object.keys(MEMBERS).map(k => Object.assign({ id:k }, MEMBERS[k])).map(m => ({ m:m, r:m.roles.filter(r => /welfare/i.test(r.role)) })).filter(x => x.r.length);
+  if (!l.length) return '';
+  return `<div class="card" style="margin:1rem 0"><h3>${ct('safeguard', 'Club Welfare Officers')}</h3><dl class="facts">${l.map(x => `<dt>${esc(x.r[0].role)}</dt><dd><a href="#person-${esc(x.m.id)}">${esc(x.m.name)}</a>${x.r[0].email ? ' &middot; <a href="mailto:' + esc(x.r[0].email) + '">' + esc(x.r[0].email) + '</a>' : ''}</dd>`).join('')}</dl></div>`;
+}
 function clubPage(id){
   if (id === 'committee') return committeePage();
   if (id === 'agm') return agmPage();
@@ -1408,6 +1418,7 @@ function clubPage(id){
   return `${pageHead(c.title, esc(c.desc || ''), c.icon || 'club', true)}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
+    ${id === 'safeguarding' ? welfareOfficers() : ''}
     ${PAGETEXT[id] || PAGETEXT[id + '_image'] ? '' : `<div class="empty">This page is a placeholder. The content from the current site moves here.${extra}</div>`}
   </section></div>`;
 }
