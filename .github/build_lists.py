@@ -35,4 +35,11 @@ for name in ('areas', 'members', 'levels', 'series', 'clubs', 'towns', 'terrain'
         body = ''.join('%s- %s\n' % (ind, json.dumps(n, ensure_ascii=False)) for n in names)
         return '%s# BEGIN %s\n%s%s# END %s\n' % (ind, name, body, ind, name)
     yml = re.sub(r'( *)# BEGIN %s\n.*?\1# END %s\n' % (name, name), fill, yml, flags=re.S)
+# events dropdown: stores the event id, shows "date title", newest first
+evs = sorted(lists['events'], key=lambda e: str(e.get('date', '')), reverse=True)
+def fill_events(m):
+    ind = m.group(1)
+    body = ''.join('%s- %s\n' % (ind, json.dumps({'value': e['id'], 'label': ('%s %s' % (e.get('date', ''), e.get('title', e['id']))).strip()}, ensure_ascii=False)) for e in evs)
+    return '%s# BEGIN events\n%s%s# END events\n' % (ind, body, ind)
+yml = re.sub(r'( *)# BEGIN events\n.*?\1# END events\n', fill_events, yml, flags=re.S)
 open('.pages.yml', 'w', encoding='utf-8').write(yml)

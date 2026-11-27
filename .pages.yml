@@ -1212,6 +1212,70 @@ content:
           label: Title (optional)
           type: string
           description: For example AGM 2025. If left empty the page shows AGM and the year.
+        - name: chair
+          label: Chair of the meeting
+          type: select
+          description: Optional. Pick from People.
+          options:
+            values:
+            # BEGIN members
+            - "Adam Willis"
+            - "Andrew Elliott"
+            - "Clive Wilkinson"
+            - "Colin West"
+            - "David Hodkinson"
+            - "Eddie Banks"
+            - "Ethan Radcliffe"
+            - "Gareth Radcliffe"
+            - "Hannah Constable-Simmonds"
+            - "Jeanette Downing"
+            - "John Liston"
+            - "Kevin Machin"
+            - "Louise Walker"
+            - "Martin Hore"
+            - "Michael Chopping"
+            - "Mike Bickle"
+            - "Mike Edwards"
+            - "Oliver Hague"
+            - "Paul Beckett"
+            - "Peter Woods"
+            - "Phil Halford"
+            - "Richard Bonnett"
+            - "Robin Thomas"
+            - "Rod Mansel"
+            - "Sally Wilkinson"
+            - "Sarah Mansel"
+            - "Simon Hooton"
+            - "Will Harrison"
+            # END members
+        - name: event
+          label: Event on the same day
+          type: select
+          description: Optional. Pick the event that took place on the day of the AGM so the two link together.
+          options:
+            values:
+            # BEGIN events
+            - {"value": "elmswell-street-o-4", "label": "2027-02-09 SUFFOC Mid-Week Street-O 4 Elmswell"}
+            - {"value": "street-o-claydon", "label": "2027-01-12 SUFFOC Mid-Week Street-O 3 Claydon"}
+            - {"value": "kings-forest-west-stow", "label": "2027-01-10 Kings Forest West Stow"}
+            - {"value": "hardwick-street-o-2", "label": "2026-12-08 SUFFOC Mid-Week Street-O 2 Hardwick"}
+            - {"value": "tunstall", "label": "2026-11-29 Tunstall Forest Barnes Carr and The Birches"}
+            - {"value": "suffoc-mid-week-street-o-1-combs-ford", "label": "2026-11-10 SUFFOC Mid-Week Street-O 1 Combs Ford"}
+            - {"value": "christchurch-park", "label": "2026-10-03 Christchurch Park"}
+            - {"value": "needham-2026", "label": "2026-07-05 Needham Lakes"}
+            - {"value": "clare-2026", "label": "2026-06-21 Clare Country Park"}
+            - {"value": "sudbury-2026", "label": "2026-05-17 Sudbury Urban"}
+            - {"value": "brandon-country-park", "label": "2026-02-22 Brandon Country Park"}
+            - {"value": "tunstall-forest-north", "label": "2026-01-18 Tunstall Forest - North"}
+            - {"value": "nowton-and-hardwick", "label": "2025-11-16 Nowton and Hardwick"}
+            - {"value": "west-harling-heath", "label": "2025-10-04 West Harling Heath"}
+            - {"value": "brdige-wood", "label": "2025-09-07 Bridge Wood"}
+            - {"value": "raf-honington", "label": "2025-08-30 RAF Honington"}
+            - {"value": "needham-market", "label": "2025-07-16 Needham Market"}
+            - {"value": "abbey-gardens", "label": "2025-07-06 Abbey Gardens"}
+            - {"value": "ickworth-park", "label": "2025-03-02 Ickworth Park - South"}
+            - {"value": "kings-forest-east", "label": "2025-02-16 King's Forest - East"}
+            # END events
         - name: file
           label: Minutes file
           type: file

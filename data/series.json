@@ -1,16 +1,38 @@
 {
   "series": [
     {
+      "name": "Annual General Meeting",
+      "abbreviation": "AGM",
+      "description": "<p></p>",
+      "id": "agm"
+    },
+    {
       "name": "Autumn in Anglia",
       "id": "autumn-in-anglia"
+    },
+    {
+      "name": "British Sprint Relay Championships",
+      "id": "british-sprint-relay-championships"
     },
     {
       "name": "Compass Sport Heat",
       "id": "compass-sport-heat"
     },
     {
+      "name": "East Anglian League",
+      "abbreviation": "EAL",
+      "description": "<p></p>",
+      "id": "east-anglian-league"
+    },
+    {
       "name": "East Anglian Schools Championships",
       "id": "east-anglian-schools-championships"
+    },
+    {
+      "name": "Essex and Suffolk Schools Orienteering League",
+      "abbreviation": "ESSOL",
+      "description": "<p></p>",
+      "id": "essex-and-suffolk-schools-orienteering-league"
     },
     {
       "name": "Mid-Week Street-O",
