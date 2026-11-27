@@ -265,12 +265,16 @@
       "title": "King's Forest - East",
       "date": "2025-02-16",
       "level": "Regional",
+      "series": [
+        "Essex and Suffolk Schools Orienteering League"
+      ],
       "league": false,
       "area": "King's Forest",
       "about": "<p></p>",
       "officials": {
         "planner": "Clive Wilkinson",
-        "organiser": "Will Harrison"
+        "organiser": "Will Harrison",
+        "controller": "Kevin Machin"
       },
       "comments": {
         "planner": "<p>Thank you for coming to today’s event, I hope your enjoyed your runs.</p><p>Many thanks to Clive, the planner, Kevin Machin of SOS, the controller, and all helpers for making the day run smoothly.</p><p>A pair of spectacles was handed in, please contact me if you think they may be yours.</p><p>Regards,</p><p>Will</p>",
