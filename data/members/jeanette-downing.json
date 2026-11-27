@@ -1,6 +1,10 @@
 {
   "name": "Jeanette Downing",
+  "club": "BOF",
   "roles": [
-    {}
+    {
+      "role": "Safeguarding & Development Officer",
+      "email": "safeguarding@britishorienteering.org.uk"
+    }
   ]
 }
