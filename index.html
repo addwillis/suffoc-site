@@ -266,6 +266,8 @@ dl.facts dd a:hover{color:var(--sky)}
 .crow b{display:block;font-size:1.05rem;color:var(--navy)}
 .crow .crole{display:block;color:var(--muted);font-size:.9rem}
 .crow .cdet{display:block;margin-top:.15rem;font-size:.88rem;overflow-wrap:anywhere}
+.mcard.vacant{opacity:.55}
+.mcard.vacant .minit{background:#b9c4d6}
 .mcard h3{margin:.9rem 0 .35rem;font-size:1.2rem;color:var(--navy)}
 .mcard .mroles{margin:0;color:var(--muted);font-weight:600;line-height:1.45}
 .mcard .mrole,.person .mrole{margin:0;color:var(--muted);font-weight:600}
@@ -375,7 +377,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 169';
+const BUILD = 'build 171';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -450,7 +452,10 @@ function loadData(areas, events){
   });
 }
 let CURKEY = '';
-let LEAGUE = {}, CHAMPS = [], CHAMPRULES = '', CLUBS = [], COMMITTEE = {};
+let LEAGUE = {}, CHAMPS = [], CHAMPRULES = '', CLUBS = [], COMMITTEE = {}, ROLES = [];
+const MAILDOMAIN = 'suffoc.co.uk';
+const fullEmail = e => { e = String(e || '').trim(); return e && e.indexOf('@') < 0 ? e + '@' + MAILDOMAIN : e; };  /* just the first part is enough: chair becomes chair@suffoc.co.uk */
+const roleByName = n => ROLES.find(x => String(x.name).trim().toLowerCase() === String(n).trim().toLowerCase());
 /* Other clubs: picked from the Other clubs list, so the same club always reads and links the same way. */
 const clubByName = s => { const k = String(s || '').trim().toLowerCase(); return k ? CLUBS.find(c => String(c.name || '').trim().toLowerCase() === k || String(c.fullName || '').trim().toLowerCase() === k) : null; };
 const clubTag = s => { const n = String(s || '').trim(); if (!n) return ''; const c = clubByName(n); return c ? `<a class="pill" href="#otherclub-${esc(c.id)}">${esc(c.name)}</a> ` : `<span class="pill">${esc(n)}</span> `; };
@@ -468,7 +473,8 @@ function loadMembers(list){
   MEMBERS = {};
   list.forEach(m => { if (m && m.name) {
     let rs = Array.isArray(m.roles) ? m.roles : (m.roles ? [m.roles] : (m.role ? [m.role] : []));
-    rs = rs.map(r => typeof r === 'object' && r ? { role: String(r.role || '').trim(), email: String(r.email || '').trim() } : { role: String(r).trim(), email: '' }).filter(r => r.role);
+    rs = rs.map(r => typeof r === 'object' && r ? { role: String(r.role || '').trim(), email: fullEmail(r.email) } : { role: String(r).trim(), email: '' }).filter(r => r.role);
+    rs.forEach(r => { if (!r.email) { const ro = roleByName(r.role); if (ro && ro.email) r.email = fullEmail(ro.email); } });  /* the role's own email, unless the person has one of their own */
     if (rs.length && m.email && !rs[0].email) rs[0].email = String(m.email).trim();  /* older entries had one email per person */
     m.roles = rs; MEMBERS[m.id || personKey(m.name)] = m; } });
 }
@@ -1313,9 +1319,19 @@ function committeePage(){
     .sort((a, b) => best(a) - best(b) || a.roles.map(r => r.role).join().localeCompare(b.roles.map(r => r.role).join()) || String(a.name).localeCompare(String(b.name)));
   /* The order comes from the Committee page order list, which is dragged into place. Without one, fall back to sorting by role. */
   const pick = l => asList(l).map(x => { const id = x && x.member ? memberId(x.member) : null; return id ? Object.assign({ id: id }, MEMBERS[id]) : null; }).filter(Boolean);
-  let groups;
+  let groups, vacant = [];
   const com = pick(COMMITTEE.committee), off = pick(COMMITTEE.coaches);
-  if (com.length || off.length) {
+  if (ROLES.length) {
+    /* Order and headings come from the Roles list: each person sits under the heading of their first role. */
+    const gi = { committee:0, coaches:1 };
+    const rk = r => { const x = roleByName(r.role); if (!x) return { g:0, o:1e6 }; const o = parseFloat(x.order); return { g:gi[String(x.group || '').toLowerCase()] !== undefined ? gi[String(x.group).toLowerCase()] : 9, o:isFinite(o) ? o : 1e6 }; };
+    const best = m => m.roles.map(rk).sort((p, q) => p.g - q.g || p.o - q.o)[0];
+    const people = holders.map(m => ({ m:m, k:best(m) })).filter(x => x.k.g < 9);
+    const out = n => people.filter(x => x.k.g === n).sort((p, q) => p.k.o - q.k.o || String(p.m.name).localeCompare(String(q.m.name))).map(x => x.m);
+    groups = [{ title:'Committee', list:out(0) }, { title:'Coaches', list:out(1) }].filter(g => g.list.length);
+    const held = new Set(); holders.forEach(m => m.roles.forEach(r => held.add(String(r.role).toLowerCase())));
+    vacant = ROLES.filter(x => String(x.group).toLowerCase() === 'committee' && !held.has(String(x.name).toLowerCase())).sort((p, q) => (parseFloat(p.order) || 1e6) - (parseFloat(q.order) || 1e6));
+  } else if (com.length || off.length) {
     const seen = new Set(com.concat(off).map(m => m.id));
     groups = [{ title:'Committee', list:com }, { title:'Coaches', list:off.concat(holders.filter(m => !seen.has(m.id))) }].filter(g => g.list.length);
   } else groups = [{ title:'', list:holders }];
@@ -1328,7 +1344,7 @@ function committeePage(){
   return `${pageHead('Committee', 'The people who run the club.', 'committee', true)}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
-    ${groups.length ? groups.map(g => `${g.title && groups.length > 1 ? `<div class="section-head" style="margin-top:1.8rem"><h2>${esc(g.title)}</h2></div>` : ''}<div class="committee">${g.list.map(card).join('')}</div>`).join('') : '<div class="empty">The committee will be listed here soon.</div>'}
+    ${groups.length ? groups.map((g, gi) => `${g.title && groups.length > 1 ? `<div class="section-head" style="margin-top:1.8rem"><h2>${esc(g.title)}</h2></div>` : ''}<div class="committee">${g.list.map(card).join('')}${gi === 0 ? vacant.map(v => `<div class="mcard vacant"><span class="minit" aria-hidden="true">?</span><h3>Vacant</h3><p class="mroles">${esc(v.name)}</p></div>`).join('') : ''}</div>`).join('') : '<div class="empty">The committee will be listed here soon.</div>'}
   </section></div>`;
 }
 /* Club league: our own events ticked "Counts for the club league", plus other clubs' events listed in the Club league entry. */
@@ -1639,8 +1655,9 @@ Promise.all([
   fetch('data/championships.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/clubs.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/maprun.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-  fetch('data/privacy.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-]).then(([a, e, n, m, pm, pt, ag, lg, ch, cl, mr, pv]) => { pt = Object.assign({}, pt, mr, pv); COMMITTEE = (pt && pt.committee && typeof pt.committee === 'object') ? pt.committee : {}; CLUBS = asList(cl).filter(x => x && x.name); CHAMPRULES = (ch && ch.rules) || ''; CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+  fetch('data/privacy.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  fetch('data/roles.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([a, e, n, m, pm, pt, ag, lg, ch, cl, mr, pv, ro]) => { ROLES = asList(ro).filter(x => x && x.name); pt = Object.assign({}, pt, mr, pv); COMMITTEE = (pt && pt.committee && typeof pt.committee === 'object') ? pt.committee : {}; CLUBS = asList(cl).filter(x => x && x.name); CHAMPRULES = (ch && ch.rules) || ''; CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>

@@ -2,16 +2,13 @@
   "name": "Sally Wilkinson",
   "roles": [
     {
-      "role": "Fixtures Secretary",
-      "email": "events@suffoc.co.uk"
+      "role": "Fixtures Secretary"
     },
     {
-      "role": "Welfare Officer",
-      "email": "events@suffoc.co.uk"
+      "role": "Welfare Officer"
     },
     {
-      "role": "Voluneer Coordinator",
-      "email": "events@suffoc.co.uk"
+      "role": "Volunteer Coordinator"
     }
   ],
   "photo": "/images/492498193_1151921863399253_1709721349349532313_n.jpg"

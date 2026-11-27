@@ -1,0 +1,144 @@
+{
+  "roles": [
+    {
+      "name": "Captain",
+      "email": "captain",
+      "group": "Committee",
+      "order": 10,
+      "id": "captain"
+    },
+    {
+      "name": "Chair",
+      "email": "chair@suffoc.uk",
+      "group": "Committee",
+      "order": 1,
+      "id": "chair"
+    },
+    {
+      "name": "Coach",
+      "email": "",
+      "group": "Coaches",
+      "order": 101,
+      "id": "coach"
+    },
+    {
+      "name": "Entries Coordinator",
+      "email": "entries",
+      "group": "Committee",
+      "order": 2,
+      "id": "entries-coordinator"
+    },
+    {
+      "name": "Equipment Officer",
+      "email": "equipment",
+      "group": "Committee",
+      "order": 16,
+      "id": "equipment-officer"
+    },
+    {
+      "name": "Fixtures Secretary",
+      "email": "events",
+      "group": "Committee",
+      "order": 11,
+      "id": "fixtures-secretary"
+    },
+    {
+      "name": "Junior Committee Representative",
+      "email": "",
+      "group": "Committee",
+      "order": 18,
+      "id": "junior-committee-representative"
+    },
+    {
+      "name": "Mapping Coordinator",
+      "email": "mapping",
+      "group": "Committee",
+      "order": 14,
+      "id": "mapping-coordinator"
+    },
+    {
+      "name": "MapRun Coordinator",
+      "email": "maprun@suffoco.uk",
+      "group": "Committee",
+      "order": 3,
+      "id": "maprun-coordinator"
+    },
+    {
+      "name": "Membership Secretary",
+      "email": "membership",
+      "group": "Committee",
+      "order": 4,
+      "id": "membership-secretary"
+    },
+    {
+      "name": "Regional Representative",
+      "email": "eaoarep@suffoco.uk",
+      "group": "Committee",
+      "order": 9,
+      "id": "regional-representative"
+    },
+    {
+      "name": "Results Secretary",
+      "email": "si",
+      "group": "Committee",
+      "order": 6,
+      "id": "results-secretary"
+    },
+    {
+      "name": "Safeguarding & Development Officer",
+      "email": "safeguarding@britishorienteering.org.uk",
+      "group": "Other",
+      "order": 201,
+      "id": "safeguarding-development-officer"
+    },
+    {
+      "name": "Safety Liaison Officer",
+      "email": "safety",
+      "group": "Committee",
+      "order": 17,
+      "id": "safety-liaison-officer"
+    },
+    {
+      "name": "Secretary",
+      "email": "secretary@suffoc.uk",
+      "group": "Committee",
+      "order": 5,
+      "id": "secretary"
+    },
+    {
+      "name": "SI Coordinator",
+      "email": "si",
+      "group": "Committee",
+      "order": 7,
+      "id": "si-coordinator"
+    },
+    {
+      "name": "Treasurer",
+      "email": "treasurer",
+      "group": "Committee",
+      "order": 8,
+      "id": "treasurer"
+    },
+    {
+      "name": "Volunteer Coordinator",
+      "email": "events",
+      "group": "Committee",
+      "order": 13,
+      "id": "volunteer-coordinator"
+    },
+    {
+      "name": "Webmaster",
+      "email": "web_adam",
+      "group": "Committee",
+      "order": 15,
+      "id": "webmaster"
+    },
+    {
+      "name": "Welfare Officer",
+      "email": "welfare",
+      "group": "Committee",
+      "order": 12,
+      "id": "welfare-officer"
+    }
+  ]
+}

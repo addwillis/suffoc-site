@@ -863,20 +863,80 @@ content:
         type: object
         list:
           max: 4
-        description: Anyone with a role is shown on the Committee page. Each role has its own email address.
+        description: Anyone with a role is shown on the Committee page, in the order set under Roles.
         fields:
         - name: role
           label: Role
-          type: string
-          description: e.g. Chair, Treasurer, Fixtures Secretary.
+          type: select
+          description: Pick from Roles. If the role is not listed, add it under Roles first.
+          options:
+            values:
+            # BEGIN roles
+            - "Chair"
+            - "Entries Coordinator"
+            - "MapRun Coordinator"
+            - "Membership Secretary"
+            - "Secretary"
+            - "Results Secretary"
+            - "SI Coordinator"
+            - "Treasurer"
+            - "Regional Representative"
+            - "Captain"
+            - "Fixtures Secretary"
+            - "Welfare Officer"
+            - "Volunteer Coordinator"
+            - "Mapping Coordinator"
+            - "Webmaster"
+            - "Equipment Officer"
+            - "Safety Liaison Officer"
+            - "Junior Committee Representative"
+            - "Coach"
+            - "Safeguarding & Development Officer"
+            # END roles
         - name: email
-          label: Email for this role
+          label: Email (only if different from the role's email)
           type: string
-          description: e.g. chair@suffoc.co.uk. Only add it if it's happy to be public.
+          description: Just the first part, e.g. coach_clive. The site adds @suffoc.co.uk. Leave empty to use the role's own email, which is set under Roles.
       - name: photo
         label: Photo (optional)
         type: image
         description: Only add this if the person is happy for it to be public.
+    - name: roles
+      label: Roles
+      type: collection
+      path: data/roles
+      format: json
+      filename: '{primary}.json'
+      view:
+        primary: name
+        fields: [name, group, order, email]
+        sort: order
+      fields:
+      - name: name
+        label: Role Name
+        type: string
+        required: true
+        description: e.g. Chair, Treasurer, Fixtures Secretary.
+      - name: email
+        label: Role Email
+        type: string
+        description: Just the first part, e.g. chair. The site adds @suffoc.co.uk. For any other domain type the whole address. It follows the role to whoever holds it next. Leave empty if each holder has their own.
+      - name: group
+        label: Shown Under
+        type: select
+        options:
+          values:
+          - Committee
+          - Coaches
+          - Other
+        description: The heading on the Committee page. Other roles do not appear on it.
+      - name: order
+        label: Order
+        type: number
+        description: Lowest number comes first on the Committee page. Leave gaps, e.g. 10, 20, 30, so a new role can slot in.
+      - name: description
+        label: What The Role Does (optional)
+        type: text
     - name: clubs
       label: Other Clubs
       type: collection
@@ -1407,6 +1467,7 @@ content:
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: committee
         label: COMMITTEE PAGE
+        description: The order and headings come from Roles (under People and Clubs). Here you only set the text and picture.
         type: object
         fields:
         - name: sub
@@ -1423,90 +1484,6 @@ content:
           label: Picture
           type: image
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-        - name: committee
-          label: Committee
-          type: object
-          list:
-            collapsible:
-              collapsed: true
-              summary: '{member}'
-          description: Drag to put people in the order you want. Add someone with the Add button and pick them from the list.
-          fields:
-          - name: member
-            label: Club member
-            type: select
-            options:
-              values:
-              # BEGIN members
-              - "Adam Willis"
-              - "Andrew Elliott"
-              - "Clive Wilkinson"
-              - "Colin West"
-              - "David Hodkinson"
-              - "Eddie Banks"
-              - "Ethan Radcliffe"
-              - "Gareth Radcliffe"
-              - "Hannah Constable-Simmonds"
-              - "Jeanette Downing"
-              - "John Liston"
-              - "Louise Walker"
-              - "Martin Hore"
-              - "Michael Chopping"
-              - "Mike Bickle"
-              - "Oliver Hague"
-              - "Paul Beckett"
-              - "Peter Woods"
-              - "Phil Halford"
-              - "Richard Bonnett"
-              - "Robin Thomas"
-              - "Rod Mansel"
-              - "Sally Wilkinson"
-              - "Sarah Mansel"
-              - "Simon Hooton"
-              - "Will Harrison"
-              # END members
-        - name: coaches
-          label: Coaches
-          type: object
-          list:
-            collapsible:
-              collapsed: true
-              summary: '{member}'
-          description: Drag to reorder. Their roles come from their own member entry.
-          fields:
-          - name: member
-            label: Club member
-            type: select
-            options:
-              values:
-              # BEGIN members
-              - "Adam Willis"
-              - "Andrew Elliott"
-              - "Clive Wilkinson"
-              - "Colin West"
-              - "David Hodkinson"
-              - "Eddie Banks"
-              - "Ethan Radcliffe"
-              - "Gareth Radcliffe"
-              - "Hannah Constable-Simmonds"
-              - "Jeanette Downing"
-              - "John Liston"
-              - "Louise Walker"
-              - "Martin Hore"
-              - "Michael Chopping"
-              - "Mike Bickle"
-              - "Oliver Hague"
-              - "Paul Beckett"
-              - "Peter Woods"
-              - "Phil Halford"
-              - "Richard Bonnett"
-              - "Robin Thomas"
-              - "Rod Mansel"
-              - "Sally Wilkinson"
-              - "Sarah Mansel"
-              - "Simon Hooton"
-              - "Will Harrison"
-              # END members
       - name: league
         label: LEAGUE PAGE
         type: object

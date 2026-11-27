@@ -2,16 +2,13 @@
   "name": "Rod Mansel",
   "roles": [
     {
-      "role": "Secretary",
-      "email": "secretary@suffoc.uk"
+      "role": "Secretary"
     },
     {
-      "role": "Results Secretary",
-      "email": "si@suffoc.co.uk "
+      "role": "Results Secretary"
     },
     {
-      "role": "SI Coordinator",
-      "email": "si@suffoc.co.uk "
+      "role": "SI Coordinator"
     }
   ],
   "photo": "/images/rod-mansel.jpg"

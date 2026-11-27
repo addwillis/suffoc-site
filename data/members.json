@@ -4,8 +4,7 @@
       "name": "Adam Willis",
       "roles": [
         {
-          "role": "Webmaster",
-          "email": "web_adam@suffoc.co.uk"
+          "role": "Webmaster"
         }
       ],
       "photo": "/images/IMG_3258 - Copy.jpg",
@@ -15,12 +14,10 @@
       "name": "Andrew Elliott",
       "roles": [
         {
-          "role": "Treasurer",
-          "email": "treasurer@suffoc.co.uk"
+          "role": "Treasurer"
         },
         {
-          "role": "Regional Repreresentative",
-          "email": "eaoarep@suffoco.uk"
+          "role": "Regional Representative"
         }
       ],
       "photo": "/images/andrew-elliott.jpg",
@@ -31,7 +28,7 @@
       "roles": [
         {
           "role": "Coach",
-          "email": "coach_clive@suffoc.co.uk"
+          "email": "coach_clive"
         }
       ],
       "photo": "/images/Clive Wilkinson.png",
@@ -65,8 +62,7 @@
       "name": "Gareth Radcliffe",
       "roles": [
         {
-          "role": "Captain",
-          "email": "captain@suffoc.co.uk"
+          "role": "Captain"
         }
       ],
       "photo": "/images/gareth-radcliffe.jpg",
@@ -76,8 +72,7 @@
       "name": "Hannah Constable-Simmonds",
       "roles": [
         {
-          "role": "Welfare Officer",
-          "email": "welfare@suffoc.co.uk"
+          "role": "Welfare Officer"
         }
       ],
       "id": "hannah-constable-simmonds"
@@ -87,8 +82,7 @@
       "club": "BOF",
       "roles": [
         {
-          "role": "Safeguarding & Development Officer",
-          "email": "safeguarding@britishorienteering.org.uk"
+          "role": "Safeguarding & Development Officer"
         }
       ],
       "id": "jeanette-downing"
@@ -97,8 +91,7 @@
       "name": "John Liston",
       "roles": [
         {
-          "role": "Safety Liasion Officer",
-          "email": "safety@suffoc.co.uk"
+          "role": "Safety Liaison Officer"
         },
         {
           "role": "Coach"
@@ -110,8 +103,7 @@
       "name": "Louise Walker",
       "roles": [
         {
-          "role": "Equipment Officer",
-          "email": "equipment@suffoc.co.uk"
+          "role": "Equipment Officer"
         }
       ],
       "photo": "/images/Walker_Louise_001935_061.jpg",
@@ -121,8 +113,7 @@
       "name": "Martin Hore",
       "roles": [
         {
-          "role": "Mapping Coordinator",
-          "email": "mapping@suffoc.co.uk"
+          "role": "Mapping Coordinator"
         }
       ],
       "photo": "/images/martin-hore-1.jpg",
@@ -170,16 +161,13 @@
       "name": "Rod Mansel",
       "roles": [
         {
-          "role": "Secretary",
-          "email": "secretary@suffoc.uk"
+          "role": "Secretary"
         },
         {
-          "role": "Results Secretary",
-          "email": "si@suffoc.co.uk "
+          "role": "Results Secretary"
         },
         {
-          "role": "SI Coordinator",
-          "email": "si@suffoc.co.uk "
+          "role": "SI Coordinator"
         }
       ],
       "photo": "/images/rod-mansel.jpg",
@@ -189,16 +177,13 @@
       "name": "Sally Wilkinson",
       "roles": [
         {
-          "role": "Fixtures Secretary",
-          "email": "events@suffoc.co.uk"
+          "role": "Fixtures Secretary"
         },
         {
-          "role": "Welfare Officer",
-          "email": "events@suffoc.co.uk"
+          "role": "Welfare Officer"
         },
         {
-          "role": "Voluneer Coordinator",
-          "email": "events@suffoc.co.uk"
+          "role": "Volunteer Coordinator"
         }
       ],
       "photo": "/images/492498193_1151921863399253_1709721349349532313_n.jpg",
@@ -208,20 +193,16 @@
       "name": "Sarah Mansel",
       "roles": [
         {
-          "role": "Chair",
-          "email": "chair@suffoc.uk"
+          "role": "Chair"
         },
         {
-          "role": "Entries Coordinator",
-          "email": "entries@suffoc.co.uk"
+          "role": "Entries Coordinator"
         },
         {
-          "role": "MapRun Coordinator",
-          "email": "maprun@suffoco.uk"
+          "role": "MapRun Coordinator"
         },
         {
-          "role": "Membership Secretary",
-          "email": "membership@suffoc.co.uk"
+          "role": "Membership Secretary"
         }
       ],
       "photo": "/images/sarah-mansel.jpg",
@@ -232,7 +213,7 @@
       "roles": [
         {
           "role": "Coach",
-          "email": "coach_simon@suffoc.co.uk"
+          "email": "coach_simon"
         }
       ],
       "photo": "/images/simon-hooton.jpg",
@@ -243,7 +224,7 @@
       "roles": [
         {
           "role": "Coach",
-          "email": "coach_will@suffoc.co.uk"
+          "email": "coach_will"
         }
       ],
       "photo": "/images/will-harrison.jpg",
