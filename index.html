@@ -303,6 +303,7 @@ dl.facts dd a:hover{color:var(--sky)}
 .tile:hover{border-color:var(--sky);border-left-color:var(--gold)}
 .tile h3{margin-bottom:.35rem}
 .tile p{margin:0;color:var(--muted)}
+.btn .ci{width:1.1em;height:1.1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;margin-right:.4rem}
 .tile h3 a{color:inherit;text-decoration:none}
 .tile h3 a:hover{text-decoration:underline}
 .tile p a{color:var(--navy);font-weight:600}
@@ -381,7 +382,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 179';
+const BUILD = 'build 181';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 /* If a newer index.html has been published, reload once to pick it up (GitHub Pages can serve a cached copy for a few minutes). */
 function checkNewer(){
@@ -507,7 +508,7 @@ const CLUB = [
   { id:'championships', title:'Club Championships',desc:'Annual championship results and awards.', icon:'champ' },
   { id:'juniors',       title:'Juniors',           desc:'Junior orienteering and who to contact.', icon:'juniors' },
   { id:'kit',           title:'Club Kit',          desc:'Club clothing and how to get it.', icon:'kit' },
-  { id:'agm',           title:'AGM Minutes',       desc:'Minutes from past AGMs.', icon:'docs' },
+  { id:'agm',           title:'AGM Minutes',       desc:'Minutes from past AGMs.', icon:'agm' },
   { id:'safeguarding',  title:'Safeguarding and Welfare', desc:'Who to talk to if you have a concern.', icon:'safeguard' },
   { id:'membership',    title:'Membership',        desc:'How to join and what membership includes.', icon:'membership' }
 ];
@@ -966,6 +967,7 @@ const ICONS = {
   safeguard:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
   lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
   safeguardlead:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path stroke-width=\"1.1\" d="M12.00 6.50 L13.35 9.84 L16.95 10.09 L14.19 12.41 L15.06 15.91 L12.00 14.00 L8.94 15.91 L9.81 12.41 L7.05 10.09 L10.65 9.84z"/>',
+  agm:'<path d="M5 3h9.5l4.5 4.5V21H5z"/><path d="M14 3v5h5M8.5 12h7M8.5 15.5h7M8.5 8.5h3"/>',
   docs:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>',
   newcomers:'<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>'
 };
@@ -1470,9 +1472,9 @@ function agmPage(){
     const lines = [(ok ? fmtShort.format(d) : '') + (x.note ? (ok ? '. ' : '') + esc(x.note) : ''),
       x.chair ? 'Chair: ' + (cid ? '<a href="#person-' + esc(cid) + '">' + esc(MEMBERS[cid].name) + '</a>' : esc(x.chair)) : '',
       ev ? 'Event: <a href="#event-' + esc(ev.id) + '">' + esc(ev.title) + '</a>' : ''].filter(Boolean);
-    return `<div class="tile"><h3><a href="${esc(url(x.file))}" target="_blank" rel="noopener">${ct('download', esc(title))}</a></h3>${lines.map(l => '<p>' + l + '</p>').join('')}</div>`;
+    return `<div class="tile"><h3>${ct('agm', esc(title))}</h3>${lines.map(l => '<p>' + l + '</p>').join('')}<p style="margin-top:.7rem"><a class="btn small line" href="${esc(url(x.file))}" target="_blank" rel="noopener">${ct('download', 'Download PDF')}</a></p></div>`;
   }).join('');
-  return `${pageHead('AGM Minutes', 'Minutes from past AGMs.', 'docs', true)}
+  return `${pageHead('AGM Minutes', 'Minutes from past AGMs.', 'agm', true)}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
     ${rows ? `<div class="tiles" style="margin-top:1rem">${rows}</div>` : (PAGETEXT.agm || PAGETEXT.agm_image ? '' : '<div class="empty">Minutes will be added here.</div>')}
