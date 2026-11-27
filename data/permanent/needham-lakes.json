@@ -1,0 +1,20 @@
+{
+  "name": "Needham lakes",
+  "area": "Needham Market",
+  "description": "<p>We have two permanent orienteering courses</p><p>Maps for these can be picked up from the information room on site</p>",
+  "courses": [
+    {
+      "name": "Short",
+      "length": "1",
+      "controls": "7"
+    },
+    {
+      "name": "Long",
+      "length": "1.9",
+      "controls": "14"
+    }
+  ],
+  "mapNote": "Maps can be picked up from the information room on site",
+  "gridRef": "TM 09554 54738",
+  "notes": "<p></p>"
+}
