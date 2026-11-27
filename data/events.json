@@ -251,6 +251,23 @@
       "id": "nowton-and-hardwick"
     },
     {
+      "title": "RAF Honington",
+      "date": "2026-11-27",
+      "level": "National",
+      "league": false,
+      "about": "<p></p>",
+      "fees": {
+        "chipHire": "£1",
+        "siacHire": "£3"
+      },
+      "comments": {
+        "planner": "<p></p>",
+        "organiser": "<p></p>",
+        "controller": "<p></p>"
+      },
+      "id": "raf-honington"
+    },
+    {
       "title": "SUFFOC Mid-Week Street-O 3 Claydon",
       "date": "2027-01-12",
       "level": "Local",
