@@ -238,6 +238,9 @@
       "title": "Ickworth Park - South",
       "date": "2025-03-02",
       "level": "Regional",
+      "series": [
+        "East Anglian League"
+      ],
       "league": false,
       "area": "Ickworth Park",
       "about": "<p></p>",
