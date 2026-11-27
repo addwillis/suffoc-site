@@ -382,7 +382,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 181';
+const BUILD = 'build 182';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 /* If a newer index.html has been published, reload once to pick it up (GitHub Pages can serve a cached copy for a few minutes). */
 function checkNewer(){
@@ -916,7 +916,7 @@ function initMaps(){
         const nEv = EVENTS.filter(e => e.area === k).length;
         const popHtml = key === 'all' ? '<a href="#area-' + esc(k) + '"><strong>' + esc(a.name) + '</strong></a><br>' + (nEv ? nEv + ' event' + (nEv === 1 ? '' : 's') + ' &middot; ' : '') + '<a href="#area-' + esc(k) + '">See events here</a>' : html;
         const mk = L.marker([a.lat, a.lon], { icon:icon, title:a.name }).addTo(map).bindPopup(popHtml);
-        if (key === 'all') chips.push({ mk:mk, a:a, n:nEv });
+        if (key === 'all') chips.push({ mk:mk, a:a, n:nEv, full:popHtml, short:(nEv ? nEv + ' event' + (nEv === 1 ? '' : 's') + ' &middot; ' : '') + '<a href="#area-' + esc(k) + '">See events here</a>' });
         pts.push([a.lat, a.lon]);
       });
       /* Mapped areas map: each area is a name label; labels that would overlap turn into small dots until you zoom in. Areas with most events keep labels first. */
@@ -926,8 +926,8 @@ function initMaps(){
           const p = map.latLngToContainerPoint([c.a.lat, c.a.lon]), w = Math.round(String(c.a.name).length * 7.4 + 28), r = { x1:p.x - w / 2 - 4, x2:p.x + w / 2 + 4, y1:p.y - 38, y2:p.y + 2 };
           const hit = placed.some(q => r.x1 < q.x2 && r.x2 > q.x1 && r.y1 < q.y2 && r.y2 > q.y1);
           const cls = c.a.osm ? ' osm' : '';
-          if (!hit) { placed.push(r); c.mk.setIcon(L.divIcon({ className:'', html:'<div class="achip' + cls + '" style="width:' + w + 'px">' + esc(c.a.name) + '</div>', iconSize:[w, 38], iconAnchor:[w / 2, 38], popupAnchor:[0, -38] })); c.mk.setZIndexOffset(500); }
-          else { c.mk.setIcon(L.divIcon({ className:'', html:'<span class="adot' + cls + '"></span>', iconSize:[16, 16], iconAnchor:[8, 8], popupAnchor:[0, -9] })); c.mk.setZIndexOffset(0); }
+          if (!hit) { placed.push(r); c.mk.setIcon(L.divIcon({ className:'', html:'<div class="achip' + cls + '" style="width:' + w + 'px">' + esc(c.a.name) + '</div>', iconSize:[w, 38], iconAnchor:[w / 2, 38], popupAnchor:[0, -38] })); c.mk.setZIndexOffset(500); c.mk.setPopupContent(c.short); }
+          else { c.mk.setIcon(L.divIcon({ className:'', html:'<span class="adot' + cls + '"></span>', iconSize:[16, 16], iconAnchor:[8, 8], popupAnchor:[0, -9] })); c.mk.setZIndexOffset(0); c.mk.setPopupContent(c.full); }
         });
       };
       if (key !== 'all' && key !== 'upcoming' && pts.length) map.setView(pts[0], evKey && evKey.loc ? 16 : 14);
