@@ -118,8 +118,6 @@ p{margin:0 0 1rem;max-width:65ch}
 .pagehead h1{font-size:clamp(2.2rem,6vw,3.4rem);text-transform:uppercase;font-weight:700}
 .tile h3 .ci,.card h3 .ci,h2 .ci{width:1.1em;height:1.1em;fill:none;stroke:var(--course);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;margin-right:.45rem}
 .pagehead .hi.sub{stroke:var(--course)}
-.ci .solid{fill:var(--course)}
-.hi .solid{fill:var(--gold)}
 .pagehead .hi{width:.8em;height:.8em;fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.04em;margin-right:.3em}
 .pagehead .lead{margin:.7rem 0 0;color:var(--muted);font-size:1.1rem}
 .back{display:inline-block;margin-bottom:.8rem;font-weight:600}
@@ -364,7 +362,7 @@ dl.facts dd a:hover{color:var(--sky)}
     </ul>
     <ul class="flinks">
       <li><a href="#club-safeguarding"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Safeguarding and Welfare</a></li>
-      <li><a href="https://www.suffoc.co.uk/data-privacy" target="_blank" rel="noopener"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Data Privacy Policy</a></li>
+      <li><a href="#club-privacy"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Data Privacy Policy</a></li>
     </ul>
     <a class="fbtn" href="https://www.facebook.com/SUFFOC" target="_blank" rel="noopener" aria-label="SUFFOC on Facebook" title="SUFFOC on Facebook"><svg class="fi fb" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8.5V7c0-.8.3-1.2 1.3-1.2H17V3h-2.6C11.6 3 10.5 4.6 10.5 6.8v1.7H8V11.5h2.5V21H14v-9.5h2.6l.4-3z" fill="currentColor" stroke="none"/></svg></a>
   </div>
@@ -377,7 +375,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 167';
+const BUILD = 'build 169';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -481,6 +479,7 @@ function memberId(v){
 }
 
 const CLUB = [
+  { id:'privacy',       title:'Data Privacy Policy', desc:'How we look after your personal data.', icon:'safeguard', hidden:true },
   { id:'about',         title:'About Us',          desc:'Who we are, where we run, and our club history.', icon:'clubabout' },
   { id:'committee',     title:'Committee',         desc:'Who does what on the committee.', icon:'committee' },
   { id:'league',        title:'League',            desc:'Club league events, rules and standings.', icon:'league' },
@@ -944,7 +943,7 @@ const ICONS = {
   courses:'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h8"/>',
   about:'<circle cx="12" cy="12" r="9"/><path d="M15.8 8.2l-2.1 5.5-5.5 2.1 2.1-5.5z"/><circle cx="12" cy="12" r=".8"/>',
   safeguard:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
-  safeguardlead:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path class=\"solid\" d="M12.00 6.50 L13.35 9.84 L16.95 10.09 L14.19 12.41 L15.06 15.91 L12.00 14.00 L8.94 15.91 L9.81 12.41 L7.05 10.09 L10.65 9.84z"/>',
+  safeguardlead:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path stroke-width=\"1.1\" d="M12.00 6.50 L13.35 9.84 L16.95 10.09 L14.19 12.41 L15.06 15.91 L12.00 14.00 L8.94 15.91 L9.81 12.41 L7.05 10.09 L10.65 9.84z"/>',
   docs:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>',
   newcomers:'<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>'
 };
@@ -1050,7 +1049,7 @@ const VIEWS = {
   club(){
     return `${pageHead('Club', 'Everything about SUFFOC in one place.', 'club')}
     <div class="wrap"><section class="section"><div class="tiles">
-      ${CLUB.map(c => `<a class="tile" href="#club-${c.id}"><h3>${ct(c.icon, esc(c.title))}</h3><p>${esc(String(PAGETEXT[c.id + '_sub'] || c.desc).trim())}</p></a>`).join('')}
+      ${CLUB.filter(c => !c.hidden).map(c => `<a class="tile" href="#club-${c.id}"><h3>${ct(c.icon, esc(c.title))}</h3><p>${esc(String(PAGETEXT[c.id + '_sub'] || c.desc).trim())}</p></a>`).join('')}
       <a class="tile" href="#mapped"><h3>${ct('mapped', 'Mapped Areas')}</h3><p>${esc(subOf('mapped', 'Areas we run events in, and which have a surveyed orienteering map.'))}</p></a>
     </div></section></div>`;
   },
@@ -1639,8 +1638,9 @@ Promise.all([
   fetch('data/league.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/championships.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/clubs.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-  fetch('data/maprun.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-]).then(([a, e, n, m, pm, pt, ag, lg, ch, cl, mr]) => { pt = Object.assign({}, pt, mr); COMMITTEE = (pt && pt.committee && typeof pt.committee === 'object') ? pt.committee : {}; CLUBS = asList(cl).filter(x => x && x.name); CHAMPRULES = (ch && ch.rules) || ''; CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+  fetch('data/maprun.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  fetch('data/privacy.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([a, e, n, m, pm, pt, ag, lg, ch, cl, mr, pv]) => { pt = Object.assign({}, pt, mr, pv); COMMITTEE = (pt && pt.committee && typeof pt.committee === 'object') ? pt.committee : {}; CLUBS = asList(cl).filter(x => x && x.name); CHAMPRULES = (ch && ch.rules) || ''; CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>

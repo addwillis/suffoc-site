@@ -1136,6 +1136,31 @@ content:
           label: Note (optional)
           type: string
           description: A few words if needed, for example approved at the 2026 AGM.
+- name: grp_clubpages
+  label: Club Pages
+  type: group
+  items:
+    - name: privacy
+      label: Data Privacy Policy
+      type: file
+      path: data/privacy.json
+      format: json
+      fields:
+      - name: privacy
+        label: DATA PRIVACY POLICY PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+        - name: text
+          label: Text
+          type: rich-text
+          options:
+            format: html
+        - name: image
+          label: Picture (optional)
+          type: image
 - name: grp_pages
   label: Pages
   type: group
