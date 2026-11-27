@@ -223,6 +223,28 @@
       "id": "needham-2026"
     },
     {
+      "title": "Nowton and Hardwick",
+      "date": "2025-11-16",
+      "level": "Regional",
+      "league": false,
+      "area": "Nowton Park",
+      "about": "<p></p>",
+      "fees": {
+        "chipHire": "£1",
+        "siacHire": "£3"
+      },
+      "officials": {
+        "planner": "David Hodkinson",
+        "organiser": "Andrew Elliott"
+      },
+      "comments": {
+        "planner": "<p></p>",
+        "organiser": "<p></p>",
+        "controller": "<p></p>"
+      },
+      "id": "nowton-and-hardwick"
+    },
+    {
       "title": "SUFFOC Mid-Week Street-O 3 Claydon",
       "date": "2027-01-12",
       "level": "Local",
