@@ -2,13 +2,15 @@
   "title": "West Harling Heath",
   "date": "2025-10-04",
   "level": "Regional",
+  "series": [
+    "Autumn in Anglia",
+    "East Anglian Schools Championships"
+  ],
   "league": false,
+  "area": "West Harling Heath",
   "about": "<p></p>",
-  "fees": {
-    "chipHire": "£1",
-    "siacHire": "£3"
-  },
   "officials": {
+    "planner": "Oliver Hague",
     "organiser": "Rod Mansel",
     "controller": "Sally Wilkinson"
   },
