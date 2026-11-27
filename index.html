@@ -312,7 +312,14 @@ dl.facts dd a:hover{color:var(--sky)}
 .site-footer{margin-top:3rem;background:var(--navy-deep);color:#C9D8EA;padding:2rem 0}
 .site-footer a{color:#fff}
 .site-footer .row{display:flex;flex-wrap:wrap;gap:16px 40px;justify-content:space-between;align-items:flex-start}
-.site-footer ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 20px}
+.site-footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.site-footer .row{align-items:flex-start}
+.site-footer .fi{width:1.1rem;height:1.1rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px;margin-right:.55rem;flex:none}
+.site-footer .flinks a{text-decoration:none;display:inline-flex;align-items:center}
+.site-footer .flinks a:hover{text-decoration:underline}
+.site-footer .fbtn{width:2.5rem;height:2.5rem;border-radius:50%;border:1.5px solid #5f7ea8;display:inline-flex;align-items:center;justify-content:center;color:#fff}
+.site-footer .fbtn:hover{background:var(--gold);border-color:var(--gold);color:var(--navy-deep)}
+.site-footer .fbtn .fi{margin:0;width:1.35rem;height:1.35rem;vertical-align:0}
 .motto{font:700 1.4rem var(--display);letter-spacing:.08em;text-transform:uppercase;color:#fff}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
@@ -351,12 +358,14 @@ dl.facts dd a:hover{color:var(--sky)}
       <div class="motto">Festina Lente</div>
       <p style="margin:.4rem 0 0">&copy; Suffolk Orienteering Club</p>
     </div>
-    <ul>
-      <li><a href="#club-contact">Contact</a></li>
-      <li><a href="#club-safeguarding">Safeguarding and Welfare</a></li>
-      <li><a href="https://www.suffoc.co.uk/data-privacy" target="_blank" rel="noopener">Data Privacy Policy</a></li>
-      <li><a href="https://www.facebook.com/SUFFOC" target="_blank" rel="noopener">Facebook</a></li>
+    <ul class="flinks">
+      <li><a href="#club-committee"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5L12 13l8.5-6.5"/></svg>Contact the committee</a></li>
     </ul>
+    <ul class="flinks">
+      <li><a href="#club-safeguarding"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Safeguarding and Welfare</a></li>
+      <li><a href="https://www.suffoc.co.uk/data-privacy" target="_blank" rel="noopener"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Data Privacy Policy</a></li>
+    </ul>
+    <a class="fbtn" href="https://www.facebook.com/SUFFOC" target="_blank" rel="noopener" aria-label="SUFFOC on Facebook" title="SUFFOC on Facebook"><svg class="fi fb" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8.5V7c0-.8.3-1.2 1.3-1.2H17V3h-2.6C11.6 3 10.5 4.6 10.5 6.8v1.7H8V11.5h2.5V21H14v-9.5h2.6l.4-3z" fill="currentColor" stroke="none"/></svg></a>
   </div>
 </footer>
 
@@ -367,7 +376,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 163';
+const BUILD = 'build 164';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
