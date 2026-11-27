@@ -554,7 +554,7 @@ content:
           - "Forest"
           - "Heath"
           - "Parkland"
-          - "Street and urban"
+          - "Urban"
           # END terrain
       - name: gridRef
         label: Grid reference (OS)
