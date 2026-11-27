@@ -507,12 +507,22 @@ content:
       filename: '{primary}.json'
       view:
         primary: name
-        fields: [name]
+        fields: [name, abbreviation]
       fields:
       - name: name
-        label: Name
+        label: Name (in full)
         type: string
         required: true
+        description: Use the full words, e.g. Compass Sport Heat.
+      - name: abbreviation
+        label: Abbreviation (optional)
+        type: string
+        description: e.g. CSH. Shown on the series page as "Also known as". Events that use the abbreviation still join the series.
+      - name: description
+        label: About this series (optional)
+        type: rich-text
+        options:
+          format: html
 - name: grp_places
   label: Areas
   type: group

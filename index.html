@@ -378,7 +378,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 175';
+const BUILD = 'build 176';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -395,7 +395,8 @@ function loadNews(list){
    This flattens them into the shape the rest of the site uses. The older flat layout is still understood. */
 const tagSlug = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const tagPill = (kind, v) => `<a class="pill" href="#tag-${kind}-${tagSlug(v)}" title="See all ${esc(v)} events">${esc(v)}</a>`;
-const serList = e => (Array.isArray(e.series) ? e.series : [e.series]).map(s => String(s || '').trim()).filter(Boolean);
+const seriesByName = s => { const k = String(s || '').trim().toLowerCase(); return k ? SERIES.find(x => String(x.name || '').trim().toLowerCase() === k || String(x.abbreviation || '').trim().toLowerCase() === k) : null; };
+const serList = e => (Array.isArray(e.series) ? e.series : [e.series]).map(s => { s = String(s || '').trim(); const x = seriesByName(s); return x ? String(x.name).trim() : s; }).filter(Boolean);
 const pills = (e, showLocal) => (e.level && (showLocal || e.level !== 'Local') ? tagPill('level', e.level) + ' ' : '') + serList(e).map(s => tagPill('series', s)).join(' ');
 function upgradeEvent(e){
   const o = Object.assign({}, e);
@@ -453,7 +454,7 @@ function loadData(areas, events){
   });
 }
 let CURKEY = '';
-let LEAGUE = {}, CHAMPS = [], CHAMPRULES = '', CLUBS = [], COMMITTEE = {}, ROLES = [];
+let LEAGUE = {}, CHAMPS = [], CHAMPRULES = '', CLUBS = [], COMMITTEE = {}, ROLES = [], SERIES = [];
 const MAILDOMAIN = 'suffoc.co.uk';
 const fullEmail = e => { e = String(e || '').trim(); return e && e.indexOf('@') < 0 ? e + '@' + MAILDOMAIN : e; };  /* just the first part is enough: chair becomes chair@suffoc.co.uk */
 const roleByName = n => ROLES.find(x => String(x.name).trim().toLowerCase() === String(n).trim().toLowerCase());
@@ -1144,11 +1145,13 @@ function tagPage(kind, slug){
   const here = EVENTS.filter(e => vals(e).some(v => tagSlug(v) === slug));
   if (!here.length) return VIEWS.events();
   const name = vals(here[0]).find(v => tagSlug(v) === slug);
+  let sx = null;
   const up = here.filter(e => !isPast(e)).sort((x, y) => parseDate(x.date) - parseDate(y.date)), old = here.filter(isPast).sort((x, y) => parseDate(y.date) - parseDate(x.date));
   return `<section class="pagehead"><div class="wrap">
       <a class="back" href="#events">&larr; Back to Events</a>
       <p class="meta" style="margin:.8rem 0 0">${kind === 'series' ? 'Event series' : 'Event level'}</p>
       <h1 class="event-title">${esc(name)}</h1>
+      ${(kind === 'series' && (sx = seriesByName(name))) ? ((sx.abbreviation ? '<p class="meta" style="margin:.4rem 0 0">Also known as <span class="pill">' + esc(sx.abbreviation) + '</span></p>' : '') + (sx.description ? '<div class="prose" style="margin-top:.8rem">' + richHTML(sx.description) + '</div>' : '')) : ''}
     </div></section>
     <div class="wrap">
       ${up.length ? `<section class="section"><div class="section-head"><h2>Coming up</h2></div><div class="events">${up.map(eventCard).join('')}</div></section>` : ''}
@@ -1665,8 +1668,9 @@ Promise.all([
   fetch('data/clubs.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/maprun.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
   fetch('data/privacy.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-  fetch('data/roles.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-]).then(([a, e, n, m, pm, pt, ag, lg, ch, cl, mr, pv, ro]) => { ROLES = asList(ro).filter(x => x && x.name); pt = Object.assign({}, pt, mr, pv); COMMITTEE = (pt && pt.committee && typeof pt.committee === 'object') ? pt.committee : {}; CLUBS = asList(cl).filter(x => x && x.name); CHAMPRULES = (ch && ch.rules) || ''; CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
+  fetch('data/roles.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+  fetch('data/series.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+]).then(([a, e, n, m, pm, pt, ag, lg, ch, cl, mr, pv, ro, sr]) => { ROLES = asList(ro).filter(x => x && x.name); SERIES = asList(sr).filter(x => x && x.name); pt = Object.assign({}, pt, mr, pv); COMMITTEE = (pt && pt.committee && typeof pt.committee === 'object') ? pt.committee : {}; CLUBS = asList(cl).filter(x => x && x.name); CHAMPRULES = (ch && ch.rules) || ''; CHAMPS = asList(ch).filter(x => x && x.year).sort((p, q) => String(q.year).localeCompare(String(p.year))); LEAGUE = (lg && typeof lg === 'object' && !Array.isArray(lg)) ? lg : {}; AGM = asList(ag).filter(x => x && x.file).sort((p, q) => String(q.date || '').localeCompare(String(p.date || ''))); PAGETEXT = flattenPageText(pt); loadPermanent(asList(pm)); loadMembers(asList(m)); loadData(asList(a), asList(e)); loadNews(asList(n)); route(); status('loaded ' + EVENTS.length + ' events, ' + NEWS.length + ' news, ' + Object.keys(AREAS).length + ' areas' + (SKIPPED.length ? '. SKIPPED (needs a Date as YYYY-MM-DD): ' + SKIPPED.join('; ') : '')); })
   .catch(err => { status('FAILED: ' + err.message); view.innerHTML = '<div class="wrap"><div class="empty">Could not load the event data: ' + esc(err.message) + '</div></div>'; });
 </script>
 </body>

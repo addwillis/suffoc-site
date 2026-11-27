@@ -14,7 +14,7 @@ def load(folder):
 lists = {}
 for folder in ('areas', 'members', 'events', 'levels', 'series', 'permanent', 'clubs', 'towns', 'terrain', 'roles'):
     lists[folder] = load(folder)
-    if folder in ('levels', 'series', 'terrain'): continue  # only used for the form dropdown
+    if folder in ('levels', 'terrain'): continue  # only used for the form dropdown
     with open('data/%s.json' % folder, 'w', encoding='utf-8') as out:
         json.dump({folder: lists[folder]}, out, indent=2, ensure_ascii=False)
         out.write('\n')

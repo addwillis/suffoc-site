@@ -1,0 +1,24 @@
+{
+  "series": [
+    {
+      "name": "Autumn in Anglia",
+      "id": "autumn-in-anglia"
+    },
+    {
+      "name": "Compass Sport Heat",
+      "id": "compass-sport-heat"
+    },
+    {
+      "name": "East Anglian Schools Championships",
+      "id": "east-anglian-schools-championships"
+    },
+    {
+      "name": "Mid-Week Street-O",
+      "id": "mid-week-street-o"
+    },
+    {
+      "name": "Simon Peck Summer Series",
+      "id": "simon-peck-summer-series"
+    }
+  ]
+}
