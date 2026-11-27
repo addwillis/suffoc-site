@@ -344,6 +344,10 @@
         "organiser": "<p></p>",
         "controller": "<p></p>"
       },
+      "resultLinks": {
+        "results": "https://suffoc.co.uk/results/BSR_2025/index.html",
+        "routegadget": "https://www.boc.routegadget.co.uk/rg2/#65"
+      },
       "id": "raf-honington"
     },
     {
