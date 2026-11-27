@@ -255,10 +255,29 @@
       "date": "2025-08-30",
       "level": "National",
       "league": false,
+      "area": "RAF Honington",
       "about": "<p></p>",
       "fees": {
         "chipHire": "£1",
         "siacHire": "£3"
+      },
+      "officials": {
+        "planner": "Sarah Mansel",
+        "organiser": "Sally Wilkinson",
+        "others": [
+          {
+            "role": "Assitant Planner",
+            "name": "Bob Hill (RAFO)"
+          },
+          {
+            "role": "Assistant Organiser",
+            "name": "Clive Wilkinson"
+          },
+          {
+            "role": "As",
+            "name": "Michael Chopping (RAFO)"
+          }
+        ]
       },
       "comments": {
         "planner": "<p></p>",
