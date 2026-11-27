@@ -328,6 +328,23 @@ content:
           - "Simon Hooton"
           - "Will Harrison"
           # END members
+      - name: controllerName
+        label: Controller's name (if not a club member)
+        type: string
+        description: Use this when the controller is from another club. Leave empty if you picked a member above.
+      - name: controllerClub
+        label: Controller's club (optional)
+        type: select
+        description: Pick from Other clubs. If the club is not listed, add it first using Other clubs in the menu.
+        options:
+          values:
+          # BEGIN clubs
+          - "CHIG"
+          - "HAVOC"
+          - "NOR"
+          - "SMOC"
+          - "WAOC"
+          # END clubs
       - name: riskAssessor
         label: Risk Assessor
         type: select
