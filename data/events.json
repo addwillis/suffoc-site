@@ -1,6 +1,36 @@
 {
   "events": [
     {
+      "title": "Abbey Gardens",
+      "date": "2025-07-06",
+      "level": "Local",
+      "series": [
+        "Simon Peck Summer Series"
+      ],
+      "league": false,
+      "area": "Bury St Edmunds",
+      "about": "<p></p>",
+      "officials": {
+        "planner": "Adam Willis",
+        "organiser": "Sally Wilkinson",
+        "controller": "Sally Wilkinson"
+      },
+      "comments": {
+        "planner": "<p>What a day!</p><p>Despite the classic curveball of a mid-event British summer downpour, I am really proud of how the event went and grateful for the brilliant turnout from newcomers, long-standing club members and competitors from further afield.</p><p>It was particularly rewarding to see how receptive people were to the experimental format, introducing this untimed, historic-themed course into the mix. I hope it helped with navigating the later courses, and maybe even revealed something new about the Abbey’s history or its sheer scale.</p><p>Thanks for your patience as we worked through the logistical headscratchers caused by the unusual format in the registration/download tent. And thank you for all the warm comments throughout the day, I especially enjoyed hearing about the now mythic puddle that formed around one of the bridges, following the deluge!</p><p>Thanks again for embracing the challenge, and to everyone who helped on the day and in preparation. Until next time.</p><p>Best,</p><p>Adam</p>",
+        "organiser": "<p>Well done to Adam on planning an innovative event which all participants enjoyed.&nbsp; It is a shame more SUFFOC members were not able to attend – they missed fun courses which tested your reading comprehension as well as your navigation skills.</p><p>Best wishes</p><p>Sally</p>",
+        "controller": "<p></p>"
+      },
+      "resultLinks": {
+        "other": [
+          {
+            "label": "Results",
+            "url": "https://suffoc.co.uk/results/2025/Abbey_Gardens_2025_Results.pdf"
+          }
+        ]
+      },
+      "id": "abbey-gardens"
+    },
+    {
       "title": "Brandon Country Park",
       "date": "2026-02-22",
       "level": "National",
