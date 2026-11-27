@@ -7,1486 +7,1506 @@ media:
   output: /documents
   extensions: [pdf, doc, docx]
 content:
-- name: events
-  label: Events and results
-  type: collection
-  path: data/events
-  format: json
-  filename: '{primary}.json'
-  view:
-    fields: [date, title, level, series, area]
-    primary: title
-    sort: [date, title]
-    search: [title, area]
-    default:
-      sort: date
-      order: desc
-  fields:
-  - name: title
-    label: Event name
-    type: string
-    required: true
-  - name: date
-    label: Date
-    type: date
-    options:
-      format: yyyy-MM-dd
-    required: true
-  - name: level
-    label: Event level
-    type: select
-    description: National, Regional or Local. To change the list, use Event levels in the menu.
-    options:
-      values:
-      # BEGIN levels
-      - "National"
-      - "Regional"
-      - "Local"
-      # END levels
-  - name: series
-    label: Event series
-    type: select
-    description: Optional. Pick from the Event series list, e.g. Mid-Week Street-O. You can pick more than one.
-    options:
-      multiple: true
-      values:
-      # BEGIN series
-      - "Autumn in Anglia"
-      - "Compass Sport Heat"
-      - "East Anglian Schools Championships"
-      - "Mid-Week Street-O"
-      - "Simon Peck Summer Series"
-      # END series
-  - name: league
-    label: Counts for the club league
-    type: boolean
-    description: Tick if this event is part of the club league. It then appears on the League page and the home page reminder.
-  - name: area
-    label: Area
-    type: select
-    required: true
-    description: Pick from the Mapped areas list. If the place isn't there yet, add it under Mapped areas first. For a map we don't hold, add it there with map type Other club's map.
-    options:
-      values:
-      # BEGIN areas
-      - "Alton Water"
-      - "Barnham Cross Common"
-      - "Beccles Common"
-      - "Belstead Brook"
-      - "Bourne Park"
-      - "Bramford"
-      - "Brandon Country Park"
-      - "Broom Hill and The Dales"
-      - "Bury St Edmunds"
-      - "Chantry Park"
-      - "Christchurch Park"
-      - "Clare"
-      - "Claydon"
-      - "Combs Ford"
-      - "Culford School"
-      - "Elmswell"
-      - "Eye"
-      - "Finborough"
-      - "Foxhall Woods"
-      - "Gunton Denes and Dip Farm"
-      - "Hardwick Heath"
-      - "Haughley Park"
-      - "Haverhill"
-      - "Holywells and Landseer Parks"
-      - "Ickworth Park"
-      - "Ipswich High School"
-      - "Kesgrave"
-      - "King's Forest"
-      - "Knettishall Heath"
-      - "Martlesham Heath"
-      - "Moreton Hall"
-      - "Needham Market"
-      - "Nowton Park"
-      - "Orwell Country Park"
-      - "Rendlesham Forest"
-      - "Royal Hospital School"
-      - "Shrubland Park"
-      - "Sudbury"
-      - "Sutton Common"
-      - "Tunstall Forest"
-      - "West Harling Heath"
-      # END areas
-  - name: about
-    label: EVENT OVERVIEW
-    type: rich-text
-    options:
-      format: html
-    description: A short summary of the event, e.g. what to expect, the terrain and who it suits.
-  - name: location
-    label: EVENT LOCATION
-    type: object
-    description: Filling in anything here creates the full event page.
-    fields:
-    - name: address
-      label: Address lines
-      type: string
-      list: true
-    - name: postcode
-      label: Postcode
-      type: string
-    - name: gridRef
-      label: Grid reference (OS)
-      type: string
-      description: e.g. TM 39950 52750. Places the pin on this event's map and the Google Maps link.
-    - name: w3w
-      label: what3words (no ///)
-      type: string
-      description: e.g. only.pint.form. Shown as text and a link only, it does not move the map pin.
-  - name: courses
-    label: COURSES
-    type: object
-    list: true
-    description: Add one entry per course. Leave empty until the courses are confirmed.
-    fields:
-    - name: name
-      label: Course name
-      type: string
-      description: e.g. Green, Short Green, Course 1, Short, Medium, Long
-    - name: colour
-      label: Colour dot (optional)
-      type: select
-      description: Only needed if the name isn't already a colour, e.g. a coloured Short course.
-      options:
-        values:
-        - White
-        - Yellow
-        - Orange
-        - Light Green
-        - Short Green
-        - Green
-        - Blue
-        - Brown
-        - Black
-    - name: length
-      label: Length (km)
-      type: string
-      description: e.g. 3.2
-    - name: controls
-      label: Number of controls
-      type: string
-    - name: climb
-      label: Climb (m, optional)
-      type: string
-    - name: note
-      label: Note (optional)
-      type: string
-      description: e.g. Good for beginners
-  - name: fees
-    label: ENTRY FEES
-    type: object
-    description: Leave empty until the fees are confirmed. Prices can be typed as 8 or £8.
-    fields:
-    - name: entryUrl
-      label: Enter online link
-      type: string
-      description: The full web address of the entry page, e.g. the RaceSignup link. Adds the gold Enter online button.
-    - name: entryNote
-      label: Entry note (optional)
-      type: string
-      description: Short line under the Enter online button.
-    - name: rows
-      label: Prices
-      type: object
-      list: true
-      description: One row per type of entrant, e.g. Senior member, Senior non-member, Junior.
+- name: grp_events
+  label: Events
+  type: group
+  items:
+    - name: events
+      label: Events and results
+      type: collection
+      path: data/events
+      format: json
+      filename: '{primary}.json'
+      view:
+        fields: [date, title, level, series, area]
+        primary: title
+        sort: [date, title]
+        search: [title, area]
+        default:
+          sort: date
+          order: desc
       fields:
-      - name: category
-        label: Who
+      - name: title
+        label: Event name
         type: string
-      - name: early
-        label: Standard price
-        type: string
-      - name: late
-        label: Late / on the day price
-        type: string
-    - name: earlyDeadline
-      label: Standard price online entry closes (optional)
-      type: string
-      description: Type as 2026-11-22, or in words like 22 November. Online entries up to this date get the standard price. Leave empty if not needed.
-    - name: lateDeadline
-      label: Late online entry closes (optional)
-      type: string
-      description: Type as 2026-11-22, or in words like 22 November. Late online entries are taken up to this date. Leave empty if not needed.
-    - name: chipHire
-      label: Chip hire (optional)
-      type: string
-      description: Our usual price is £1. Leave empty if there is no hire charge.
-    - name: siacHire
-      label: SIAC chip hire (optional)
-      type: string
-      description: Our usual price is £3. Leave empty if SIAC chips aren't hired out.
-    - name: note
-      label: Note (optional)
-      type: text
-      description: e.g. Cash or card on the day. Group discounts.
-  - name: timings
-    label: EVENT TIMES
-    type: object
-    description: Fill in what you know. The first Starts time and the last Course closes time are shown on the home page and Events page.
-    fields:
-    - name: registrationFrom
-      label: Registration opens
-      type: string
-      description: e.g. 10:00
-    - name: registrationTo
-      label: Registration closes
-      type: string
-      description: e.g. 11:30
-    - name: startsFrom
-      label: Starts open
-      type: string
-      description: First start time, e.g. 10:30
-    - name: startsTo
-      label: Starts close
-      type: string
-      description: Last start time, e.g. 12:00
-    - name: courseClose
-      label: Course closes
-      type: string
-      description: Final course close time, e.g. 14:00
-  - name: officials
-    label: EVENT OFFICIALS
-    type: object
-    description: Pick from People. If someone isn't there yet, add them under People first (choose their club there if they're not SUFFOC), or use Other officials.
-    fields:
-      - name: planner
-        label: Planner
+        required: true
+      - name: date
+        label: Date
+        type: date
+        options:
+          format: yyyy-MM-dd
+        required: true
+      - name: level
+        label: Event level
         type: select
+        description: National, Regional or Local. To change the list, use Event levels in the menu.
         options:
           values:
-          # BEGIN members
-          - "Adam Willis"
-          - "Andrew Elliott"
-          - "Clive Wilkinson"
-          - "Colin West"
-          - "David Hodkinson"
-          - "Eddie Banks"
-          - "Ethan Radcliffe"
-          - "Gareth Radcliffe"
-          - "Hannah Constable-Simmonds"
-          - "Jeanette Downing"
-          - "John Liston"
-          - "Louise Walker"
-          - "Martin Hore"
-          - "Michael Chopping"
-          - "Mike Bickle"
-          - "Oliver Hague"
-          - "Paul Beckett"
-          - "Peter Woods"
-          - "Phil Halford"
-          - "Richard Bonnett"
-          - "Robin Thomas"
-          - "Rod Mansel"
-          - "Sally Wilkinson"
-          - "Sarah Mansel"
-          - "Simon Hooton"
-          - "Will Harrison"
-          # END members
-      - name: organiser
-        label: Organiser
+          # BEGIN levels
+          - "National"
+          - "Regional"
+          - "Local"
+          # END levels
+      - name: series
+        label: Event series
         type: select
+        description: Optional. Pick from the Event series list, e.g. Mid-Week Street-O. You can pick more than one.
+        options:
+          multiple: true
+          values:
+          # BEGIN series
+          - "Autumn in Anglia"
+          - "Compass Sport Heat"
+          - "East Anglian Schools Championships"
+          - "Mid-Week Street-O"
+          - "Simon Peck Summer Series"
+          # END series
+      - name: league
+        label: Counts for the club league
+        type: boolean
+        description: Tick if this event is part of the club league. It then appears on the League page and the home page reminder.
+      - name: area
+        label: Area
+        type: select
+        required: true
+        description: Pick from the Mapped areas list. If the place isn't there yet, add it under Mapped areas first. For a map we don't hold, add it there with map type Other club's map.
         options:
           values:
-          # BEGIN members
-          - "Adam Willis"
-          - "Andrew Elliott"
-          - "Clive Wilkinson"
-          - "Colin West"
-          - "David Hodkinson"
-          - "Eddie Banks"
-          - "Ethan Radcliffe"
-          - "Gareth Radcliffe"
-          - "Hannah Constable-Simmonds"
-          - "Jeanette Downing"
-          - "John Liston"
-          - "Louise Walker"
-          - "Martin Hore"
-          - "Michael Chopping"
-          - "Mike Bickle"
-          - "Oliver Hague"
-          - "Paul Beckett"
-          - "Peter Woods"
-          - "Phil Halford"
-          - "Richard Bonnett"
-          - "Robin Thomas"
-          - "Rod Mansel"
-          - "Sally Wilkinson"
-          - "Sarah Mansel"
-          - "Simon Hooton"
-          - "Will Harrison"
-          # END members
-      - name: controller
-        label: Controller
-        type: select
+          # BEGIN areas
+          - "Alton Water"
+          - "Barnham Cross Common"
+          - "Beccles Common"
+          - "Belstead Brook"
+          - "Bourne Park"
+          - "Bramford"
+          - "Brandon Country Park"
+          - "Broom Hill and The Dales"
+          - "Bury St Edmunds"
+          - "Chantry Park"
+          - "Christchurch Park"
+          - "Clare"
+          - "Claydon"
+          - "Combs Ford"
+          - "Culford School"
+          - "Elmswell"
+          - "Eye"
+          - "Finborough"
+          - "Foxhall Woods"
+          - "Gunton Denes and Dip Farm"
+          - "Hardwick Heath"
+          - "Haughley Park"
+          - "Haverhill"
+          - "Holywells and Landseer Parks"
+          - "Ickworth Park"
+          - "Ipswich High School"
+          - "Kesgrave"
+          - "King's Forest"
+          - "Knettishall Heath"
+          - "Martlesham Heath"
+          - "Moreton Hall"
+          - "Needham Market"
+          - "Nowton Park"
+          - "Orwell Country Park"
+          - "Rendlesham Forest"
+          - "Royal Hospital School"
+          - "Shrubland Park"
+          - "Sudbury"
+          - "Sutton Common"
+          - "Tunstall Forest"
+          - "West Harling Heath"
+          # END areas
+      - name: about
+        label: EVENT OVERVIEW
+        type: rich-text
         options:
-          values:
-          # BEGIN members
-          - "Adam Willis"
-          - "Andrew Elliott"
-          - "Clive Wilkinson"
-          - "Colin West"
-          - "David Hodkinson"
-          - "Eddie Banks"
-          - "Ethan Radcliffe"
-          - "Gareth Radcliffe"
-          - "Hannah Constable-Simmonds"
-          - "Jeanette Downing"
-          - "John Liston"
-          - "Louise Walker"
-          - "Martin Hore"
-          - "Michael Chopping"
-          - "Mike Bickle"
-          - "Oliver Hague"
-          - "Paul Beckett"
-          - "Peter Woods"
-          - "Phil Halford"
-          - "Richard Bonnett"
-          - "Robin Thomas"
-          - "Rod Mansel"
-          - "Sally Wilkinson"
-          - "Sarah Mansel"
-          - "Simon Hooton"
-          - "Will Harrison"
-          # END members
-      - name: riskAssessor
-        label: Risk Assessor
-        type: select
-        options:
-          values:
-          # BEGIN members
-          - "Adam Willis"
-          - "Andrew Elliott"
-          - "Clive Wilkinson"
-          - "Colin West"
-          - "David Hodkinson"
-          - "Eddie Banks"
-          - "Ethan Radcliffe"
-          - "Gareth Radcliffe"
-          - "Hannah Constable-Simmonds"
-          - "Jeanette Downing"
-          - "John Liston"
-          - "Louise Walker"
-          - "Martin Hore"
-          - "Michael Chopping"
-          - "Mike Bickle"
-          - "Oliver Hague"
-          - "Paul Beckett"
-          - "Peter Woods"
-          - "Phil Halford"
-          - "Richard Bonnett"
-          - "Robin Thomas"
-          - "Rod Mansel"
-          - "Sally Wilkinson"
-          - "Sarah Mansel"
-          - "Simon Hooton"
-          - "Will Harrison"
-          # END members
-      - name: others
-        label: Other officials (optional)
+          format: html
+        description: A short summary of the event, e.g. what to expect, the terrain and who it suits.
+      - name: location
+        label: EVENT LOCATION
+        type: object
+        description: Filling in anything here creates the full event page.
+        fields:
+        - name: address
+          label: Address lines
+          type: string
+          list: true
+        - name: postcode
+          label: Postcode
+          type: string
+        - name: gridRef
+          label: Grid reference (OS)
+          type: string
+          description: e.g. TM 39950 52750. Places the pin on this event's map and the Google Maps link.
+        - name: w3w
+          label: what3words (no ///)
+          type: string
+          description: e.g. only.pint.form. Shown as text and a link only, it does not move the map pin.
+      - name: courses
+        label: COURSES
         type: object
         list: true
-        description: For helpers who aren't in People.
+        description: Add one entry per course. Leave empty until the courses are confirmed.
+        fields:
+        - name: name
+          label: Course name
+          type: string
+          description: e.g. Green, Short Green, Course 1, Short, Medium, Long
+        - name: colour
+          label: Colour dot (optional)
+          type: select
+          description: Only needed if the name isn't already a colour, e.g. a coloured Short course.
+          options:
+            values:
+            - White
+            - Yellow
+            - Orange
+            - Light Green
+            - Short Green
+            - Green
+            - Blue
+            - Brown
+            - Black
+        - name: length
+          label: Length (km)
+          type: string
+          description: e.g. 3.2
+        - name: controls
+          label: Number of controls
+          type: string
+        - name: climb
+          label: Climb (m, optional)
+          type: string
+        - name: note
+          label: Note (optional)
+          type: string
+          description: e.g. Good for beginners
+      - name: fees
+        label: ENTRY FEES
+        type: object
+        description: Leave empty until the fees are confirmed. Prices can be typed as 8 or £8.
+        fields:
+        - name: entryUrl
+          label: Enter online link
+          type: string
+          description: The full web address of the entry page, e.g. the RaceSignup link. Adds the gold Enter online button.
+        - name: entryNote
+          label: Entry note (optional)
+          type: string
+          description: Short line under the Enter online button.
+        - name: rows
+          label: Prices
+          type: object
+          list: true
+          description: One row per type of entrant, e.g. Senior member, Senior non-member, Junior.
+          fields:
+          - name: category
+            label: Who
+            type: string
+          - name: early
+            label: Standard price
+            type: string
+          - name: late
+            label: Late / on the day price
+            type: string
+        - name: earlyDeadline
+          label: Standard price online entry closes (optional)
+          type: string
+          description: Type as 2026-11-22, or in words like 22 November. Online entries up to this date get the standard price. Leave empty if not needed.
+        - name: lateDeadline
+          label: Late online entry closes (optional)
+          type: string
+          description: Type as 2026-11-22, or in words like 22 November. Late online entries are taken up to this date. Leave empty if not needed.
+        - name: chipHire
+          label: Chip hire (optional)
+          type: string
+          description: Our usual price is £1. Leave empty if there is no hire charge.
+        - name: siacHire
+          label: SIAC chip hire (optional)
+          type: string
+          description: Our usual price is £3. Leave empty if SIAC chips aren't hired out.
+        - name: note
+          label: Note (optional)
+          type: text
+          description: e.g. Cash or card on the day. Group discounts.
+      - name: timings
+        label: EVENT TIMES
+        type: object
+        description: Fill in what you know. The first Starts time and the last Course closes time are shown on the home page and Events page.
+        fields:
+        - name: registrationFrom
+          label: Registration opens
+          type: string
+          description: e.g. 10:00
+        - name: registrationTo
+          label: Registration closes
+          type: string
+          description: e.g. 11:30
+        - name: startsFrom
+          label: Starts open
+          type: string
+          description: First start time, e.g. 10:30
+        - name: startsTo
+          label: Starts close
+          type: string
+          description: Last start time, e.g. 12:00
+        - name: courseClose
+          label: Course closes
+          type: string
+          description: Final course close time, e.g. 14:00
+      - name: officials
+        label: EVENT OFFICIALS
+        type: object
+        description: Pick from People. If someone isn't there yet, add them under People first (choose their club there if they're not SUFFOC), or use Other officials.
+        fields:
+          - name: planner
+            label: Planner
+            type: select
+            options:
+              values:
+              # BEGIN members
+              - "Adam Willis"
+              - "Andrew Elliott"
+              - "Clive Wilkinson"
+              - "Colin West"
+              - "David Hodkinson"
+              - "Eddie Banks"
+              - "Ethan Radcliffe"
+              - "Gareth Radcliffe"
+              - "Hannah Constable-Simmonds"
+              - "Jeanette Downing"
+              - "John Liston"
+              - "Louise Walker"
+              - "Martin Hore"
+              - "Michael Chopping"
+              - "Mike Bickle"
+              - "Oliver Hague"
+              - "Paul Beckett"
+              - "Peter Woods"
+              - "Phil Halford"
+              - "Richard Bonnett"
+              - "Robin Thomas"
+              - "Rod Mansel"
+              - "Sally Wilkinson"
+              - "Sarah Mansel"
+              - "Simon Hooton"
+              - "Will Harrison"
+              # END members
+          - name: organiser
+            label: Organiser
+            type: select
+            options:
+              values:
+              # BEGIN members
+              - "Adam Willis"
+              - "Andrew Elliott"
+              - "Clive Wilkinson"
+              - "Colin West"
+              - "David Hodkinson"
+              - "Eddie Banks"
+              - "Ethan Radcliffe"
+              - "Gareth Radcliffe"
+              - "Hannah Constable-Simmonds"
+              - "Jeanette Downing"
+              - "John Liston"
+              - "Louise Walker"
+              - "Martin Hore"
+              - "Michael Chopping"
+              - "Mike Bickle"
+              - "Oliver Hague"
+              - "Paul Beckett"
+              - "Peter Woods"
+              - "Phil Halford"
+              - "Richard Bonnett"
+              - "Robin Thomas"
+              - "Rod Mansel"
+              - "Sally Wilkinson"
+              - "Sarah Mansel"
+              - "Simon Hooton"
+              - "Will Harrison"
+              # END members
+          - name: controller
+            label: Controller
+            type: select
+            options:
+              values:
+              # BEGIN members
+              - "Adam Willis"
+              - "Andrew Elliott"
+              - "Clive Wilkinson"
+              - "Colin West"
+              - "David Hodkinson"
+              - "Eddie Banks"
+              - "Ethan Radcliffe"
+              - "Gareth Radcliffe"
+              - "Hannah Constable-Simmonds"
+              - "Jeanette Downing"
+              - "John Liston"
+              - "Louise Walker"
+              - "Martin Hore"
+              - "Michael Chopping"
+              - "Mike Bickle"
+              - "Oliver Hague"
+              - "Paul Beckett"
+              - "Peter Woods"
+              - "Phil Halford"
+              - "Richard Bonnett"
+              - "Robin Thomas"
+              - "Rod Mansel"
+              - "Sally Wilkinson"
+              - "Sarah Mansel"
+              - "Simon Hooton"
+              - "Will Harrison"
+              # END members
+          - name: riskAssessor
+            label: Risk Assessor
+            type: select
+            options:
+              values:
+              # BEGIN members
+              - "Adam Willis"
+              - "Andrew Elliott"
+              - "Clive Wilkinson"
+              - "Colin West"
+              - "David Hodkinson"
+              - "Eddie Banks"
+              - "Ethan Radcliffe"
+              - "Gareth Radcliffe"
+              - "Hannah Constable-Simmonds"
+              - "Jeanette Downing"
+              - "John Liston"
+              - "Louise Walker"
+              - "Martin Hore"
+              - "Michael Chopping"
+              - "Mike Bickle"
+              - "Oliver Hague"
+              - "Paul Beckett"
+              - "Peter Woods"
+              - "Phil Halford"
+              - "Richard Bonnett"
+              - "Robin Thomas"
+              - "Rod Mansel"
+              - "Sally Wilkinson"
+              - "Sarah Mansel"
+              - "Simon Hooton"
+              - "Will Harrison"
+              # END members
+          - name: others
+            label: Other officials (optional)
+            type: object
+            list: true
+            description: For helpers who aren't in People.
+            fields:
+            - name: role
+              label: Role
+              type: string
+            - name: name
+              label: Name
+              type: string
+      - name: comments
+        label: OFFICIALS' COMMENTS (add after the event)
+        type: object
+        description: Comments from the people who ran the event. Leave empty if you haven't been sent any. A Comments button appears next to the results once any of these have text.
+        fields:
+        - name: planner
+          label: Planner's comments
+          type: rich-text
+          options:
+            format: html
+        - name: organiser
+          label: Organiser's comments
+          type: rich-text
+          options:
+            format: html
+        - name: controller
+          label: Controller's comments
+          type: rich-text
+          options:
+            format: html
+      - name: documents
+        label: DOCUMENTS AND LINKS
+        type: object
+        fields:
+        - name: pdf
+          label: Preliminary details PDF link
+          type: string
+        - name: britishOrienteering
+          label: British Orienteering event page link
+          type: string
+          description: The event's page on britishorienteering.org.uk
+        - name: oldPage
+          label: Link to existing event page
+          type: string
+        - name: docs
+          label: Other documents and links
+          type: object
+          list: true
+          fields:
+          - name: label
+            label: Link text
+            type: string
+          - name: url
+            label: Web address
+            type: string
+      - name: resultLinks
+        label: RESULTS (add after the event)
+        type: object
+        description: Paste the web address for each one you have. Leave the others blank.
+        fields:
+        - name: results
+          label: Results and split times
+          type: string
+        - name: winsplits
+          label: Winsplits
+          type: string
+        - name: routegadget
+          label: Routegadget
+          type: string
+        - name: other
+          label: Other result links (optional)
+          type: object
+          list: true
+          description: Only for extra links that don't fit above, e.g. a second Routegadget map.
+          fields:
+          - name: label
+            label: Link text
+            type: string
+          - name: url
+            label: Web address
+            type: string
+    - name: levels
+      label: Event levels
+      type: collection
+      path: data/levels
+      format: json
+      filename: '{primary}.json'
+      view:
+        primary: name
+        fields: [name, order]
+      fields:
+      - name: name
+        label: Name
+        type: string
+        required: true
+      - name: order
+        label: Order in the dropdown
+        type: number
+        description: 1 comes first. National 1, Regional 2, Local 3.
+    - name: series
+      label: Event series
+      type: collection
+      path: data/series
+      format: json
+      filename: '{primary}.json'
+      view:
+        primary: name
+        fields: [name]
+      fields:
+      - name: name
+        label: Name
+        type: string
+        required: true
+- name: grp_places
+  label: Places and maps
+  type: group
+  items:
+    - name: areas
+      label: Mapped areas
+      type: collection
+      path: data/areas
+      format: json
+      filename: '{primary}.json'
+      view:
+        primary: name
+        fields: [name]
+      fields:
+      - name: name
+        label: Name
+        type: string
+        required: true
+      - name: town
+        label: Town or region
+        type: select
+        description: Groups this area with others on the Mapped areas page. If it isn't listed, add it under Towns and regions first. Optional.
+        options:
+          values:
+          # BEGIN towns
+          - "Bury St Edmunds"
+          - "Ipswich"
+          # END towns
+      - name: mapType
+        label: Map type
+        type: select
+        description: SUFFOC map means an orienteering map our mapping officer surveyed and checked. OpenStreetMap means public OpenStreetMap data, like the MapRun nights. Other club's map is for areas we only post results for, like national events elsewhere. Those are left off the Mapped areas page. Leave empty for SUFFOC map.
+        options:
+          values:
+          - "SUFFOC map"
+          - "OpenStreetMap"
+          - "Other club's map"
+      - name: terrain
+        label: Terrain (optional)
+        type: select
+        description: Pick everything that applies. Add or change the choices under Terrain types in the menu.
+        options:
+          multiple: true
+          values:
+          # BEGIN terrain
+          - "Forest"
+          - "Heath"
+          - "Parkland"
+          - "Street and urban"
+          # END terrain
+      - name: gridRef
+        label: Grid reference (OS)
+        type: string
+        description: e.g. TM 39950 52750. The map pin is placed from this, so you don't need latitude and longitude.
+      - name: lat
+        label: Latitude (optional)
+        type: number
+        description: Only needed if there is no grid reference.
+      - name: lon
+        label: Longitude (optional)
+        type: number
+        description: Only needed if there is no grid reference.
+    - name: towns
+      label: Towns and regions
+      type: collection
+      path: data/towns
+      format: json
+      filename: '{primary}.json'
+      view:
+        primary: name
+        fields: [name]
+      fields:
+      - name: name
+        label: Name
+        type: string
+        required: true
+        description: A town or region that groups mapped areas, for example Ipswich or Bury St Edmunds.
+    - name: terrain
+      label: Terrain types
+      type: collection
+      path: data/terrain
+      format: json
+      filename: '{primary}.json'
+      view:
+        primary: name
+        fields: [name]
+      fields:
+      - name: name
+        label: Name
+        type: string
+        required: true
+    - name: permanent
+      label: Permanent orienteering courses
+      type: collection
+      path: data/permanent
+      format: json
+      filename: '{primary}.json'
+      view:
+        primary: name
+        fields: [name, area]
+        search: [name, area]
+      fields:
+      - name: name
+        label: Name
+        type: string
+        required: true
+      - name: area
+        label: Mapped area (optional)
+        type: select
+        description: Pick from the Mapped areas list if the course is in one of the areas the club has mapped.
+        options:
+          values:
+          # BEGIN areas
+          - "Alton Water"
+          - "Barnham Cross Common"
+          - "Beccles Common"
+          - "Belstead Brook"
+          - "Bourne Park"
+          - "Bramford"
+          - "Brandon Country Park"
+          - "Broom Hill and The Dales"
+          - "Bury St Edmunds"
+          - "Chantry Park"
+          - "Christchurch Park"
+          - "Clare"
+          - "Claydon"
+          - "Combs Ford"
+          - "Culford School"
+          - "Elmswell"
+          - "Eye"
+          - "Finborough"
+          - "Foxhall Woods"
+          - "Gunton Denes and Dip Farm"
+          - "Hardwick Heath"
+          - "Haughley Park"
+          - "Haverhill"
+          - "Holywells and Landseer Parks"
+          - "Ickworth Park"
+          - "Ipswich High School"
+          - "Kesgrave"
+          - "King's Forest"
+          - "Knettishall Heath"
+          - "Martlesham Heath"
+          - "Moreton Hall"
+          - "Needham Market"
+          - "Nowton Park"
+          - "Orwell Country Park"
+          - "Rendlesham Forest"
+          - "Royal Hospital School"
+          - "Shrubland Park"
+          - "Sudbury"
+          - "Sutton Common"
+          - "Tunstall Forest"
+          - "West Harling Heath"
+          # END areas
+      - name: description
+        label: ABOUT THE COURSE
+        type: rich-text
+        options:
+          format: html
+        description: A short description of what the course is like and who it suits.
+      - name: courses
+        label: COURSES
+        type: object
+        list: true
+        description: One entry per course, e.g. Orange, 3.0 km, 14 controls.
+        fields:
+        - name: name
+          label: Course name
+          type: string
+          description: e.g. Orange, Short Green, Course 1
+        - name: colour
+          label: Colour dot (optional)
+          type: select
+          description: Only needed if the name isn't already a colour.
+          options:
+            values:
+            - White
+            - Yellow
+            - Orange
+            - Light Green
+            - Short Green
+            - Green
+            - Blue
+            - Brown
+            - Black
+        - name: length
+          label: Length (km)
+          type: string
+        - name: controls
+          label: Number of controls
+          type: string
+        - name: climb
+          label: Climb (m, optional)
+          type: string
+        - name: note
+          label: Note (optional)
+          type: string
+      - name: mapUrl
+        label: Map download link
+        type: string
+        description: The web address of the map PDF (or the page it is on).
+      - name: mapNote
+        label: Map note (optional)
+        type: string
+        description: Short line under the download button, e.g. Print at A4. Last updated March 2025.
+      - name: gridRef
+        label: Start grid reference (OS)
+        type: string
+        description: e.g. TM 39950 52750. The map pin is placed from this.
+      - name: lat
+        label: Latitude (optional)
+        type: number
+        description: Only needed if there is no grid reference.
+      - name: lon
+        label: Longitude (optional)
+        type: number
+        description: Only needed if there is no grid reference.
+      - name: postcode
+        label: Postcode (optional)
+        type: string
+      - name: w3w
+        label: what3words (optional)
+        type: string
+        description: e.g. only.pint.form
+      - name: notes
+        label: GETTING THERE AND NOTES
+        type: rich-text
+        options:
+          format: html
+        description: Parking, access, dogs, anything people should know.
+- name: grp_people
+  label: People and clubs
+  type: group
+  items:
+    - name: members
+      label: People
+      type: collection
+      path: data/members
+      format: json
+      filename: '{primary}.json'
+      view:
+        primary: name
+        fields: [name, club, roles]
+      fields:
+      - name: name
+        label: Name
+        type: string
+        required: true
+      - name: club
+        label: Club (leave empty for SUFFOC)
+        type: select
+        description: Only choose a club if this person is from another club, for example a controller. Pick from Other clubs. If the club is not listed, add it first using Other clubs in the menu.
+        options:
+          values:
+          # BEGIN clubs
+          - "BAOC"
+          - "BOF"
+          - "CHIG"
+          - "HAVOC"
+          - "NOR"
+          - "RAFO"
+          - "SMOC"
+          - "SOS"
+          - "WAOC"
+          # END clubs
+      - name: phone
+        label: Phone (optional)
+        type: string
+        description: Only add this if they are happy for it to be public. Shown on their page and in contact boxes.
+      - name: roles
+        label: Club roles (optional, up to 4)
+        type: object
+        list:
+          max: 4
+        description: Anyone with a role is shown on the Committee page. Each role has its own email address.
         fields:
         - name: role
           label: Role
           type: string
-        - name: name
-          label: Name
+          description: e.g. Chair, Treasurer, Fixtures Secretary.
+        - name: email
+          label: Email for this role
           type: string
-  - name: comments
-    label: OFFICIALS' COMMENTS (add after the event)
-    type: object
-    description: Comments from the people who ran the event. Leave empty if you haven't been sent any. A Comments button appears next to the results once any of these have text.
-    fields:
-    - name: planner
-      label: Planner's comments
-      type: rich-text
-      options:
-        format: html
-    - name: organiser
-      label: Organiser's comments
-      type: rich-text
-      options:
-        format: html
-    - name: controller
-      label: Controller's comments
-      type: rich-text
-      options:
-        format: html
-  - name: documents
-    label: DOCUMENTS AND LINKS
-    type: object
-    fields:
-    - name: pdf
-      label: Preliminary details PDF link
-      type: string
-    - name: britishOrienteering
-      label: British Orienteering event page link
-      type: string
-      description: The event's page on britishorienteering.org.uk
-    - name: oldPage
-      label: Link to existing event page
-      type: string
-    - name: docs
-      label: Other documents and links
-      type: object
-      list: true
+          description: e.g. chair@suffoc.co.uk. Only add it if it's happy to be public.
+      - name: photo
+        label: Photo (optional)
+        type: image
+        description: Only add this if the person is happy for it to be public.
+    - name: clubs
+      label: Other clubs
+      type: collection
+      path: data/clubs
+      format: json
+      filename: '{primary}.json'
+      view:
+        primary: name
+        fields: [name, fullName]
       fields:
-      - name: label
-        label: Link text
+      - name: name
+        label: Short name
         type: string
-      - name: url
-        label: Web address
+        required: true
+        description: The short name used on the site, for example NOR or WAOC.
+      - name: fullName
+        label: Full name
         type: string
-  - name: resultLinks
-    label: RESULTS (add after the event)
-    type: object
-    description: Paste the web address for each one you have. Leave the others blank.
-    fields:
-    - name: results
-      label: Results and split times
-      type: string
-    - name: winsplits
-      label: Winsplits
-      type: string
-    - name: routegadget
-      label: Routegadget
-      type: string
-    - name: other
-      label: Other result links (optional)
-      type: object
-      list: true
-      description: Only for extra links that don't fit above, e.g. a second Routegadget map.
-      fields:
-      - name: label
-        label: Link text
+        description: For example Norfolk Orienteering Club.
+      - name: website
+        label: Website
         type: string
-      - name: url
-        label: Web address
-        type: string
-- name: levels
-  label: Event levels
-  type: collection
-  path: data/levels
-  format: json
-  filename: '{primary}.json'
-  view:
-    primary: name
-    fields: [name, order]
-  fields:
-  - name: name
-    label: Name
-    type: string
-    required: true
-  - name: order
-    label: Order in the dropdown
-    type: number
-    description: 1 comes first. National 1, Regional 2, Local 3.
-- name: series
-  label: Event series
-  type: collection
-  path: data/series
-  format: json
-  filename: '{primary}.json'
-  view:
-    primary: name
-    fields: [name]
-  fields:
-  - name: name
-    label: Name
-    type: string
-    required: true
-- name: terrain
-  label: Terrain types
-  type: collection
-  path: data/terrain
-  format: json
-  filename: '{primary}.json'
-  view:
-    primary: name
-    fields: [name]
-  fields:
-  - name: name
-    label: Name
-    type: string
-    required: true
-- name: clubs
-  label: Other clubs
-  type: collection
-  path: data/clubs
-  format: json
-  filename: '{primary}.json'
-  view:
-    primary: name
-    fields: [name, fullName]
-  fields:
-  - name: name
-    label: Short name
-    type: string
-    required: true
-    description: The short name used on the site, for example NOR or WAOC.
-  - name: fullName
-    label: Full name
-    type: string
-    description: For example Norfolk Orienteering Club.
-  - name: website
-    label: Website
-    type: string
-    description: The full web address, starting https://
-  - name: notes
-    label: About the club (optional)
-    type: text
-    description: A line or two, for example where they usually run.
-- name: towns
-  label: Towns and regions
-  type: collection
-  path: data/towns
-  format: json
-  filename: '{primary}.json'
-  view:
-    primary: name
-    fields: [name]
-  fields:
-  - name: name
-    label: Name
-    type: string
-    required: true
-    description: A town or region that groups mapped areas, for example Ipswich or Bury St Edmunds.
-- name: areas
-  label: Mapped areas
-  type: collection
-  path: data/areas
-  format: json
-  filename: '{primary}.json'
-  view:
-    primary: name
-    fields: [name]
-  fields:
-  - name: name
-    label: Name
-    type: string
-    required: true
-  - name: town
-    label: Town or region
-    type: select
-    description: Groups this area with others on the Mapped areas page. If it isn't listed, add it under Towns and regions first. Optional.
-    options:
-      values:
-      # BEGIN towns
-      - "Bury St Edmunds"
-      - "Ipswich"
-      # END towns
-  - name: mapType
-    label: Map type
-    type: select
-    description: SUFFOC map means an orienteering map our mapping officer surveyed and checked. OpenStreetMap means public OpenStreetMap data, like the MapRun nights. Other club's map is for areas we only post results for, like national events elsewhere. Those are left off the Mapped areas page. Leave empty for SUFFOC map.
-    options:
-      values:
-      - "SUFFOC map"
-      - "OpenStreetMap"
-      - "Other club's map"
-  - name: terrain
-    label: Terrain (optional)
-    type: select
-    description: Pick everything that applies. Add or change the choices under Terrain types in the menu.
-    options:
-      multiple: true
-      values:
-      # BEGIN terrain
-      - "Forest"
-      - "Heath"
-      - "Parkland"
-      - "Street and urban"
-      # END terrain
-  - name: gridRef
-    label: Grid reference (OS)
-    type: string
-    description: e.g. TM 39950 52750. The map pin is placed from this, so you don't need latitude and longitude.
-  - name: lat
-    label: Latitude (optional)
-    type: number
-    description: Only needed if there is no grid reference.
-  - name: lon
-    label: Longitude (optional)
-    type: number
-    description: Only needed if there is no grid reference.
-- name: permanent
-  label: Permanent orienteering courses
-  type: collection
-  path: data/permanent
-  format: json
-  filename: '{primary}.json'
-  view:
-    primary: name
-    fields: [name, area]
-    search: [name, area]
-  fields:
-  - name: name
-    label: Name
-    type: string
-    required: true
-  - name: area
-    label: Mapped area (optional)
-    type: select
-    description: Pick from the Mapped areas list if the course is in one of the areas the club has mapped.
-    options:
-      values:
-      # BEGIN areas
-      - "Alton Water"
-      - "Barnham Cross Common"
-      - "Beccles Common"
-      - "Belstead Brook"
-      - "Bourne Park"
-      - "Bramford"
-      - "Brandon Country Park"
-      - "Broom Hill and The Dales"
-      - "Bury St Edmunds"
-      - "Chantry Park"
-      - "Christchurch Park"
-      - "Clare"
-      - "Claydon"
-      - "Combs Ford"
-      - "Culford School"
-      - "Elmswell"
-      - "Eye"
-      - "Finborough"
-      - "Foxhall Woods"
-      - "Gunton Denes and Dip Farm"
-      - "Hardwick Heath"
-      - "Haughley Park"
-      - "Haverhill"
-      - "Holywells and Landseer Parks"
-      - "Ickworth Park"
-      - "Ipswich High School"
-      - "Kesgrave"
-      - "King's Forest"
-      - "Knettishall Heath"
-      - "Martlesham Heath"
-      - "Moreton Hall"
-      - "Needham Market"
-      - "Nowton Park"
-      - "Orwell Country Park"
-      - "Rendlesham Forest"
-      - "Royal Hospital School"
-      - "Shrubland Park"
-      - "Sudbury"
-      - "Sutton Common"
-      - "Tunstall Forest"
-      - "West Harling Heath"
-      # END areas
-  - name: description
-    label: ABOUT THE COURSE
-    type: rich-text
-    options:
-      format: html
-    description: A short description of what the course is like and who it suits.
-  - name: courses
-    label: COURSES
-    type: object
-    list: true
-    description: One entry per course, e.g. Orange, 3.0 km, 14 controls.
-    fields:
-    - name: name
-      label: Course name
-      type: string
-      description: e.g. Orange, Short Green, Course 1
-    - name: colour
-      label: Colour dot (optional)
-      type: select
-      description: Only needed if the name isn't already a colour.
-      options:
-        values:
-        - White
-        - Yellow
-        - Orange
-        - Light Green
-        - Short Green
-        - Green
-        - Blue
-        - Brown
-        - Black
-    - name: length
-      label: Length (km)
-      type: string
-    - name: controls
-      label: Number of controls
-      type: string
-    - name: climb
-      label: Climb (m, optional)
-      type: string
-    - name: note
-      label: Note (optional)
-      type: string
-  - name: mapUrl
-    label: Map download link
-    type: string
-    description: The web address of the map PDF (or the page it is on).
-  - name: mapNote
-    label: Map note (optional)
-    type: string
-    description: Short line under the download button, e.g. Print at A4. Last updated March 2025.
-  - name: gridRef
-    label: Start grid reference (OS)
-    type: string
-    description: e.g. TM 39950 52750. The map pin is placed from this.
-  - name: lat
-    label: Latitude (optional)
-    type: number
-    description: Only needed if there is no grid reference.
-  - name: lon
-    label: Longitude (optional)
-    type: number
-    description: Only needed if there is no grid reference.
-  - name: postcode
-    label: Postcode (optional)
-    type: string
-  - name: w3w
-    label: what3words (optional)
-    type: string
-    description: e.g. only.pint.form
-  - name: notes
-    label: GETTING THERE AND NOTES
-    type: rich-text
-    options:
-      format: html
-    description: Parking, access, dogs, anything people should know.
-- name: members
-  label: People
-  type: collection
-  path: data/members
-  format: json
-  filename: '{primary}.json'
-  view:
-    primary: name
-    fields: [name, club, roles]
-  fields:
-  - name: name
-    label: Name
-    type: string
-    required: true
-  - name: club
-    label: Club (leave empty for SUFFOC)
-    type: select
-    description: Only choose a club if this person is from another club, for example a controller. Pick from Other clubs. If the club is not listed, add it first using Other clubs in the menu.
-    options:
-      values:
-      # BEGIN clubs
-      - "BAOC"
-      - "BOF"
-      - "CHIG"
-      - "HAVOC"
-      - "NOR"
-      - "RAFO"
-      - "SMOC"
-      - "SOS"
-      - "WAOC"
-      # END clubs
-  - name: phone
-    label: Phone (optional)
-    type: string
-    description: Only add this if they are happy for it to be public. Shown on their page and in contact boxes.
-  - name: roles
-    label: Club roles (optional, up to 4)
-    type: object
-    list:
-      max: 4
-    description: Anyone with a role is shown on the Committee page. Each role has its own email address.
-    fields:
-    - name: role
-      label: Role
-      type: string
-      description: e.g. Chair, Treasurer, Fixtures Secretary.
-    - name: email
-      label: Email for this role
-      type: string
-      description: e.g. chair@suffoc.co.uk. Only add it if it's happy to be public.
-  - name: photo
-    label: Photo (optional)
-    type: image
-    description: Only add this if the person is happy for it to be public.
-- name: pagetext
-  label: Page text
-  type: file
-  path: data/pagetext.json
-  format: json
-  fields:
-  - name: events
-    label: EVENTS PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: results
-    label: RESULTS PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: news
-    label: NEWS PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: anytime
-    label: ANYTIME O PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: permanent
-    label: PERMANENT ORIENTEERING COURSES PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: maprun
-    label: MAPRUN PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: maprunnew
-    label: NEW TO MAPRUN PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: kit
-    label: CLUB KIT PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: safeguarding
-    label: SAFEGUARDING AND WELFARE PAGE
-    type: object
-    description: The page has an introduction, two boxes, then background text. Fill in each part below.
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: 1. Introduction (top of page)
-      type: rich-text
-      options:
-        format: html
-    - name: image
-      label: Picture (optional)
-      type: image
-      description: Optional picture shown in the top right next to the introduction.
-    - name: welfareTitle
-      label: 2. First box, title
-      type: string
-      description: Our own Welfare Officers. Leave empty for Talk to our Welfare Officers.
-    - name: welfareText
-      label: 2. First box, text above the names
-      type: rich-text
-      options:
-        format: html
-      description: The names and emails below it come from People (anyone with a role containing Welfare). Nothing to type for those.
-    - name: boTitle
-      label: 3. Second box, title
-      type: string
-      description: British Orienteering. Leave empty for British Orienteering.
-    - name: boText
-      label: 3. Second box, text above the contact
-      type: rich-text
-      options:
-        format: html
-      description: The contact below it comes from People (anyone with another club selected and a Welfare or Safeguarding role). Nothing to type for that.
-    - name: links
-      label: 3. Buttons (the first one is highlighted)
-      type: object
-      list: true
-      fields:
-      - name: label
-        label: Button text
-        type: string
-      - name: url
-        label: Web address
-        type: string
-    - name: more
-      label: 4. Background text (below the boxes)
-      type: rich-text
-      options:
-        format: html
-  - name: agm
-    label: AGM MINUTES PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: mapped
-    label: MAPPED AREAS PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: club
-    label: CLUB PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: newcomers
-    label: NEWCOMERS PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: committee
-    label: COMMITTEE PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-    - name: committee
-      label: Committee
-      type: object
-      list:
-        collapsible:
-          collapsed: true
-          summary: '{member}'
-      description: Drag to put people in the order you want. Add someone with the Add button and pick them from the list.
-      fields:
-      - name: member
-        label: Club member
-        type: select
-        options:
-          values:
-          # BEGIN members
-          - "Adam Willis"
-          - "Andrew Elliott"
-          - "Clive Wilkinson"
-          - "Colin West"
-          - "David Hodkinson"
-          - "Eddie Banks"
-          - "Ethan Radcliffe"
-          - "Gareth Radcliffe"
-          - "Hannah Constable-Simmonds"
-          - "Jeanette Downing"
-          - "John Liston"
-          - "Louise Walker"
-          - "Martin Hore"
-          - "Michael Chopping"
-          - "Mike Bickle"
-          - "Oliver Hague"
-          - "Paul Beckett"
-          - "Peter Woods"
-          - "Phil Halford"
-          - "Richard Bonnett"
-          - "Robin Thomas"
-          - "Rod Mansel"
-          - "Sally Wilkinson"
-          - "Sarah Mansel"
-          - "Simon Hooton"
-          - "Will Harrison"
-          # END members
-    - name: coaches
-      label: Coaches
-      type: object
-      list:
-        collapsible:
-          collapsed: true
-          summary: '{member}'
-      description: Drag to reorder. Their roles come from their own member entry.
-      fields:
-      - name: member
-        label: Club member
-        type: select
-        options:
-          values:
-          # BEGIN members
-          - "Adam Willis"
-          - "Andrew Elliott"
-          - "Clive Wilkinson"
-          - "Colin West"
-          - "David Hodkinson"
-          - "Eddie Banks"
-          - "Ethan Radcliffe"
-          - "Gareth Radcliffe"
-          - "Hannah Constable-Simmonds"
-          - "Jeanette Downing"
-          - "John Liston"
-          - "Louise Walker"
-          - "Martin Hore"
-          - "Michael Chopping"
-          - "Mike Bickle"
-          - "Oliver Hague"
-          - "Paul Beckett"
-          - "Peter Woods"
-          - "Phil Halford"
-          - "Richard Bonnett"
-          - "Robin Thomas"
-          - "Rod Mansel"
-          - "Sally Wilkinson"
-          - "Sarah Mansel"
-          - "Simon Hooton"
-          - "Will Harrison"
-          # END members
-  - name: league
-    label: LEAGUE PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-  - name: championships
-    label: CLUB CHAMPIONSHIPS PAGE
-    type: object
-    fields:
-    - name: sub
-      label: Subtitle
-      type: string
-      description: The line under the page title, also shown in the box that leads to this page.
-    - name: text
-      label: Main text
-      type: rich-text
-      options:
-        format: html
-      description: Text shown at the top of the page, under the title. Leave empty for none.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
-- name: agm
-  label: AGM minutes
-  type: file
-  path: data/agm.json
-  format: json
-  fields:
-  - name: minutes
-    label: AGM minutes
-    type: object
-    list:
-      collapsible:
-        collapsed: true
-        summary: '{date} {title}'
-    fields:
-    - name: date
-      label: AGM date
-      type: date
-      options:
-        format: yyyy-MM-dd
-    - name: title
-      label: Title (optional)
-      type: string
-      description: For example AGM 2025. If left empty the page shows AGM and the year.
-    - name: file
-      label: Minutes file
+        description: The full web address, starting https://
+      - name: notes
+        label: About the club (optional)
+        type: text
+        description: A line or two, for example where they usually run.
+- name: grp_results
+  label: Club results and records
+  type: group
+  items:
+    - name: league
+      label: Club league
       type: file
-      options:
-        media: documents
-      description: Upload the minutes as a PDF. These are public, so check there is nothing private in them.
-    - name: note
-      label: Note (optional)
-      type: string
-      description: A few words if needed, for example approved at the 2026 AGM.
-- name: league
-  label: Club league
-  type: file
-  path: data/league.json
-  format: json
-  fields:
-  - name: rulesFile
-    label: League rules (PDF upload)
-    type: file
-    options:
-      media: documents
-    description: Upload the rules as a PDF. Shows as a Rules button on the League page.
-  - name: rulesUrl
-    label: League rules link (instead of an upload)
-    type: string
-    description: Only if the rules are already online. An uploaded PDF above is used first.
-  - name: tableUrl
-    label: League table link
-    type: string
-    description: The web address of the current league table, for example a Google Sheets link. Shows as a League table button.
-  - name: events
-    label: Other clubs' league events
-    type: object
-    list:
-      collapsible:
-        collapsed: true
-        summary: '{date} {title}'
-    fields:
-    - name: date
-      label: Date
-      type: date
-      options:
-        format: yyyy-MM-dd
-    - name: title
-      label: Event name
-      type: string
-    - name: level
-      label: Event level
-      type: select
-      description: Optional. National, Regional or Local. To change the list, use Event levels in the menu.
-      options:
-        values:
-        # BEGIN levels
-        - "National"
-        - "Regional"
-        - "Local"
-        # END levels
-    - name: club
-      label: Host club
-      type: select
-      description: Pick from Other clubs. If the club is not listed, add it first using Other clubs in the menu.
-      options:
-        values:
-        # BEGIN clubs
-        - "BAOC"
-        - "BOF"
-        - "CHIG"
-        - "HAVOC"
-        - "NOR"
-        - "RAFO"
-        - "SMOC"
-        - "SOS"
-        - "WAOC"
-        # END clubs
-    - name: startFrom
-      label: Start times from (optional)
-      type: string
-      description: For example 10:30.
-    - name: closes
-      label: Courses close (optional)
-      type: string
-      description: For example 14:15.
-    - name: link
-      label: Link to enter or find out more
-      type: string
-      description: The full web address, usually the other club's event page or entry page.
-    - name: note
-      label: Note (optional)
-      type: string
-- name: championships
-  label: Club championships
-  type: file
-  path: data/championships.json
-  format: json
-  fields:
-  - name: rules
-    label: Championship rules
-    type: rich-text
-    options:
-      format: html
-    description: Shown on the Club Championships page under Championship rules. Tables are supported.
-  - name: championships
-    label: Club championships
-    type: object
-    list:
-      collapsible:
-        collapsed: true
-        summary: '{year} {event}'
-    fields:
-    - name: year
-      label: Year
-      type: string
-      description: For example 2026.
-    - name: event
-      label: Event name
-      type: string
-    - name: date
-      label: Date (optional)
-      type: date
-      options:
-        format: yyyy-MM-dd
-    - name: venue
-      label: Venue (optional)
-      type: string
-    - name: club
-      label: Host club (optional)
-      type: select
-      description: Pick from Other clubs if another club hosted it.
-      options:
-        values:
-        # BEGIN clubs
-        - "BAOC"
-        - "BOF"
-        - "CHIG"
-        - "HAVOC"
-        - "NOR"
-        - "RAFO"
-        - "SMOC"
-        - "SOS"
-        - "WAOC"
-        # END clubs
-    - name: eventLink
-      label: Event page link (optional)
-      type: string
-      description: The full web address of the event, for example a SUFFOC event page.
-    - name: resultsLink
-      label: Results link (optional)
-      type: string
-      description: The full web address of the results.
-    - name: resultsFile
-      label: Results file (optional)
-      type: file
-      options:
-        media: documents
-      description: Upload the results as a PDF, if there is no online link.
-    - name: note
-      label: Note (optional)
-      type: string
-    - name: winners
-      label: Winners
-      type: object
-      list: true
+      path: data/league.json
+      format: json
       fields:
-      - name: class
-        label: Class
-        type: string
-        description: For example Men, Women or M16.
-      - name: member
-        label: Club member
-        type: select
-        description: Pick the winner from People. They then get this win on their own page.
+      - name: rulesFile
+        label: League rules (PDF upload)
+        type: file
         options:
-          values:
-          # BEGIN members
-          - "Adam Willis"
-          - "Andrew Elliott"
-          - "Clive Wilkinson"
-          - "Colin West"
-          - "David Hodkinson"
-          - "Eddie Banks"
-          - "Ethan Radcliffe"
-          - "Gareth Radcliffe"
-          - "Hannah Constable-Simmonds"
-          - "Jeanette Downing"
-          - "John Liston"
-          - "Louise Walker"
-          - "Martin Hore"
-          - "Michael Chopping"
-          - "Mike Bickle"
-          - "Oliver Hague"
-          - "Paul Beckett"
-          - "Peter Woods"
-          - "Phil Halford"
-          - "Richard Bonnett"
-          - "Robin Thomas"
-          - "Rod Mansel"
-          - "Sally Wilkinson"
-          - "Sarah Mansel"
-          - "Simon Hooton"
-          - "Will Harrison"
-          # END members
-      - name: otherName
-        label: Winner not in the members list
+          media: documents
+        description: Upload the rules as a PDF. Shows as a Rules button on the League page.
+      - name: rulesUrl
+        label: League rules link (instead of an upload)
         type: string
-        description: Only if the winner isn't in People, for example an earlier year. Leave empty when you pick a member above.
-- name: news
-  label: News
-  type: file
-  path: data/news.json
-  format: json
-  fields:
-  - name: news
-    label: News items
-    type: object
-    list:
-      collapsible:
-        collapsed: true
-        summary: '{date} {title}'
-    fields:
-    - name: title
-      label: Headline
-      type: string
-    - name: date
-      label: Date
-      type: date
-      options:
-        format: yyyy-MM-dd
-    - name: image
-      label: Picture (optional)
-      type: image
-    - name: imageAlt
-      label: Picture description (optional)
-      type: string
-      description: A few words describing the picture, for people using screen readers.
-    - name: text
-      label: Main text
-      type: rich-text
-      description: The full article. The cards on the home and News pages show the first few words, with Read more taking people to the full article.
-      options:
-        format: html
-    - name: link
-      label: Link to old news page (optional)
-      type: string
-      description: Only if the article also exists on the old website.
+        description: Only if the rules are already online. An uploaded PDF above is used first.
+      - name: tableUrl
+        label: League table link
+        type: string
+        description: The web address of the current league table, for example a Google Sheets link. Shows as a League table button.
+      - name: events
+        label: Other clubs' league events
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: '{date} {title}'
+        fields:
+        - name: date
+          label: Date
+          type: date
+          options:
+            format: yyyy-MM-dd
+        - name: title
+          label: Event name
+          type: string
+        - name: level
+          label: Event level
+          type: select
+          description: Optional. National, Regional or Local. To change the list, use Event levels in the menu.
+          options:
+            values:
+            # BEGIN levels
+            - "National"
+            - "Regional"
+            - "Local"
+            # END levels
+        - name: club
+          label: Host club
+          type: select
+          description: Pick from Other clubs. If the club is not listed, add it first using Other clubs in the menu.
+          options:
+            values:
+            # BEGIN clubs
+            - "BAOC"
+            - "BOF"
+            - "CHIG"
+            - "HAVOC"
+            - "NOR"
+            - "RAFO"
+            - "SMOC"
+            - "SOS"
+            - "WAOC"
+            # END clubs
+        - name: startFrom
+          label: Start times from (optional)
+          type: string
+          description: For example 10:30.
+        - name: closes
+          label: Courses close (optional)
+          type: string
+          description: For example 14:15.
+        - name: link
+          label: Link to enter or find out more
+          type: string
+          description: The full web address, usually the other club's event page or entry page.
+        - name: note
+          label: Note (optional)
+          type: string
+    - name: championships
+      label: Club championships
+      type: file
+      path: data/championships.json
+      format: json
+      fields:
+      - name: rules
+        label: Championship rules
+        type: rich-text
+        options:
+          format: html
+        description: Shown on the Club Championships page under Championship rules. Tables are supported.
+      - name: championships
+        label: Club championships
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: '{year} {event}'
+        fields:
+        - name: year
+          label: Year
+          type: string
+          description: For example 2026.
+        - name: event
+          label: Event name
+          type: string
+        - name: date
+          label: Date (optional)
+          type: date
+          options:
+            format: yyyy-MM-dd
+        - name: venue
+          label: Venue (optional)
+          type: string
+        - name: club
+          label: Host club (optional)
+          type: select
+          description: Pick from Other clubs if another club hosted it.
+          options:
+            values:
+            # BEGIN clubs
+            - "BAOC"
+            - "BOF"
+            - "CHIG"
+            - "HAVOC"
+            - "NOR"
+            - "RAFO"
+            - "SMOC"
+            - "SOS"
+            - "WAOC"
+            # END clubs
+        - name: eventLink
+          label: Event page link (optional)
+          type: string
+          description: The full web address of the event, for example a SUFFOC event page.
+        - name: resultsLink
+          label: Results link (optional)
+          type: string
+          description: The full web address of the results.
+        - name: resultsFile
+          label: Results file (optional)
+          type: file
+          options:
+            media: documents
+          description: Upload the results as a PDF, if there is no online link.
+        - name: note
+          label: Note (optional)
+          type: string
+        - name: winners
+          label: Winners
+          type: object
+          list: true
+          fields:
+          - name: class
+            label: Class
+            type: string
+            description: For example Men, Women or M16.
+          - name: member
+            label: Club member
+            type: select
+            description: Pick the winner from People. They then get this win on their own page.
+            options:
+              values:
+              # BEGIN members
+              - "Adam Willis"
+              - "Andrew Elliott"
+              - "Clive Wilkinson"
+              - "Colin West"
+              - "David Hodkinson"
+              - "Eddie Banks"
+              - "Ethan Radcliffe"
+              - "Gareth Radcliffe"
+              - "Hannah Constable-Simmonds"
+              - "Jeanette Downing"
+              - "John Liston"
+              - "Louise Walker"
+              - "Martin Hore"
+              - "Michael Chopping"
+              - "Mike Bickle"
+              - "Oliver Hague"
+              - "Paul Beckett"
+              - "Peter Woods"
+              - "Phil Halford"
+              - "Richard Bonnett"
+              - "Robin Thomas"
+              - "Rod Mansel"
+              - "Sally Wilkinson"
+              - "Sarah Mansel"
+              - "Simon Hooton"
+              - "Will Harrison"
+              # END members
+          - name: otherName
+            label: Winner not in the members list
+            type: string
+            description: Only if the winner isn't in People, for example an earlier year. Leave empty when you pick a member above.
+    - name: agm
+      label: AGM minutes
+      type: file
+      path: data/agm.json
+      format: json
+      fields:
+      - name: minutes
+        label: AGM minutes
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: '{date} {title}'
+        fields:
+        - name: date
+          label: AGM date
+          type: date
+          options:
+            format: yyyy-MM-dd
+        - name: title
+          label: Title (optional)
+          type: string
+          description: For example AGM 2025. If left empty the page shows AGM and the year.
+        - name: file
+          label: Minutes file
+          type: file
+          options:
+            media: documents
+          description: Upload the minutes as a PDF. These are public, so check there is nothing private in them.
+        - name: note
+          label: Note (optional)
+          type: string
+          description: A few words if needed, for example approved at the 2026 AGM.
+- name: grp_pages
+  label: Pages and news
+  type: group
+  items:
+    - name: pagetext
+      label: Page text
+      type: file
+      path: data/pagetext.json
+      format: json
+      fields:
+      - name: events
+        label: EVENTS PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+      - name: results
+        label: RESULTS PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+      - name: news
+        label: NEWS PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+      - name: anytime
+        label: ANYTIME O PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+      - name: permanent
+        label: PERMANENT ORIENTEERING COURSES PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+      - name: maprun
+        label: MAPRUN PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+      - name: maprunnew
+        label: NEW TO MAPRUN PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+      - name: kit
+        label: CLUB KIT PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+      - name: safeguarding
+        label: SAFEGUARDING AND WELFARE PAGE
+        type: object
+        description: The page has an introduction, two boxes, then background text. Fill in each part below.
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: 1. Introduction (top of page)
+          type: rich-text
+          options:
+            format: html
+        - name: image
+          label: Picture (optional)
+          type: image
+          description: Optional picture shown in the top right next to the introduction.
+        - name: welfareTitle
+          label: 2. First box, title
+          type: string
+          description: Our own Welfare Officers. Leave empty for Talk to our Welfare Officers.
+        - name: welfareText
+          label: 2. First box, text above the names
+          type: rich-text
+          options:
+            format: html
+          description: The names and emails below it come from People (anyone with a role containing Welfare). Nothing to type for those.
+        - name: boTitle
+          label: 3. Second box, title
+          type: string
+          description: British Orienteering. Leave empty for British Orienteering.
+        - name: boText
+          label: 3. Second box, text above the contact
+          type: rich-text
+          options:
+            format: html
+          description: The contact below it comes from People (anyone with another club selected and a Welfare or Safeguarding role). Nothing to type for that.
+        - name: links
+          label: 3. Buttons (the first one is highlighted)
+          type: object
+          list: true
+          fields:
+          - name: label
+            label: Button text
+            type: string
+          - name: url
+            label: Web address
+            type: string
+        - name: more
+          label: 4. Background text (below the boxes)
+          type: rich-text
+          options:
+            format: html
+      - name: agm
+        label: AGM MINUTES PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+      - name: mapped
+        label: MAPPED AREAS PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+      - name: club
+        label: CLUB PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+      - name: newcomers
+        label: NEWCOMERS PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+      - name: committee
+        label: COMMITTEE PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+        - name: committee
+          label: Committee
+          type: object
+          list:
+            collapsible:
+              collapsed: true
+              summary: '{member}'
+          description: Drag to put people in the order you want. Add someone with the Add button and pick them from the list.
+          fields:
+          - name: member
+            label: Club member
+            type: select
+            options:
+              values:
+              # BEGIN members
+              - "Adam Willis"
+              - "Andrew Elliott"
+              - "Clive Wilkinson"
+              - "Colin West"
+              - "David Hodkinson"
+              - "Eddie Banks"
+              - "Ethan Radcliffe"
+              - "Gareth Radcliffe"
+              - "Hannah Constable-Simmonds"
+              - "Jeanette Downing"
+              - "John Liston"
+              - "Louise Walker"
+              - "Martin Hore"
+              - "Michael Chopping"
+              - "Mike Bickle"
+              - "Oliver Hague"
+              - "Paul Beckett"
+              - "Peter Woods"
+              - "Phil Halford"
+              - "Richard Bonnett"
+              - "Robin Thomas"
+              - "Rod Mansel"
+              - "Sally Wilkinson"
+              - "Sarah Mansel"
+              - "Simon Hooton"
+              - "Will Harrison"
+              # END members
+        - name: coaches
+          label: Coaches
+          type: object
+          list:
+            collapsible:
+              collapsed: true
+              summary: '{member}'
+          description: Drag to reorder. Their roles come from their own member entry.
+          fields:
+          - name: member
+            label: Club member
+            type: select
+            options:
+              values:
+              # BEGIN members
+              - "Adam Willis"
+              - "Andrew Elliott"
+              - "Clive Wilkinson"
+              - "Colin West"
+              - "David Hodkinson"
+              - "Eddie Banks"
+              - "Ethan Radcliffe"
+              - "Gareth Radcliffe"
+              - "Hannah Constable-Simmonds"
+              - "Jeanette Downing"
+              - "John Liston"
+              - "Louise Walker"
+              - "Martin Hore"
+              - "Michael Chopping"
+              - "Mike Bickle"
+              - "Oliver Hague"
+              - "Paul Beckett"
+              - "Peter Woods"
+              - "Phil Halford"
+              - "Richard Bonnett"
+              - "Robin Thomas"
+              - "Rod Mansel"
+              - "Sally Wilkinson"
+              - "Sarah Mansel"
+              - "Simon Hooton"
+              - "Will Harrison"
+              # END members
+      - name: league
+        label: LEAGUE PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+      - name: championships
+        label: CLUB CHAMPIONSHIPS PAGE
+        type: object
+        fields:
+        - name: sub
+          label: Subtitle
+          type: string
+          description: The line under the page title, also shown in the box that leads to this page.
+        - name: text
+          label: Main text
+          type: rich-text
+          options:
+            format: html
+          description: Text shown at the top of the page, under the title. Leave empty for none.
+        - name: image
+          label: Picture
+          type: image
+          description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
+    - name: news
+      label: News
+      type: file
+      path: data/news.json
+      format: json
+      fields:
+      - name: news
+        label: News items
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: '{date} {title}'
+        fields:
+        - name: title
+          label: Headline
+          type: string
+        - name: date
+          label: Date
+          type: date
+          options:
+            format: yyyy-MM-dd
+        - name: image
+          label: Picture (optional)
+          type: image
+        - name: imageAlt
+          label: Picture description (optional)
+          type: string
+          description: A few words describing the picture, for people using screen readers.
+        - name: text
+          label: Main text
+          type: rich-text
+          description: The full article. The cards on the home and News pages show the first few words, with Read more taking people to the full article.
+          options:
+            format: html
+        - name: link
+          label: Link to old news page (optional)
+          type: string
+          description: Only if the article also exists on the old website.
