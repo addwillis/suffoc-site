@@ -371,6 +371,32 @@
       "id": "needham-2026"
     },
     {
+      "title": "Needham Market",
+      "date": "2025-07-16",
+      "level": "Local",
+      "league": false,
+      "area": "Needham Market",
+      "about": "<p></p>",
+      "officials": {
+        "planner": "Martin Hore",
+        "organiser": "Martin Hore"
+      },
+      "comments": {
+        "planner": "<p></p>",
+        "organiser": "<p></p>",
+        "controller": "<p></p>"
+      },
+      "resultLinks": {
+        "other": [
+          {
+            "label": "Results",
+            "url": "https://results.maprun.net/#/event_results?eventName=Needham%20Market%202025%20PXAS%20ScoreN60"
+          }
+        ]
+      },
+      "id": "needham-market"
+    },
+    {
       "title": "Nowton and Hardwick",
       "date": "2025-11-16",
       "level": "Regional",
