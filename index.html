@@ -323,6 +323,7 @@ dl.facts dd a:hover{color:var(--sky)}
 .site-footer .fbtn .fi{margin:0;width:1.35rem;height:1.35rem;vertical-align:0}
 .motto{font:700 1.4rem var(--display);letter-spacing:.08em;text-transform:uppercase;color:#fff}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.updated{font-size:.85rem;opacity:.7;margin:0 0 .8rem}
 </style>
 </head>
 <body>
@@ -377,7 +378,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 171';
+const BUILD = 'build 174';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -485,7 +486,7 @@ function memberId(v){
 }
 
 const CLUB = [
-  { id:'privacy',       title:'Data Privacy Policy', desc:'How we look after your personal data.', icon:'safeguard', hidden:true },
+  { id:'privacy',       title:'Data Privacy Policy', desc:'How we look after your personal data.', icon:'lock', hidden:true },
   { id:'about',         title:'About Us',          desc:'Who we are, where we run, and our club history.', icon:'clubabout' },
   { id:'committee',     title:'Committee',         desc:'Who does what on the committee.', icon:'committee' },
   { id:'league',        title:'League',            desc:'Club league events, rules and standings.', icon:'league' },
@@ -949,6 +950,7 @@ const ICONS = {
   courses:'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h8"/>',
   about:'<circle cx="12" cy="12" r="9"/><path d="M15.8 8.2l-2.1 5.5-5.5 2.1 2.1-5.5z"/><circle cx="12" cy="12" r=".8"/>',
   safeguard:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
   safeguardlead:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path stroke-width=\"1.1\" d="M12.00 6.50 L13.35 9.84 L16.95 10.09 L14.19 12.41 L15.06 15.91 L12.00 14.00 L8.94 15.91 L9.81 12.41 L7.05 10.09 L10.65 9.84z"/>',
   docs:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>',
   newcomers:'<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>'
@@ -1496,7 +1498,7 @@ function clubPage(id){
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
     <div class="sgrid">
-      <div class="prose">${pic ? '<img class="introimg" src="' + esc(pic) + '" alt="" loading="lazy">' : ''}${richHTML(PAGETEXT.safeguarding)}${PAGETEXT.safeguarding_more ? richHTML(PAGETEXT.safeguarding_more) : ''}</div>
+      <div class="prose">${pic ? '<img class="introimg" src="' + esc(pic) + '" alt="" loading="lazy">' : ''}${updatedLine('safeguarding')}${richHTML(PAGETEXT.safeguarding)}${PAGETEXT.safeguarding_more ? richHTML(PAGETEXT.safeguarding_more) : ''}</div>
       ${safeguardingBoxes()}
     </div>
   </section></div>`;
@@ -1585,13 +1587,20 @@ function flattenPageText(pt){
   });
   return out;
 }
+function updatedLine(name){
+  let u = String((PAGETEXT || {})[name + '_updated'] || '').trim();
+  if (!u) return '';
+  const d = new Date(u); if (!isNaN(d)) u = d.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  return '<p class="updated">Last updated: ' + esc(u) + '</p>';
+}
 function introText(name, html){
   const t = PAGETEXT[name], plain = String(t == null ? '' : t).replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
   let pic = String(PAGETEXT[name + '_image'] || '').trim();
   if (pic && !/^https?:\/\//i.test(pic)) pic = (window.BASE || '/').replace(/\/$/, '') + '/' + pic.replace(/^\/+/, '');
   if (!plain && !pic) return html;
   const img = pic ? '<img class="introimg" src="' + esc(pic) + '" alt="" loading="lazy" onload="this.classList.toggle(\'tall\', this.naturalHeight > this.naturalWidth)">' : '';
-  const box = '<div class="wrap"><div class="prose pageintro">' + img + (plain ? richHTML(t) : '') + '</div></div>';
+  const upd = updatedLine(name);
+  const box = '<div class="wrap"><div class="prose pageintro">' + img + upd + (plain ? richHTML(t) : '') + '</div></div>';
   const i = html.indexOf('</section>');
   if (i < 0) return html;
   let head = html.slice(0, i + 10), rest = html.slice(i + 10), back = '';

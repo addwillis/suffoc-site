@@ -1213,6 +1213,9 @@ content:
         - name: sub
           label: Subtitle
           type: string
+        - name: updated
+          label: Last updated (change when the policy changes)
+          type: date
         - name: text
           label: Text
           type: rich-text
@@ -1348,6 +1351,9 @@ content:
           label: Subtitle
           type: string
           description: The line under the page title, also shown in the box that leads to this page.
+        - name: updated
+          label: Last updated (change when the page changes)
+          type: date
         - name: text
           label: 1. Introduction (top of page)
           type: rich-text
