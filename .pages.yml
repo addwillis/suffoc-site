@@ -777,6 +777,7 @@ content:
       values:
       # BEGIN clubs
       - "BAOC"
+      - "BOF"
       - "CHIG"
       - "HAVOC"
       - "NOR"
@@ -1318,6 +1319,7 @@ content:
         values:
         # BEGIN clubs
         - "BAOC"
+        - "BOF"
         - "CHIG"
         - "HAVOC"
         - "NOR"
@@ -1384,6 +1386,7 @@ content:
         values:
         # BEGIN clubs
         - "BAOC"
+        - "BOF"
         - "CHIG"
         - "HAVOC"
         - "NOR"
