@@ -2,7 +2,10 @@
   "title": "SUFFOC Mid-Week Street-O 4 Elmswell",
   "date": "2027-02-09",
   "level": "Local",
-  "series": "Mid-Week Street-O",
+  "series": [
+    "Mid-Week Street-O"
+  ],
+  "league": false,
   "area": "Elmswell",
   "about": "<p></p>",
   "location": {
@@ -30,7 +33,7 @@
         "early": "4"
       },
       {
-        "category": "Se",
+        "category": "Senior non-member",
         "early": "4"
       },
       {
@@ -48,8 +51,13 @@
     "courseClose": "19:15"
   },
   "officials": {
-    "organiser": "Gareth Radcliffe",
     "planner": "Gareth Radcliffe",
+    "organiser": "Gareth Radcliffe",
     "riskAssessor": "Sarah Mansel"
+  },
+  "comments": {
+    "planner": "<p></p>",
+    "organiser": "<p></p>",
+    "controller": "<p></p>"
   }
 }
