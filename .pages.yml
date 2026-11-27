@@ -996,6 +996,10 @@ content:
     - name: boEmail
       label: 3. Contact email
       type: string
+    - name: boPhoto
+      label: 3. Contact photo (optional)
+      type: image
+      description: Only add this if they are happy for it to be public. Without a photo the box shows their initials.
     - name: links
       label: 3. Buttons (the first one is highlighted)
       type: object

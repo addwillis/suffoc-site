@@ -256,6 +256,14 @@ dl.facts dd a:hover{color:var(--sky)}
 .mcard:hover h3{text-decoration:underline;text-underline-offset:3px}
 .mcard .mimg{width:120px;height:120px;border-radius:50%;object-fit:cover;flex:none;border:4px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 6px 16px rgba(11,42,85,.2)}
 .mcard .minit{width:120px;height:120px;border-radius:50%;flex:none;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font:700 2.2rem var(--body);border:4px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 6px 16px rgba(11,42,85,.2)}
+.crows{display:flex;flex-direction:column;gap:.9rem;margin:.9rem 0 0}
+.crow{display:flex;align-items:center;gap:.9rem}
+.crow .cimg,.crow .cinit{width:64px;height:64px;border-radius:50%;flex:none;border:3px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 3px 8px rgba(11,42,85,.18)}
+.crow .cimg{object-fit:cover}
+.crow .cinit{background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font:700 1.2rem var(--body)}
+.crow b{display:block;font-size:1.05rem;color:var(--navy)}
+.crow .crole{display:block;color:var(--muted);font-size:.9rem}
+.crow .cdet{display:block;margin-top:.15rem;font-size:.88rem;overflow-wrap:anywhere}
 .mcard h3{margin:.9rem 0 .35rem;font-size:1.2rem;color:var(--navy)}
 .mcard .mroles{margin:0;color:var(--muted);font-weight:600;line-height:1.45}
 .mcard .mrole,.person .mrole{margin:0;color:var(--muted);font-weight:600}
@@ -356,7 +364,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 159';
+const BUILD = 'build 160';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -1420,18 +1428,25 @@ function agmPage(){
   </section></div>`;
 }
 /* Safeguarding page: two boxes. First our own Welfare Officers (from People), then British Orienteering's contact and policies. */
+function contactRow(c){
+  const ini = String(c.name).split(/\s+/).filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+  const nm = c.href ? '<a href="' + esc(c.href) + '">' + esc(c.name) + '</a>' : esc(c.name);
+  return '<div class="crow">' + (c.photo ? '<img class="cimg" src="' + esc(imgSrc(c.photo)) + '" alt="" loading="lazy">' : '<span class="cinit" aria-hidden="true">' + esc(ini) + '</span>')
+    + '<div><b>' + nm + '</b>' + (c.role ? '<span class="crole">' + esc(c.role) + '</span>' : '')
+    + (c.email ? '<span class="cdet"><a href="mailto:' + esc(c.email) + '">' + esc(c.email) + '</a></span>' : '')
+    + (c.phone ? '<span class="cdet"><a href="tel:' + esc(c.phone.replace(/\s+/g, '')) + '">' + esc(c.phone) + '</a></span>' : '') + '</div></div>';
+}
 function safeguardingBoxes(){
   const P = k => String(PAGETEXT['safeguarding_' + k] || '').trim();
   const BO = 'https://www.britishorienteering.org.uk/';
-  const mine = roleTokens('{{people:Welfare}}');
-  const bo = { name:P('boName'), phone:P('boPhone'), email:P('boEmail') };
+  const mine = roleHolders('welfare').map(x => contactRow({ name:x.m.name, href:'#person-' + x.m.id, photo:x.m.photo, role:x.r.role, email:x.r.email })).join('');
+  const bo = { name:P('boName'), phone:P('boPhone'), email:P('boEmail'), photo:P('boPhoto') };
   const links = (Array.isArray(PAGETEXT.safeguarding_links) ? PAGETEXT.safeguarding_links : []).filter(l => l && l.label && l.url);
-  const boLine = [bo.name, bo.phone ? '<a href="tel:' + esc(bo.phone.replace(/\s+/g, '')) + '">' + esc(bo.phone) + '</a>' : '', bo.email ? '<a href="mailto:' + esc(bo.email) + '">' + esc(bo.email) + '</a>' : ''].map((x, i) => i ? x : esc(x)).filter(Boolean).join(', ');
   return `<div class="stack" style="margin:1.2rem 0">
     <section class="card"><h3>${ct('safeguard', esc(P('welfareTitle') || 'Talk to our Welfare Officers'))}</h3>
-      ${P('welfareText') ? '<div class="prose" style="margin:.5rem 0">' + richHTML(P('welfareText')) + '</div>' : ''}${mine || '<p class="cnote">Welfare Officers are added under People in the CMS (give them a role containing Welfare).</p>'}</section>
+      ${P('welfareText') ? '<div class="prose" style="margin:.5rem 0">' + richHTML(P('welfareText')) + '</div>' : ''}${mine ? '<div class="crows">' + mine + '</div>' : '<p class="cnote">Welfare Officers are added under People in the CMS (give them a role containing Welfare).</p>'}</section>
     <section class="card"><h3>${ct('docs', esc(P('boTitle') || 'British Orienteering'))}</h3>
-      ${P('boText') ? '<div class="prose" style="margin:.5rem 0">' + richHTML(P('boText')) + '</div>' : ''}${boLine ? '<ul><li>' + boLine + '</li></ul>' : ''}
+      ${P('boText') ? '<div class="prose" style="margin:.5rem 0">' + richHTML(P('boText')) + '</div>' : ''}${bo.name ? '<div class="crows">' + contactRow({ name:bo.name, photo:bo.photo, role:'Lead Safeguarding Officer', email:bo.email, phone:bo.phone }) + '</div>' : ''}
       ${links.length ? '<div class="links" style="margin-top:.8rem">' + links.map((l, i) => '<a class="btn small ' + (i ? 'line' : 'gold') + '" href="' + esc(l.url) + '" ' + ext + '>' + esc(l.label) + '</a>').join('') + '</div>' : ''}</section>
   </div>${PAGETEXT.safeguarding_more ? '<div class="prose">' + richHTML(PAGETEXT.safeguarding_more) + '</div>' : ''}`;
 }
