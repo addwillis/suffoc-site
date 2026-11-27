@@ -953,38 +953,65 @@ content:
   - name: safeguarding
     label: SAFEGUARDING AND WELFARE PAGE
     type: object
+    description: The page has an introduction, two boxes, then background text. Fill in each part below.
     fields:
     - name: sub
       label: Subtitle
       type: string
       description: The line under the page title, also shown in the box that leads to this page.
     - name: text
-      label: Main text
+      label: 1. Introduction (top of page)
       type: rich-text
       options:
         format: html
-      description: A short introduction at the top. The two boxes below it (our Welfare Officers, taken from People, and British Orienteering's contact and policy links) appear automatically.
-    - name: boName
-      label: British Orienteering officer, name
+    - name: image
+      label: Picture (optional)
+      type: image
+      description: Optional picture shown in the top right next to the introduction.
+    - name: welfareTitle
+      label: 2. First box, title
       type: string
-      description: Shown in the British Orienteering box. Leave empty to use Jeanette Downing.
+      description: Our own Welfare Officers. Leave empty for Talk to our Welfare Officers.
+    - name: welfareText
+      label: 2. First box, text above the names
+      type: rich-text
+      options:
+        format: html
+      description: The names and emails below it come from People (anyone with a role containing Welfare). Nothing to type for those.
+    - name: boTitle
+      label: 3. Second box, title
+      type: string
+      description: British Orienteering. Leave empty for British Orienteering.
+    - name: boText
+      label: 3. Second box, text above the contact
+      type: rich-text
+      options:
+        format: html
+    - name: boName
+      label: 3. Contact name
+      type: string
     - name: boPhone
-      label: British Orienteering officer, phone
+      label: 3. Contact phone
       type: string
     - name: boEmail
-      label: British Orienteering officer, email
+      label: 3. Contact email
       type: string
-      description: Their own email if you have it. Leave empty to use safeguarding@britishorienteering.org.uk.
+    - name: links
+      label: 3. Buttons (the first one is highlighted)
+      type: object
+      list: true
+      fields:
+      - name: label
+        label: Button text
+        type: string
+      - name: url
+        label: Web address
+        type: string
     - name: more
-      label: Background text (below the boxes)
+      label: 4. Background text (below the boxes)
       type: rich-text
       options:
         format: html
-      description: Optional longer text shown under the boxes.
-    - name: image
-      label: Picture
-      type: image
-      description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
   - name: agm
     label: AGM MINUTES PAGE
     type: object

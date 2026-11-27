@@ -356,7 +356,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 158';
+const BUILD = 'build 159';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -1421,16 +1421,18 @@ function agmPage(){
 }
 /* Safeguarding page: two boxes. First our own Welfare Officers (from People), then British Orienteering's contact and policies. */
 function safeguardingBoxes(){
+  const P = k => String(PAGETEXT['safeguarding_' + k] || '').trim();
   const BO = 'https://www.britishorienteering.org.uk/';
   const mine = roleTokens('{{people:Welfare}}');
-  const bo = { name:String(PAGETEXT.safeguarding_boName || 'Jeanette Downing').trim(), phone:String(PAGETEXT.safeguarding_boPhone || '07891 091662').trim(), email:String(PAGETEXT.safeguarding_boEmail || 'safeguarding@britishorienteering.org.uk').trim() };
+  const bo = { name:P('boName'), phone:P('boPhone'), email:P('boEmail') };
+  const links = (Array.isArray(PAGETEXT.safeguarding_links) ? PAGETEXT.safeguarding_links : []).filter(l => l && l.label && l.url);
+  const boLine = [bo.name, bo.phone ? '<a href="tel:' + esc(bo.phone.replace(/\s+/g, '')) + '">' + esc(bo.phone) + '</a>' : '', bo.email ? '<a href="mailto:' + esc(bo.email) + '">' + esc(bo.email) + '</a>' : ''].map((x, i) => i ? x : esc(x)).filter(Boolean).join(', ');
   return `<div class="stack" style="margin:1.2rem 0">
-    <section class="card"><h3>${ct('safeguard', 'Talk to our Welfare Officers')}</h3>
-      <p style="margin:.5rem 0">If you have a concern, however small, please have a word with one of them at an event or by email.</p>${mine || '<p class="cnote">Welfare Officers are added under People in the CMS (give them a role containing Welfare).</p>'}</section>
-    <section class="card"><h3>${ct('docs', 'British Orienteering')}</h3>
-      <p style="margin:.5rem 0">If you would rather not speak to the club, contact British Orienteering's Lead Safeguarding Officer.</p>
-      <ul><li>${esc(bo.name)}${bo.phone ? ', <a href="tel:' + esc(bo.phone.replace(/\s+/g, '')) + '">' + esc(bo.phone) + '</a>' : ''}${bo.email ? ', <a href="mailto:' + esc(bo.email) + '">' + esc(bo.email) + '</a>' : ''}</li></ul>
-      <div class="links" style="margin-top:.8rem"><a class="btn small gold" href="${BO}safeguardreporting" ${ext}>Report a concern</a><a class="btn small line" href="${BO}safeguardingandsafety" ${ext}>Child safeguarding policy</a><a class="btn small line" href="https://britishorienteering.org.uk/doc/policies-and-guidance/safeguarding/adult-safeguarding-policy" ${ext}>Adult safeguarding policy</a></div></section>
+    <section class="card"><h3>${ct('safeguard', esc(P('welfareTitle') || 'Talk to our Welfare Officers'))}</h3>
+      ${P('welfareText') ? '<div class="prose" style="margin:.5rem 0">' + richHTML(P('welfareText')) + '</div>' : ''}${mine || '<p class="cnote">Welfare Officers are added under People in the CMS (give them a role containing Welfare).</p>'}</section>
+    <section class="card"><h3>${ct('docs', esc(P('boTitle') || 'British Orienteering'))}</h3>
+      ${P('boText') ? '<div class="prose" style="margin:.5rem 0">' + richHTML(P('boText')) + '</div>' : ''}${boLine ? '<ul><li>' + boLine + '</li></ul>' : ''}
+      ${links.length ? '<div class="links" style="margin-top:.8rem">' + links.map((l, i) => '<a class="btn small ' + (i ? 'line' : 'gold') + '" href="' + esc(l.url) + '" ' + ext + '>' + esc(l.label) + '</a>').join('') + '</div>' : ''}</section>
   </div>${PAGETEXT.safeguarding_more ? '<div class="prose">' + richHTML(PAGETEXT.safeguarding_more) + '</div>' : ''}`;
 }
 function clubPage(id){
@@ -1519,7 +1521,7 @@ function flattenPageText(pt){
   if (!pt || typeof pt !== 'object' || Array.isArray(pt)) return out;
   Object.keys(pt).forEach(k => {
     const v = pt[k];
-    if (v && typeof v === 'object') { out[k] = v.text || ''; out[k + '_sub'] = v.sub || ''; out[k + '_image'] = v.image || ''; out[k + '_more'] = v.more || ''; ['boName', 'boPhone', 'boEmail'].forEach(f => { out[k + '_' + f] = v[f] || ''; }); }
+    if (v && typeof v === 'object') { out[k] = v.text || ''; out[k + '_sub'] = v.sub || ''; out[k + '_image'] = v.image || ''; Object.keys(v).forEach(f => { if (!/^(text|sub|image)$/.test(f)) out[k + '_' + f] = v[f]; }); }
     else out[k] = v;
   });
   return out;

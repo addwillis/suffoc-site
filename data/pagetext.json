@@ -35,10 +35,28 @@
   "safeguarding": {
     "sub": "Who to talk to if you have a concern.",
     "text": "<p>British Orienteering is committed to ensuring that everyone who participates in orienteering, including children and at-risk adults, has a positive experience in what can be a challenging environment, while keeping it as safe as possible. With this in mind, British Orienteering has continued to develop and implement policies and procedures which ensure everyone knows and accepts their responsibility for the duty of care owed to children and at-risk adults. Practical support for affiliated clubs such as SUFFOC includes providing a comprehensive safeguarding policy, along with training for our volunteer Welfare Officers and Coaches.&nbsp;</p>",
+    "more": "<p></p>",
     "boName": "Jeanette Downing",
     "boPhone": "07891 091662",
     "boEmail": "safeguarding@britishorienteering.org.uk",
-    "more": "<p></p>"
+    "welfareTitle": "Talk to our Welfare Officers",
+    "welfareText": "<p>If you have a concern, however small, please have a word with one of them at an event or by email.</p>",
+    "boTitle": "British Orienteering",
+    "boText": "<p>If you would rather not speak to the club, contact British Orienteering's Lead Safeguarding Officer.</p>",
+    "links": [
+      {
+        "label": "Report a concern",
+        "url": "https://www.britishorienteering.org.uk/safeguardreporting"
+      },
+      {
+        "label": "Child safeguarding policy",
+        "url": "https://www.britishorienteering.org.uk/safeguardingandsafety"
+      },
+      {
+        "label": "Adult safeguarding policy",
+        "url": "https://britishorienteering.org.uk/doc/policies-and-guidance/safeguarding/adult-safeguarding-policy"
+      }
+    ]
   },
   "agm": {
     "sub": "Minutes from past AGMs.",
