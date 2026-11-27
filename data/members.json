@@ -196,13 +196,16 @@
           "role": "Chair"
         },
         {
-          "role": "Entries Coordinator"
+          "role": "Entries Coordinator",
+          "email": "entries"
         },
         {
-          "role": "MapRun Coordinator"
+          "role": "MapRun Coordinator",
+          "email": "maprun"
         },
         {
-          "role": "Membership Secretary"
+          "role": "Membership Secretary",
+          "email": "membership"
         }
       ],
       "photo": "/images/sarah-mansel.jpg",
