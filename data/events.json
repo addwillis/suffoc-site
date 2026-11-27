@@ -235,6 +235,30 @@
       "id": "hardwick-street-o-2"
     },
     {
+      "title": "Ickworth Park",
+      "date": "2025-03-02",
+      "level": "Regional",
+      "league": false,
+      "area": "Ickworth Park",
+      "about": "<p></p>",
+      "officials": {
+        "planner": "Simon Hooton",
+        "organiser": "Phil Halford",
+        "controller": "Mike Bickle"
+      },
+      "comments": {
+        "planner": "<p>The glorious sunshine on the 2nd brought some lovely smiles to people's faces and helped any event be more enjoyable. The southern woods and parkland give some wonderful views of the estate and I hope competitors found time to at least glance at them at times. The woods have an enormous amount of fallen timber and past felling meaning some of it was ankle turning as you crossed it. There were some other parts that were open and runnable and multiple ditches gave the planner a chance to confuse in what is not a technically difficult place. In places it was remarkably wet - often the grassland and paths rather than the depressions. The start by the church kept a trickle of people asking 'what on earth are you doing?' along with a few 'I did orienteering at school /scouts and will have to think about it again'.&nbsp; Many thanks to the SuffOC members who worked with Phil to make it all so smooth. We've learnt that controls that go to sleep can be a pain for early SIAC users and a number of solutions were discussed (though it is the runner's responsibility to check their passage has been recorded). Hopefully, download were able to modify results to be fair. I learnt that Finish controls DO need a kite as well. The popularity of the estate on a sunny day was astounding and we hope that those caught in a long queue to get in were calmed by their run, or the NT cream tea. Huge thanks to controller Mike Bickle who pleasantly and calmly drew attention to my occasional glitches and ensured errors were rectified. I'm still not sure we have consistently marked standing dead trunks as either 'prominent trees' or as 'root-stocks' across the whole estate so that debate may continue. I hope however competitors had a 'good day' and will come again to Suffolk.</p><p>Simon Hooton</p>",
+        "organiser": "<p></p>",
+        "controller": "<p></p>"
+      },
+      "resultLinks": {
+        "results": "https://suffoc.co.uk/results/2025/Ickworth/index.html",
+        "winsplits": "https://obasen.orientering.se/winsplits/online/en/default.asp?page=classes&databaseId=103101&ct=true",
+        "routegadget": "https://www.suffoc.routegadget.co.uk/rg2/#132"
+      },
+      "id": "ickworth-park"
+    },
+    {
       "title": "Kings Forest West Stow",
       "date": "2027-01-10",
       "level": "Regional",
