@@ -5,13 +5,10 @@
   "league": false,
   "area": "RAF Honington",
   "about": "<p></p>",
-  "fees": {
-    "chipHire": "£1",
-    "siacHire": "£3"
-  },
   "officials": {
     "planner": "Sarah Mansel",
     "organiser": "Sally Wilkinson",
+    "controller": "Mike Edwards",
     "others": [
       {
         "role": "Assitant Planner",
