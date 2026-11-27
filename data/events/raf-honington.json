@@ -1,0 +1,16 @@
+{
+  "title": "RAF Honington",
+  "date": "2026-11-27",
+  "level": "National",
+  "league": false,
+  "about": "<p></p>",
+  "fees": {
+    "chipHire": "£1",
+    "siacHire": "£3"
+  },
+  "comments": {
+    "planner": "<p></p>",
+    "organiser": "<p></p>",
+    "controller": "<p></p>"
+  }
+}
