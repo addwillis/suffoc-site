@@ -60,6 +60,36 @@
       "id": "brandon-country-park"
     },
     {
+      "title": "Bridge Wood ",
+      "date": "2026-11-27",
+      "series": [
+        "Annual General Meeting"
+      ],
+      "league": false,
+      "area": "Orwell Country Park",
+      "about": "<p></p>",
+      "location": {
+        "gridRef": "TM188408"
+      },
+      "officials": {
+        "planner": "Martin Hore"
+      },
+      "comments": {
+        "planner": "<p></p>",
+        "organiser": "<p></p>",
+        "controller": "<p></p>"
+      },
+      "resultLinks": {
+        "other": [
+          {
+            "label": "Results",
+            "url": "https://results.maprun.net/#/event_results?eventName=AGM2025%20Maprun%20PXAS%20ScoreN40"
+          }
+        ]
+      },
+      "id": "brdige-wood"
+    },
+    {
       "title": "Christchurch Park",
       "date": "2026-10-03",
       "level": "Local",
