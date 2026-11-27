@@ -60,6 +60,36 @@
       "id": "brandon-country-park"
     },
     {
+      "title": "Christchurch Park",
+      "date": "2026-11-27",
+      "level": "Local",
+      "league": false,
+      "area": "Christchurch Park",
+      "about": "<p></p>",
+      "location": {
+        "gridRef": "TM162452"
+      },
+      "officials": {
+        "planner": "Martin Hore",
+        "organiser": "Martin Hore",
+        "controller": "Sarah Mansel"
+      },
+      "comments": {
+        "planner": "<p></p>",
+        "organiser": "<p></p>",
+        "controller": "<p></p>"
+      },
+      "resultLinks": {
+        "other": [
+          {
+            "label": "Results",
+            "url": "https://results.maprun.net/#/event_results?eventName=Christchurch%20Park%20AGM%202026%20PXAS%20ScoreQ30&mode=tracks"
+          }
+        ]
+      },
+      "id": "christchurch-park"
+    },
+    {
       "title": "Clare Country Park",
       "date": "2026-06-21",
       "level": "Local",
