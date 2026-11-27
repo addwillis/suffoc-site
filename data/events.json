@@ -63,6 +63,9 @@
       "title": "Christchurch Park",
       "date": "2026-11-27",
       "level": "Local",
+      "series": [
+        "AGM"
+      ],
       "league": false,
       "area": "Christchurch Park",
       "about": "<p></p>",
