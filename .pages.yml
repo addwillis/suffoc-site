@@ -739,6 +739,7 @@ content:
       - "NOR"
       - "RAFO"
       - "SMOC"
+      - "SOS"
       - "WAOC"
       # END clubs
   - name: roles
@@ -1207,6 +1208,7 @@ content:
         - "NOR"
         - "RAFO"
         - "SMOC"
+        - "SOS"
         - "WAOC"
         # END clubs
     - name: startFrom
@@ -1272,6 +1274,7 @@ content:
         - "NOR"
         - "RAFO"
         - "SMOC"
+        - "SOS"
         - "WAOC"
         # END clubs
     - name: eventLink
