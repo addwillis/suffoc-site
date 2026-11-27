@@ -1,0 +1,59 @@
+{
+  "title": "SUFFOC Mid-Week Street-O 5 Hadleigh",
+  "date": "2026-03-09",
+  "level": "Local",
+  "series": [
+    "Mid-Week Street-O"
+  ],
+  "league": false,
+  "area": "Hadleigh",
+  "about": "<p></p>",
+  "location": {
+    "address": [
+      "Kings Head",
+      "90 High Street",
+      "Hadleigh"
+    ],
+    "postcode": "IP75EF",
+    "gridRef": "TM 02599 42626",
+    "w3w": "gobblers.earlobe.position"
+  },
+  "courses": [
+    {
+      "name": "45 min Score Course",
+      "colour": "White"
+    }
+  ],
+  "fees": {
+    "entryUrl": "https://racesignup.co.uk/2026-street-O-5",
+    "rows": [
+      {
+        "category": "Senior member",
+        "early": "4"
+      },
+      {
+        "category": "Senior non-member",
+        "early": "5"
+      },
+      {
+        "category": "Junior",
+        "early": "3"
+      }
+    ]
+  },
+  "timings": {
+    "startsFrom": "18:00",
+    "startsTo": "18:30",
+    "courseClose": "19:15"
+  },
+  "officials": {
+    "planner": "Gareth Radcliffe",
+    "organiser": "Gareth Radcliffe",
+    "controller": "Sarah Mansel"
+  },
+  "comments": {
+    "planner": "<p></p>",
+    "organiser": "<p></p>",
+    "controller": "<p></p>"
+  }
+}
