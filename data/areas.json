@@ -131,6 +131,15 @@
       "id": "gunton-denes-and-dip-farm"
     },
     {
+      "name": "Hadleigh",
+      "mapType": "OpenStreetMap",
+      "terrain": [
+        "Urban"
+      ],
+      "gridRef": "TM 02599 42626",
+      "id": "hadleigh"
+    },
+    {
       "name": "Hardwick Heath",
       "town": "Bury St Edmunds",
       "mapType": "SUFFOC map",
