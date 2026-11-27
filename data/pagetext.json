@@ -32,6 +32,14 @@
     "text": "<p>SUFFOC members&nbsp;can purchase short and long sleeve running tops, vests and jackets supplied by <a href=\"https://bryzosport.com/\">Bryzos</a>.</p><p>Fleeces, sweatshirts, hoodies, T-Shirts, polo shirts and wooly hats are also available.</p><p>Club orders for kit are put together at intervals, when there is enough demand.</p><p>If you're interested in a future order, please contact our Club Captain, <a href=\"https://addwillis.github.io/suffoc-site/people/gareth-radcliffe\">Gareth Radcliffe</a>, to register your interest and for further details.</p><p><a href=\"https://bryzosport.com/pages/size-chart\">Bryzos Size Chart</a></p>",
     "image": "/images/Club_Kit.png"
   },
+  "safeguarding": {
+    "sub": "Who to talk to if you have a concern.",
+    "text": "<p>British Orienteering is committed to ensuring that everyone who participates in orienteering, including children and at-risk adults, has a positive experience in what can be a challenging environment, while keeping it as safe as possible. With this in mind, British Orienteering has continued to develop and implement policies and procedures which ensure everyone knows and accepts their responsibility for the duty of care owed to children and at-risk adults. Practical support for affiliated clubs such as SUFFOC includes providing a comprehensive safeguarding policy, along with training for our volunteer Welfare Officers and Coaches.&nbsp;</p>",
+    "boName": "Jeanette Downing",
+    "boPhone": "07891 091662",
+    "boEmail": "safeguarding@britishorienteering.org.uk",
+    "more": "<p></p>"
+  },
   "agm": {
     "sub": "Minutes from past AGMs.",
     "text": "<p></p>"
@@ -50,6 +58,7 @@
   },
   "committee": {
     "sub": "The people who run the club.",
+    "text": "<p></p>",
     "committee": [
       {
         "member": "Sarah Mansel"
@@ -98,17 +107,11 @@
     ]
   },
   "league": {
-    "sub": "Club league events, rules and standings."
+    "sub": "Club league events, rules and standings.",
+    "text": "<p></p>"
   },
   "championships": {
-    "sub": "Annual championship results and awards."
-  },
-  "safeguarding": {
-    "sub": "Who to talk to if you have a concern.",
-    "text": "<p>We want everyone at our events to feel safe and welcome. Our club is committed to the principles of safeguarding both adults and children.</p>",
-    "more": "<p>British Orienteering is committed to ensuring that everyone, including children and at-risk adults who participate in orienteering, has a positive experience in what can be a challenging environment, managed to be as safe as possible. With this in mind, British Orienteering has continued to develop and implement policies and procedures which ensure everyone knows and accepts their responsibility in relation to their duty of care for children and at-risk adults. Practical support for affiliated clubs such as SUFFOC includes a comprehensive policy on safeguarding together with training for our volunteer Welfare Officers and Coaches.</p>",
-    "boName": "Jeanette Downing",
-    "boPhone": "07891 091662",
-    "boEmail": "safeguarding@britishorienteering.org.uk"
+    "sub": "Annual championship results and awards.",
+    "text": "<p></p>"
   }
 }
