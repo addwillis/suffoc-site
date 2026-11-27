@@ -55,6 +55,7 @@ content:
           multiple: true
           values:
           # BEGIN series
+          - "AGM"
           - "Autumn in Anglia"
           - "British Sprint Relay Championships"
           - "Compass Sport Heat"
