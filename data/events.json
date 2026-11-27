@@ -470,6 +470,32 @@
         "britishOrienteering": "https://www.britishorienteering.org.uk/event?&event=88040"
       },
       "id": "tunstall"
+    },
+    {
+      "title": "West Harling Heath",
+      "date": "2026-11-27",
+      "level": "Regional",
+      "league": false,
+      "about": "<p></p>",
+      "fees": {
+        "chipHire": "£1",
+        "siacHire": "£3"
+      },
+      "officials": {
+        "organiser": "Rod Mansel",
+        "controller": "Sally Wilkinson"
+      },
+      "comments": {
+        "planner": "<p></p>",
+        "organiser": "<p>Most people seemed to be glad that the event was going ahead despite the warnings of wind. My team of helpers worked well and we were ready to go ahead of time.</p><p>The rain held off for most runners and we managed to get one tent down before the rain struck but the later runners and the control collectors got a bit soggy.</p><p>Sally also managed to reunite a stray dog with its owner which isn’t usually part of the controller’s job!</p><p>Hopefully everyone enjoyed it and see you again soon.</p><p>Rod Mansel</p>",
+        "controller": "<p>I fully supported the organiser's decision for this event to go ahead. It lived up to its name as it did feel very autumnal. Most runners enjoyed a sunny run with rain and gusts of wind only making an appearance in the afternoon. This did make control collecting more challenging, but a great team were in place for this.&nbsp;</p><p>Oliver planned some good courses with longer ones including tricky areas not necessarily expected in an area known to be an FE block forest. He also gave runners the opportunity to run through some lovely beech and sweet chestnut woodland which again add variety to this area.</p><p>Well done to Rod and Oliver for organising and planning such a good event.</p><p>Thanks</p><p>Sally</p>"
+      },
+      "resultLinks": {
+        "results": "https://www.suffoc.co.uk/results/2025/West_Harling/index.html",
+        "winsplits": "https://obasen.orientering.se/winsplits/online/en/default.asp?page=classes&databaseId=109260",
+        "routegadget": "https://www.suffoc.routegadget.co.uk/rg2/#133"
+      },
+      "id": "west-harling-heath"
     }
   ]
 }
