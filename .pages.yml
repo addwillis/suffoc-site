@@ -46,11 +46,14 @@ content:
   - name: series
     label: Event series
     type: select
-    description: Optional. Pick from the Event series list, e.g. Mid-Week Street-O.
+    description: Optional. Pick from the Event series list, e.g. Mid-Week Street-O. You can pick more than one.
     options:
+      multiple: true
       values:
       # BEGIN series
+      - "Autumn in Anglia"
       - "Compass Sport Heat"
+      - "East Anglian Schools Championships"
       - "Mid-Week Street-O"
       - "Simon Peck Summer Series"
       # END series
