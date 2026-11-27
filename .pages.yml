@@ -248,7 +248,7 @@ content:
   - name: officials
     label: EVENT OFFICIALS
     type: object
-    description: Pick from Club members. If someone isn't there yet, add them under Club members first, or use Other officials.
+    description: Pick from People. If someone isn't there yet, add them under People first (choose their club there if they're not SUFFOC), or use Other officials.
     fields:
       - name: planner
         label: Planner
@@ -328,23 +328,6 @@ content:
           - "Simon Hooton"
           - "Will Harrison"
           # END members
-      - name: controllerName
-        label: Controller's name (if not a club member)
-        type: string
-        description: Use this when the controller is from another club. Leave empty if you picked a member above.
-      - name: controllerClub
-        label: Controller's club (optional)
-        type: select
-        description: Pick from Other clubs. If the club is not listed, add it first using Other clubs in the menu.
-        options:
-          values:
-          # BEGIN clubs
-          - "CHIG"
-          - "HAVOC"
-          - "NOR"
-          - "SMOC"
-          - "WAOC"
-          # END clubs
       - name: riskAssessor
         label: Risk Assessor
         type: select
@@ -375,7 +358,7 @@ content:
         label: Other officials (optional)
         type: object
         list: true
-        description: For helpers who aren't club members, e.g. a controller from another club.
+        description: For helpers who aren't in People.
         fields:
         - name: role
           label: Role
@@ -714,19 +697,32 @@ content:
       format: html
     description: Parking, access, dogs, anything people should know.
 - name: members
-  label: Club members
+  label: People
   type: collection
   path: data/members
   format: json
   filename: '{primary}.json'
   view:
     primary: name
-    fields: [name, roles]
+    fields: [name, club, roles]
   fields:
   - name: name
     label: Name
     type: string
     required: true
+  - name: club
+    label: Club (leave empty for SUFFOC)
+    type: select
+    description: Only choose a club if this person is from another club, for example a controller. Pick from Other clubs. If the club is not listed, add it first using Other clubs in the menu.
+    options:
+      values:
+      # BEGIN clubs
+      - "CHIG"
+      - "HAVOC"
+      - "NOR"
+      - "SMOC"
+      - "WAOC"
+      # END clubs
   - name: roles
     label: Club roles (optional, up to 4)
     type: object
@@ -1279,7 +1275,7 @@ content:
       - name: member
         label: Club member
         type: select
-        description: Pick the winner from Club members. They then get this win on their own page.
+        description: Pick the winner from People. They then get this win on their own page.
         options:
           values:
           # BEGIN members
@@ -1306,7 +1302,7 @@ content:
       - name: otherName
         label: Winner not in the members list
         type: string
-        description: Only if the winner isn't in Club members, for example an earlier year. Leave empty when you pick a member above.
+        description: Only if the winner isn't in People, for example an earlier year. Leave empty when you pick a member above.
 - name: news
   label: News
   type: file

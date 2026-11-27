@@ -356,7 +356,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 151';
+const BUILD = 'build 152';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -387,7 +387,7 @@ function upgradeEvent(e){
   if (doc.pdf && !o.pdf) o.pdf = doc.pdf;
   if (doc.britishOrienteering && !o.boUrl) o.boUrl = String(doc.britishOrienteering).trim();
   const d = Object.assign({}, e.detail || {});
-  ['organiser', 'planner', 'controller', 'controllerName', 'controllerClub', 'riskAssessor'].forEach(k => { if (off[k] && !d[k]) d[k] = off[k]; });
+  ['organiser', 'planner', 'controller', 'riskAssessor'].forEach(k => { if (off[k] && !d[k]) d[k] = off[k]; });
   if (off.others && !d.officials) d.officials = off.others;
   ['address', 'postcode', 'gridRef', 'w3w'].forEach(k => { if (loc[k] && !(d[k] && d[k].length)) d[k] = loc[k]; });
   if (e.about && !d.about) d.about = e.about;
@@ -414,7 +414,7 @@ function loadData(areas, events){
     const o = upgradeEvent(e);
     const d = o.detail || {};
     { /* every event gets its own page, even if it only has a title and date so far */
-      o.detail = Object.assign({}, d, { address: (d.address || []).filter(Boolean), officials: [['Planner', d.planner], ['Organiser', d.organiser], ['Controller', d.controller || d.controllerName, d.controllerClub], ['Risk Assessor', d.riskAssessor]].filter(x => x[1]).map(x => { const id = memberId(x[1]); return [x[0], id ? MEMBERS[id].name : personKey(x[1]) ? String(x[1]).replace(/^.*\//, '').replace(/\.json$/i, '') : x[1], id ? '#person-' + id : '', x[2] || '']; }).concat(pairs(d.officials, 'role', 'name').map(x => { const id = memberId(x[1]); return [x[0], x[1], id ? '#person-' + id : '']; })), docs: pairs(d.docs, 'label', 'url') });
+      o.detail = Object.assign({}, d, { address: (d.address || []).filter(Boolean), officials: [['Planner', d.planner], ['Organiser', d.organiser], ['Controller', d.controller], ['Risk Assessor', d.riskAssessor]].filter(x => x[1]).map(x => { const id = memberId(x[1]); return [x[0], id ? MEMBERS[id].name : personKey(x[1]) ? String(x[1]).replace(/^.*\//, '').replace(/\.json$/i, '') : x[1], id ? '#person-' + id : '', id && MEMBERS[id].club ? MEMBERS[id].club : '']; }).concat(pairs(d.officials, 'role', 'name').map(x => { const id = memberId(x[1]); return [x[0], x[1], id ? '#person-' + id : '']; })), docs: pairs(d.docs, 'label', 'url') });
     }
     o.loc = o.detail && o.detail.gridRef ? gridToLatLon(o.detail.gridRef) : null;
     return o;
@@ -1118,7 +1118,7 @@ function personPage(id){
       ${m.roles.length ? '<a class="back" href="#club-committee">&larr; Back to Committee</a>' : '<a class="back" href="#club">&larr; Back to Club</a>'}
       <div class="person">
         ${m.photo ? `<img class="personimg" src="${esc(imgSrc(m.photo))}" alt="${esc(m.name)}">` : ''}
-        <div><h1 class="event-title">${esc(m.name)}</h1></div>
+        <div><h1 class="event-title">${esc(m.name)}</h1>${m.club ? '<p class="meta">' + clubTag(m.club) + '</p>' : ''}</div>
       </div>
     </div></section>
     <div class="wrap">
