@@ -717,6 +717,7 @@ content:
     options:
       values:
       # BEGIN clubs
+      - "BAOC"
       - "CHIG"
       - "HAVOC"
       - "NOR"
