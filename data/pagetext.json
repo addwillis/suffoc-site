@@ -26,6 +26,7 @@
   },
   "safeguarding": {
     "sub": "Who to talk to if you have a concern.",
+    "updated": "2026-11-27",
     "text": "<p>British Orienteering is committed to ensuring that everyone who participates in orienteering, including children and at-risk adults, has a positive experience in what can be a challenging environment, while keeping it as safe as possible. With this in mind, British Orienteering has continued to develop and implement policies and procedures which ensure everyone knows and accepts their responsibility for the duty of care owed to children and at-risk adults. Practical support for affiliated clubs such as SUFFOC includes providing a comprehensive safeguarding policy, along with training for our volunteer Welfare Officers and Coaches.&nbsp;</p>",
     "welfareTitle": "Club Welfare Officers",
     "welfareText": "<p>If you have any concerns, however minor, please don’t hesitate to speak with one of our club welfare officers either at an event or by email:</p>",
@@ -45,11 +46,10 @@
         "url": "https://www.britishorienteering.org.uk/doc/policies-and-guidance/safeguarding/adult-safeguarding-policy"
       }
     ],
-    "more": "<p></p>",
-    "updated": "2026-11-27"
+    "more": "<p></p>"
   },
   "agm": {
-    "sub": "Minutes from past AGMs.",
+    "sub": "Minutes from past Annual General Meetings",
     "text": "<p></p>"
   },
   "mapped": {
@@ -66,53 +66,7 @@
   },
   "committee": {
     "sub": "The people who run the club.",
-    "text": "<p></p>",
-    "committee": [
-      {
-        "member": "Sarah Mansel"
-      },
-      {
-        "member": "Rod Mansel"
-      },
-      {
-        "member": "Andrew Elliott"
-      },
-      {
-        "member": "Gareth Radcliffe"
-      },
-      {
-        "member": "Sally Wilkinson"
-      },
-      {
-        "member": "Martin Hore"
-      },
-      {
-        "member": "Adam Willis"
-      },
-      {
-        "member": "Louise Walker"
-      },
-      {
-        "member": "Hannah Constable-Simmonds"
-      },
-      {
-        "member": "John Liston"
-      },
-      {
-        "member": "Ethan Radcliffe"
-      }
-    ],
-    "coaches": [
-      {
-        "member": "Simon Hooton"
-      },
-      {
-        "member": "Will Harrison"
-      },
-      {
-        "member": "Clive Wilkinson"
-      }
-    ]
+    "text": "<p></p>"
   },
   "league": {
     "sub": "Club league events, rules and standings.",
