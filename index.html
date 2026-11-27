@@ -356,7 +356,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 155';
+const BUILD = 'build 158';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -627,7 +627,25 @@ const imgSrc = p => /^https?:/i.test(p) ? p : String(p).replace(/^\/+/, '');
 /* News text comes from the Pages CMS rich-text editor (HTML), or plain text with blank lines between paragraphs.
    Only a short list of safe tags is kept. */
 const SAFE_TAGS = { P:1, BR:1, STRONG:1, B:1, EM:1, I:1, U:1, A:1, UL:1, OL:1, LI:1, H2:1, H3:1, H4:1, BLOCKQUOTE:1, IMG:1, TABLE:1, THEAD:1, TBODY:1, TR:1, TH:1, TD:1 };
-function richHTML(src){
+/* Role tokens in any rich text, filled in from People so they never go out of date:
+   {{people:Welfare Officer}} = bulleted list of names (linked) with their role email,
+   {{role:Chair}} = the name(s), {{email:Chair}} = the role's email address. Matches roles containing the words typed. */
+function roleHolders(q){
+  q = String(q || '').trim().toLowerCase();
+  return Object.keys(MEMBERS).map(k => Object.assign({ id:k }, MEMBERS[k])).map(m => ({ m:m, r:(m.roles || []).find(r => String(r.role).toLowerCase().indexOf(q) >= 0) })).filter(x => q && x.r);
+}
+function roleTokens(html){
+  return String(html).replace(/\{\{\s*(people|role|email)\s*:\s*([^}]+?)\s*\}\}/gi, (all, kind, q) => {
+    const l = roleHolders(q); if (!l.length) return '';
+    const nm = x => '<a href="#person-' + esc(x.m.id) + '">' + esc(x.m.name) + '</a>', em = x => x.r.email ? '<a href="mailto:' + esc(x.r.email) + '">' + esc(x.r.email) + '</a>' : '';
+    kind = kind.toLowerCase();
+    if (kind === 'people') return '<ul>' + l.map(x => '<li>' + nm(x) + (em(x) ? ', ' + em(x) : '') + '</li>').join('') + '</ul>';
+    if (kind === 'role') return l.map(nm).join(', ').replace(/, ([^,]*)$/, ' and $1');
+    return l.map(em).filter(Boolean).join(', ');
+  });
+}
+function richHTML(src){ return roleTokens(richBase(src)); }
+function richBase(src){
   src = String(src || '').trim();
   if (!src) return '';
   if (!/<\w+[^>]*>/.test(src)) {
@@ -1401,11 +1419,19 @@ function agmPage(){
     ${rows ? `<div class="tiles" style="margin-top:1rem">${rows}</div>` : (PAGETEXT.agm || PAGETEXT.agm_image ? '' : '<div class="empty">Minutes will be added here.</div>')}
   </section></div>`;
 }
-/* Welfare Officers are taken from People: anyone with a role containing "Welfare". */
-function welfareOfficers(){
-  const l = Object.keys(MEMBERS).map(k => Object.assign({ id:k }, MEMBERS[k])).map(m => ({ m:m, r:m.roles.filter(r => /welfare/i.test(r.role)) })).filter(x => x.r.length);
-  if (!l.length) return '';
-  return `<div class="card" style="margin:1rem 0"><h3>${ct('safeguard', 'Club Welfare Officers')}</h3><dl class="facts">${l.map(x => `<dt>${esc(x.r[0].role)}</dt><dd><a href="#person-${esc(x.m.id)}">${esc(x.m.name)}</a>${x.r[0].email ? ' &middot; <a href="mailto:' + esc(x.r[0].email) + '">' + esc(x.r[0].email) + '</a>' : ''}</dd>`).join('')}</dl></div>`;
+/* Safeguarding page: two boxes. First our own Welfare Officers (from People), then British Orienteering's contact and policies. */
+function safeguardingBoxes(){
+  const BO = 'https://www.britishorienteering.org.uk/';
+  const mine = roleTokens('{{people:Welfare}}');
+  const bo = { name:String(PAGETEXT.safeguarding_boName || 'Jeanette Downing').trim(), phone:String(PAGETEXT.safeguarding_boPhone || '07891 091662').trim(), email:String(PAGETEXT.safeguarding_boEmail || 'safeguarding@britishorienteering.org.uk').trim() };
+  return `<div class="stack" style="margin:1.2rem 0">
+    <section class="card"><h3>${ct('safeguard', 'Talk to our Welfare Officers')}</h3>
+      <p style="margin:.5rem 0">If you have a concern, however small, please have a word with one of them at an event or by email.</p>${mine || '<p class="cnote">Welfare Officers are added under People in the CMS (give them a role containing Welfare).</p>'}</section>
+    <section class="card"><h3>${ct('docs', 'British Orienteering')}</h3>
+      <p style="margin:.5rem 0">If you would rather not speak to the club, contact British Orienteering's Lead Safeguarding Officer.</p>
+      <ul><li>${esc(bo.name)}${bo.phone ? ', <a href="tel:' + esc(bo.phone.replace(/\s+/g, '')) + '">' + esc(bo.phone) + '</a>' : ''}${bo.email ? ', <a href="mailto:' + esc(bo.email) + '">' + esc(bo.email) + '</a>' : ''}</li></ul>
+      <div class="links" style="margin-top:.8rem"><a class="btn small gold" href="${BO}safeguardreporting" ${ext}>Report a concern</a><a class="btn small line" href="${BO}safeguardingandsafety" ${ext}>Child safeguarding policy</a><a class="btn small line" href="https://britishorienteering.org.uk/doc/policies-and-guidance/safeguarding/adult-safeguarding-policy" ${ext}>Adult safeguarding policy</a></div></section>
+  </div>${PAGETEXT.safeguarding_more ? '<div class="prose">' + richHTML(PAGETEXT.safeguarding_more) + '</div>' : ''}`;
 }
 function clubPage(id){
   if (id === 'committee') return committeePage();
@@ -1418,7 +1444,7 @@ function clubPage(id){
   return `${pageHead(c.title, esc(c.desc || ''), c.icon || 'club', true)}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
-    ${id === 'safeguarding' ? welfareOfficers() : ''}
+    ${id === 'safeguarding' ? safeguardingBoxes() : ''}
     ${PAGETEXT[id] || PAGETEXT[id + '_image'] ? '' : `<div class="empty">This page is a placeholder. The content from the current site moves here.${extra}</div>`}
   </section></div>`;
 }
@@ -1493,7 +1519,7 @@ function flattenPageText(pt){
   if (!pt || typeof pt !== 'object' || Array.isArray(pt)) return out;
   Object.keys(pt).forEach(k => {
     const v = pt[k];
-    if (v && typeof v === 'object') { out[k] = v.text || ''; out[k + '_sub'] = v.sub || ''; out[k + '_image'] = v.image || ''; }
+    if (v && typeof v === 'object') { out[k] = v.text || ''; out[k + '_sub'] = v.sub || ''; out[k + '_image'] = v.image || ''; out[k + '_more'] = v.more || ''; ['boName', 'boPhone', 'boEmail'].forEach(f => { out[k + '_' + f] = v[f] || ''; }); }
     else out[k] = v;
   });
   return out;

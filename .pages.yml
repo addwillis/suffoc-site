@@ -963,7 +963,24 @@ content:
       type: rich-text
       options:
         format: html
-      description: Text shown on the page. The Club Welfare Officers are listed above it automatically from People (anyone with a role containing Welfare).
+      description: A short introduction at the top. The two boxes below it (our Welfare Officers, taken from People, and British Orienteering's contact and policy links) appear automatically.
+    - name: boName
+      label: British Orienteering officer, name
+      type: string
+      description: Shown in the British Orienteering box. Leave empty to use Jeanette Downing.
+    - name: boPhone
+      label: British Orienteering officer, phone
+      type: string
+    - name: boEmail
+      label: British Orienteering officer, email
+      type: string
+      description: Their own email if you have it. Leave empty to use safeguarding@britishorienteering.org.uk.
+    - name: more
+      label: Background text (below the boxes)
+      type: rich-text
+      options:
+        format: html
+      description: Optional longer text shown under the boxes.
     - name: image
       label: Picture
       type: image

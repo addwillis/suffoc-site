@@ -105,6 +105,10 @@
   },
   "safeguarding": {
     "sub": "Who to talk to if you have a concern.",
-    "text": "<p><strong>DRAFT: please replace with the text from the old website.</strong></p><p>We want everyone to feel safe and welcome at our events. If you have a concern or see something that worries you, please tell one of our Club Welfare Officers as soon as you can. Our club is committed to safeguarding both children and adults.</p><p>You can also contact British Orienteering's Lead Safeguarding Officer at <a href=\"mailto:safeguarding@britishorienteering.org.uk\">safeguarding@britishorienteering.org.uk</a>. This covers any concern about welfare, whether it happens in orienteering or outside it.</p>"
+    "text": "<p>We want everyone at our events to feel safe and welcome. Our club is committed to the principles of safeguarding both adults and children.</p>",
+    "more": "<p>British Orienteering is committed to ensuring that everyone, including children and at-risk adults who participate in orienteering, has a positive experience in what can be a challenging environment, managed to be as safe as possible. With this in mind, British Orienteering has continued to develop and implement policies and procedures which ensure everyone knows and accepts their responsibility in relation to their duty of care for children and at-risk adults. Practical support for affiliated clubs such as SUFFOC includes a comprehensive policy on safeguarding together with training for our volunteer Welfare Officers and Coaches.</p>",
+    "boName": "Jeanette Downing",
+    "boPhone": "07891 091662",
+    "boEmail": "safeguarding@britishorienteering.org.uk"
   }
 }
