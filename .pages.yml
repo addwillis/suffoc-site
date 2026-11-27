@@ -1257,6 +1257,7 @@ content:
           options:
             values:
             # BEGIN events
+            - {"value": "suffoc-mid-week-street-o-5-hadleigh", "label": "2027-03-09 SUFFOC Mid-Week Street-O 5 Hadleigh"}
             - {"value": "elmswell-street-o-4", "label": "2027-02-09 SUFFOC Mid-Week Street-O 4 Elmswell"}
             - {"value": "street-o-claydon", "label": "2027-01-12 SUFFOC Mid-Week Street-O 3 Claydon"}
             - {"value": "kings-forest-west-stow", "label": "2027-01-10 Kings Forest West Stow"}
@@ -1267,7 +1268,6 @@ content:
             - {"value": "needham-2026", "label": "2026-07-05 Needham Lakes"}
             - {"value": "clare-2026", "label": "2026-06-21 Clare Country Park"}
             - {"value": "sudbury-2026", "label": "2026-05-17 Sudbury Urban"}
-            - {"value": "suffoc-mid-week-street-o-5-hadleigh", "label": "2026-03-09 SUFFOC Mid-Week Street-O 5 Hadleigh"}
             - {"value": "brandon-country-park", "label": "2026-02-22 Brandon Country Park"}
             - {"value": "tunstall-forest-north", "label": "2026-01-18 Tunstall Forest - North"}
             - {"value": "nowton-and-hardwick", "label": "2025-11-16 Nowton and Hardwick"}
