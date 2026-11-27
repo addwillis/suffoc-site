@@ -729,6 +729,7 @@ content:
       - "CHIG"
       - "HAVOC"
       - "NOR"
+      - "RAF"
       - "SMOC"
       - "WAOC"
       # END clubs
@@ -1192,6 +1193,7 @@ content:
         - "CHIG"
         - "HAVOC"
         - "NOR"
+        - "RAF"
         - "SMOC"
         - "WAOC"
         # END clubs
@@ -1256,6 +1258,7 @@ content:
         - "CHIG"
         - "HAVOC"
         - "NOR"
+        - "RAF"
         - "SMOC"
         - "WAOC"
         # END clubs
