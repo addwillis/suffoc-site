@@ -257,8 +257,8 @@ dl.facts dd a:hover{color:var(--sky)}
 .mcard .mimg{width:120px;height:120px;border-radius:50%;object-fit:cover;flex:none;border:4px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 6px 16px rgba(11,42,85,.2)}
 .mcard .minit{width:120px;height:120px;border-radius:50%;flex:none;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font:700 2.2rem var(--body);border:4px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 6px 16px rgba(11,42,85,.2)}
 .sgrid{display:block;margin-top:1.2rem}
-.sgside{margin:1.4rem 0 0}
-@media(min-width:900px){.sgrid{display:grid;grid-template-columns:minmax(0,1fr) 22rem;gap:2.2rem;align-items:start}.sgside{margin:0}}
+.sgside{margin:1.6rem 0 0}
+@media(min-width:760px){.sgside{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;align-items:start}}
 .crows{display:flex;flex-direction:column;gap:.9rem;margin:.9rem 0 0}
 .crow{display:flex;align-items:center;gap:.9rem}
 .crow .cimg,.crow .cinit{width:64px;height:64px;border-radius:50%;flex:none;border:3px solid #fff;box-shadow:0 0 0 1px rgba(11,42,85,.14),0 3px 8px rgba(11,42,85,.18)}
@@ -367,7 +367,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 162';
+const BUILD = 'build 163';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 window.addEventListener('error', e => status('JS error: ' + e.message));
 window.addEventListener('unhandledrejection', e => status('Promise error: ' + (e.reason && e.reason.message || e.reason)));
@@ -934,6 +934,7 @@ const ICONS = {
   courses:'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h8"/>',
   about:'<circle cx="12" cy="12" r="9"/><path d="M15.8 8.2l-2.1 5.5-5.5 2.1 2.1-5.5z"/><circle cx="12" cy="12" r=".8"/>',
   safeguard:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  safeguardlead:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M12 8l1.2 2.5 2.7.4-2 1.9.5 2.7-2.4-1.3-2.4 1.3.5-2.7-2-1.9 2.7-.4z"/>',
   docs:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>',
   newcomers:'<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>'
 };
@@ -1451,7 +1452,7 @@ function safeguardingBoxes(){
   return `<div class="stack sgside">
     <section class="card"><h3>${ct('safeguard', esc(P('welfareTitle') || 'Talk to our Welfare Officers'))}</h3>
       ${P('welfareText') ? '<div class="prose" style="margin:.5rem 0">' + richHTML(P('welfareText')) + '</div>' : ''}${mine ? '<div class="crows">' + mine + '</div>' : '<p class="cnote">Welfare Officers are added under People in the CMS (give them a role containing Welfare).</p>'}</section>
-    <section class="card"><h3>${ct('docs', esc(P('boTitle') || 'British Orienteering'))}</h3>
+    <section class="card"><h3>${ct('safeguardlead', esc(P('boTitle') || 'British Orienteering'))}</h3>
       ${P('boText') ? '<div class="prose" style="margin:.5rem 0">' + richHTML(P('boText')) + '</div>' : ''}${others ? '<div class="crows">' + others + '</div>' : ''}
       ${links.length ? '<div class="links" style="margin-top:.8rem">' + links.map((l, i) => '<a class="btn small ' + (i ? 'line' : 'gold') + '" href="' + esc(l.url) + '" ' + ext + '>' + esc(l.label) + '</a>').join('') + '</div>' : ''}</section>
   </div>`;
