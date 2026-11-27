@@ -35,28 +35,28 @@
   "safeguarding": {
     "sub": "Who to talk to if you have a concern.",
     "text": "<p>British Orienteering is committed to ensuring that everyone who participates in orienteering, including children and at-risk adults, has a positive experience in what can be a challenging environment, while keeping it as safe as possible. With this in mind, British Orienteering has continued to develop and implement policies and procedures which ensure everyone knows and accepts their responsibility for the duty of care owed to children and at-risk adults. Practical support for affiliated clubs such as SUFFOC includes providing a comprehensive safeguarding policy, along with training for our volunteer Welfare Officers and Coaches.&nbsp;</p>",
-    "more": "<p></p>",
+    "welfareTitle": "Club Welfare Officers",
+    "welfareText": "<p>If you have any concerns, however minor, please don’t hesitate to have speak with one of our club welfare officers either at an event or by email:</p>",
+    "boTitle": "British Orienteering Lead Safeguarding Officer",
+    "boText": "<p>If you do not feel able to speak with the SUFFOC Welfare Officers, please contact the British Orienteering's Safeguarding and Development Officer:</p>",
     "boName": "Jeanette Downing",
     "boPhone": "07891 091662",
-    "boEmail": "safeguarding@britishorienteering.org.uk",
-    "welfareTitle": "Talk to our Welfare Officers",
-    "welfareText": "<p>If you have a concern, however small, please have a word with one of them at an event or by email.</p>",
-    "boTitle": "British Orienteering",
-    "boText": "<p>If you would rather not speak to the club, contact British Orienteering's Lead Safeguarding Officer.</p>",
+    "boEmail": "safeguarding@britishorienteering.org.uk ",
     "links": [
       {
-        "label": "Report a concern",
-        "url": "https://www.britishorienteering.org.uk/safeguardreporting"
-      },
-      {
-        "label": "Child safeguarding policy",
+        "label": "British Orienteering Safeguarding Page",
         "url": "https://www.britishorienteering.org.uk/safeguardingandsafety"
       },
       {
-        "label": "Adult safeguarding policy",
-        "url": "https://britishorienteering.org.uk/doc/policies-and-guidance/safeguarding/adult-safeguarding-policy"
+        "label": "Child Safeguarding Policy",
+        "url": "https://www.britishorienteering.org.uk/doc/policies-and-guidance/safeguarding/child-safeguarding-policy"
+      },
+      {
+        "label": "Adult At-Risk Safeguarding Policy",
+        "url": "https://www.britishorienteering.org.uk/doc/policies-and-guidance/safeguarding/adult-safeguarding-policy"
       }
-    ]
+    ],
+    "more": "<p></p>"
   },
   "agm": {
     "sub": "Minutes from past AGMs.",
