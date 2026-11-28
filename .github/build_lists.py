@@ -12,7 +12,7 @@ def load(folder):
     return items
 
 lists = {}
-for folder in ('areas', 'members', 'events', 'levels', 'series', 'permanent', 'clubs', 'towns', 'terrain', 'roles'):
+for folder in ('areas', 'members', 'events', 'news', 'levels', 'series', 'permanent', 'clubs', 'towns', 'terrain', 'roles'):
     lists[folder] = load(folder)
     if folder in ('levels', 'terrain'): continue  # only used for the form dropdown
     with open('data/%s.json' % folder, 'w', encoding='utf-8') as out:

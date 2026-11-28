@@ -384,7 +384,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 184';
+const BUILD = 'build 185';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 /* If a newer index.html has been published, reload once to pick it up (GitHub Pages can serve a cached copy for a few minutes). */
 function checkNewer(){
@@ -1666,7 +1666,8 @@ function adminTarget(h){
   if (h.startsWith('person-')) return cmsEntry('members', h.slice(7));
   if (h.startsWith('permanent-')) return cmsEntry('permanent', h.slice(10));
   if (h.startsWith('otherclub-')) return cmsEntry('clubs', h.slice(10));
-  if (h.startsWith('news-') || h === 'news') return cmsFile('news');
+  if (h.startsWith('news-')) return cmsEntry('news', h.slice(5));
+  if (h === 'news') return cmsList('news');
   if (h.startsWith('tag-series-')) { const s = SERIES.find(x => tagSlug(x.name) === h.slice(11)); return s && s.id ? cmsEntry('series', s.id) : cmsList('series'); }
   if (h.startsWith('tag-level-')) return cmsList('levels');
   const m = { events:cmsList('events'), mapped:cmsList('areas'), anytime:cmsList('permanent'), permanent:cmsList('permanent'), maprun:cmsFile('maprun'), otherclubs:cmsList('clubs'),

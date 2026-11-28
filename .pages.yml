@@ -626,52 +626,53 @@ content:
   items:
     - name: news
       label: News
-      type: file
-      path: data/news.json
+      type: collection
+      path: data/news
       format: json
+      filename: '{primary}.json'
+      view:
+        fields: [date, title]
+        primary: title
+        sort: [date, title]
+        search: [title]
+        default:
+          sort: date
+          order: desc
       fields:
-      - name: news
-        label: News items
-        type: object
-        list:
-          collapsible:
-            collapsed: true
-            summary: '{date} {title}'
-        fields:
-        - name: title
-          label: Headline
-          type: string
-        - name: date
-          label: Date
-          type: date
-          options:
-            format: yyyy-MM-dd
-        - name: image
-          label: Picture (optional)
-          type: image
-          options:
-            path: images/news
-        - name: imageAlt
-          label: Picture description (optional)
-          type: string
-          description: A few words describing the picture, for people using screen readers.
-        - name: images
-          label: More pictures (optional)
-          type: image
-          list: true
-          description: Extra pictures shown under the text. Tap one to see it full size.
-          options:
-            path: images/news
-        - name: text
-          label: Main text
-          type: rich-text
-          description: The full article. The cards on the home and News pages show the first few words, with Read more taking people to the full article.
-          options:
-            format: html
-        - name: link
-          label: Link to old news page (optional)
-          type: string
-          description: Only if the article also exists on the old website.
+      - name: title
+        label: Headline
+        type: string
+      - name: date
+        label: Date
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: image
+        label: Picture (optional)
+        type: image
+        options:
+          path: images/news
+      - name: imageAlt
+        label: Picture description (optional)
+        type: string
+        description: A few words describing the picture, for people using screen readers.
+      - name: images
+        label: More pictures (optional)
+        type: image
+        list: true
+        description: Extra pictures shown under the text. Tap one to see it full size.
+        options:
+          path: images/news
+      - name: text
+        label: Main text
+        type: rich-text
+        description: The full article. The cards on the home and News pages show the first few words, with Read more taking people to the full article.
+        options:
+          format: html
+      - name: link
+        label: Link to old news page (optional)
+        type: string
+        description: Only if the article also exists on the old website.
 - name: grp_anytime
   label: Anytime O
   type: group
