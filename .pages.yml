@@ -43,6 +43,7 @@ content:
         options:
           values:
           # BEGIN levels
+          - "Major"
           - "National"
           - "Regional"
           - "Local"
@@ -1077,6 +1078,7 @@ content:
           options:
             values:
             # BEGIN levels
+            - "Major"
             - "National"
             - "Regional"
             - "Local"
