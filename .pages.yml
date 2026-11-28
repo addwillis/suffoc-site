@@ -649,6 +649,8 @@ content:
         - name: image
           label: Picture (optional)
           type: image
+          options:
+            path: images/news
         - name: imageAlt
           label: Picture description (optional)
           type: string
@@ -830,6 +832,8 @@ content:
         - name: image
           label: Picture (optional)
           type: image
+          options:
+            path: images/pages
       - name: maprunnew
         label: NEW TO MAPRUN PAGE
         type: object
@@ -845,6 +849,8 @@ content:
         - name: image
           label: Picture (optional)
           type: image
+          options:
+            path: images/pages
 - name: grp_people
   label: People and Clubs
   type: group
@@ -926,6 +932,8 @@ content:
       - name: photo
         label: Photo (optional)
         type: image
+        options:
+          path: images/people
         description: Only add this if the person is happy for it to be public.
     - name: roles
       label: Roles
@@ -1317,6 +1325,8 @@ content:
         - name: image
           label: Picture (optional)
           type: image
+          options:
+            path: images/pages
 - name: grp_pages
   label: Pages
   type: group
@@ -1344,6 +1354,8 @@ content:
         - name: image
           label: Picture
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: results
         label: RESULTS PAGE
@@ -1362,6 +1374,8 @@ content:
         - name: image
           label: Picture
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: news
         label: NEWS PAGE
@@ -1380,6 +1394,8 @@ content:
         - name: image
           label: Picture
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: anytime
         label: ANYTIME O PAGE
@@ -1398,6 +1414,8 @@ content:
         - name: image
           label: Picture
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: permanent
         label: PERMANENT ORIENTEERING COURSES PAGE
@@ -1416,6 +1434,8 @@ content:
         - name: image
           label: Picture
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: kit
         label: CLUB KIT PAGE
@@ -1434,6 +1454,8 @@ content:
         - name: image
           label: Picture
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: safeguarding
         label: SAFEGUARDING AND WELFARE PAGE
@@ -1455,6 +1477,8 @@ content:
         - name: image
           label: Picture (optional)
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the introduction.
         - name: welfareTitle
           label: 2. First box, title
@@ -1509,6 +1533,8 @@ content:
         - name: image
           label: Picture
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: mapped
         label: MAPPED AREAS PAGE
@@ -1527,6 +1553,8 @@ content:
         - name: image
           label: Picture
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: club
         label: CLUB PAGE
@@ -1545,6 +1573,8 @@ content:
         - name: image
           label: Picture
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: newcomers
         label: NEWCOMERS PAGE
@@ -1563,6 +1593,8 @@ content:
         - name: image
           label: Picture
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: committee
         label: COMMITTEE PAGE
@@ -1582,6 +1614,8 @@ content:
         - name: image
           label: Picture
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: league
         label: LEAGUE PAGE
@@ -1600,6 +1634,8 @@ content:
         - name: image
           label: Picture
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.
       - name: championships
         label: CLUB CHAMPIONSHIPS PAGE
@@ -1618,4 +1654,6 @@ content:
         - name: image
           label: Picture
           type: image
+          options:
+            path: images/pages
           description: Optional picture shown in the top right next to the text. On a phone it goes above the text.

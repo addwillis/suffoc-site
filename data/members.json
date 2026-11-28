@@ -7,7 +7,7 @@
           "role": "Webmaster"
         }
       ],
-      "photo": "/images/IMG_3258 - Copy.jpg",
+      "photo": "/images/people/IMG_3258 - Copy.jpg",
       "id": "adam-willis"
     },
     {
@@ -20,7 +20,7 @@
           "role": "Regional Representative"
         }
       ],
-      "photo": "/images/andrew-elliott.jpg",
+      "photo": "/images/people/andrew-elliott.jpg",
       "id": "andrew-elliott"
     },
     {
@@ -31,7 +31,7 @@
           "email": "coach_clive"
         }
       ],
-      "photo": "/images/Clive Wilkinson.png",
+      "photo": "/images/people/Clive Wilkinson.png",
       "id": "clive-wilkinson"
     },
     {
@@ -55,7 +55,7 @@
           "role": "Junior Committee Representative"
         }
       ],
-      "photo": "/images/Ethan Radcliffe.jpg",
+      "photo": "/images/people/Ethan Radcliffe.jpg",
       "id": "ethan-radcliffe"
     },
     {
@@ -65,7 +65,7 @@
           "role": "Captain"
         }
       ],
-      "photo": "/images/gareth-radcliffe.jpg",
+      "photo": "/images/people/gareth-radcliffe.jpg",
       "id": "gareth-radcliffe"
     },
     {
@@ -112,7 +112,7 @@
           "role": "Equipment Officer"
         }
       ],
-      "photo": "/images/Walker_Louise_001935_061.jpg",
+      "photo": "/images/people/Walker_Louise_001935_061.jpg",
       "id": "louise-walker"
     },
     {
@@ -122,7 +122,7 @@
           "role": "Mapping Coordinator"
         }
       ],
-      "photo": "/images/martin-hore-1.jpg",
+      "photo": "/images/people/martin-hore-1.jpg",
       "id": "martin-hore"
     },
     {
@@ -181,7 +181,7 @@
           "role": "SI Coordinator"
         }
       ],
-      "photo": "/images/rod-mansel.jpg",
+      "photo": "/images/people/rod-mansel.jpg",
       "id": "rod-mansel"
     },
     {
@@ -197,7 +197,7 @@
           "role": "Volunteer Coordinator"
         }
       ],
-      "photo": "/images/492498193_1151921863399253_1709721349349532313_n.jpg",
+      "photo": "/images/people/492498193_1151921863399253_1709721349349532313_n.jpg",
       "id": "sally-wilkinson"
     },
     {
@@ -219,7 +219,7 @@
           "email": "membership"
         }
       ],
-      "photo": "/images/sarah-mansel.jpg",
+      "photo": "/images/people/sarah-mansel.jpg",
       "id": "sarah-mansel"
     },
     {
@@ -230,7 +230,7 @@
           "email": "coach_simon"
         }
       ],
-      "photo": "/images/simon-hooton.jpg",
+      "photo": "/images/people/simon-hooton.jpg",
       "id": "simon-hooton"
     },
     {
@@ -241,7 +241,7 @@
           "email": "coach_will"
         }
       ],
-      "photo": "/images/will-harrison.jpg",
+      "photo": "/images/people/will-harrison.jpg",
       "id": "will-harrison"
     }
   ]
