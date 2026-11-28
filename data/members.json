@@ -411,6 +411,9 @@
     },
     {
       "name": "Sally Wilkinson",
+      "junior": false,
+      "gender": "M",
+      "yob": 1964,
       "roles": [
         {
           "role": "Fixtures Secretary"
