@@ -57,13 +57,23 @@ content:
           # BEGIN series
           - "Annual General Meeting"
           - "Autumn in Anglia"
+          - "British Middle Distance Championships"
           - "British Sprint Relay Championships"
           - "Compass Sport Heat"
+          - "East Anglian Championships"
           - "East Anglian League"
           - "East Anglian Schools Championships"
+          - "East Anglian Urban League"
           - "Essex and Suffolk Schools Orienteering League"
           - "Mid-Week Street-O"
+          - "Midland and East Anglian Championships"
+          - "Park-O"
           - "Simon Peck Summer Series"
+          - "Southern England Orienteering Urban League"
+          - "Suffolk Summer of Sport"
+          - "UK Orienteering League"
+          - "UK Urban League"
+          - "Yvette Baker Trophy"
           # END series
       - name: league
         label: Counts for the club league

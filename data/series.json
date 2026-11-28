@@ -11,12 +11,23 @@
       "id": "autumn-in-anglia"
     },
     {
+      "name": "British Middle Distance Championships",
+      "description": "<p></p>",
+      "id": "british-middle-distance-championships"
+    },
+    {
       "name": "British Sprint Relay Championships",
       "id": "british-sprint-relay-championships"
     },
     {
       "name": "Compass Sport Heat",
       "id": "compass-sport-heat"
+    },
+    {
+      "name": "East Anglian Championships",
+      "abbreviation": "EA Championships",
+      "description": "<p></p>",
+      "id": "east-anglian-championships"
     },
     {
       "name": "East Anglian League",
@@ -29,6 +40,12 @@
       "id": "east-anglian-schools-championships"
     },
     {
+      "name": "East Anglian Urban League",
+      "abbreviation": "EAUL",
+      "description": "<p></p>",
+      "id": "east-anglian-urban-league"
+    },
+    {
       "name": "Essex and Suffolk Schools Orienteering League",
       "abbreviation": "ESSOL",
       "description": "<p></p>",
@@ -39,8 +56,46 @@
       "id": "mid-week-street-o"
     },
     {
+      "name": "Midland and East Anglian Championships",
+      "description": "<p></p>",
+      "id": "midland-and-east-anglian-championships"
+    },
+    {
+      "name": "Park-O",
+      "description": "<p></p>",
+      "id": "park-o"
+    },
+    {
       "name": "Simon Peck Summer Series",
       "id": "simon-peck-summer-series"
+    },
+    {
+      "name": "Southern England Orienteering Urban League",
+      "abbreviation": "SEOUL",
+      "description": "<p></p>",
+      "id": "southern-england-orienteering-urban-league"
+    },
+    {
+      "name": "Suffolk Summer of Sport",
+      "description": "<p></p>",
+      "id": "suffolk-summer-of-sport"
+    },
+    {
+      "name": "UK Orienteering League",
+      "abbreviation": "UKOL",
+      "description": "<p></p>",
+      "id": "uk-orienteering-league"
+    },
+    {
+      "name": "UK Urban League",
+      "abbreviation": "UKUL",
+      "description": "<p></p>",
+      "id": "uk-urban-league"
+    },
+    {
+      "name": "Yvette Baker Trophy",
+      "description": "<p></p>",
+      "id": "yvette-baker-trophy"
     }
   ]
 }
