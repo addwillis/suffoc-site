@@ -170,6 +170,9 @@
     },
     {
       "name": "Hannah Constable-Simmonds",
+      "junior": false,
+      "gender": "W",
+      "yob": 1974,
       "roles": [
         {
           "role": "Welfare Officer"
