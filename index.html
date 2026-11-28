@@ -293,7 +293,7 @@ dl.facts dd a:hover{color:var(--sky)}
 .alist li.a a{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:.7rem .2rem;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:500}
 .alist li.a a:hover{background:var(--card)}
 .alist .m{color:var(--muted);font-size:.9rem;white-space:nowrap;font-weight:400}
-.alist .tag{font-style:normal;font-size:.78rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.05rem .5rem;margin-left:.4rem;white-space:nowrap}
+.alist .tag,.tile h3 .tag{font-style:normal;font-size:.78rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.05rem .5rem;margin-left:.4rem;white-space:nowrap}
 .chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:1rem 0 0;padding:0}
 .chips li{background:var(--card);border:1px solid var(--line);border-radius:999px;font-weight:500}
 .chips li a{display:block;padding:.3rem .8rem;text-decoration:none;color:var(--ink)}
@@ -385,7 +385,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 192';
+const BUILD = 'build 193';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 /* If a newer index.html has been published, reload once to pick it up (GitHub Pages can serve a cached copy for a few minutes). */
 function checkNewer(){
@@ -1426,10 +1426,12 @@ function leaguePage(){
 /* Other clubs: a list page, and one page per club showing the league and championship events they host. */
 function otherClubsPage(){
   const all = leagueItems().filter(i => !i.own);
-  const tiles = CLUBS.filter(c => !/^suffoc$/i.test(String(c.name).trim())).sort((a, b) => String(a.name).localeCompare(String(b.name))).map(c => {
+  const isE = c => c.eaoa === true || c.eaoa === 'true';
+  const tile = c => {
     const n = all.filter(i => leagueIsUp(i) && clubByName(i.club) === c).length;
-    return `<a class="tile" href="#otherclub-${esc(c.id)}"><h3>${ct('club', esc(c.name))}</h3><p>${esc(c.fullName || '')}${n ? (c.fullName ? '. ' : '') + n + ' upcoming league event' + (n > 1 ? 's' : '') : ''}</p></a>`;
-  }).join('');
+    return `<a class="tile" href="#otherclub-${esc(c.id)}"><h3>${ct('club', esc(c.name))}${isE(c) ? ' <span class="tag">EAOA</span>' : ''}</h3><p>${esc(c.fullName || '')}${n ? (c.fullName ? '. ' : '') + n + ' upcoming league event' + (n > 1 ? 's' : '') : ''}</p></a>`;
+  };
+  const tiles = CLUBS.filter(c => !/^suffoc$/i.test(String(c.name).trim())).sort((a, b) => (isE(b) - isE(a)) || String(a.name).localeCompare(String(b.name))).map(tile).join('');
   return `${pageHead('Neighbouring clubs', 'Clubs whose events count for our league and championships.', 'club', true)}
   <div class="wrap"><section class="section">
     <a class="back" href="#club-league">&larr; Back to League</a>

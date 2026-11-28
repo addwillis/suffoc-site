@@ -1270,7 +1270,7 @@ content:
       filename: '{primary}.json'
       view:
         primary: name
-        fields: [name, fullName, website]
+        fields: [name, fullName, eaoa, website]
       fields:
       - name: name
         label: Short name
@@ -1281,6 +1281,10 @@ content:
         label: Full name
         type: string
         description: For example Norfolk Orienteering Club.
+      - name: eaoa
+        label: East Anglian Orienteering Association (EAOA)
+        type: boolean
+        description: Tick if the club is in the East Anglian Orienteering Association. The Neighbouring clubs page lists these first, and the rest under Further afield.
       - name: website
         label: Website
         type: string
