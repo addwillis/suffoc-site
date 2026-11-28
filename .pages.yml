@@ -655,6 +655,13 @@ content:
           label: Picture description (optional)
           type: string
           description: A few words describing the picture, for people using screen readers.
+        - name: images
+          label: More pictures (optional)
+          type: image
+          list: true
+          description: Extra pictures shown under the text. Tap one to see it full size.
+          options:
+            path: images/news
         - name: text
           label: Main text
           type: rich-text

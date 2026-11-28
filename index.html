@@ -189,6 +189,8 @@ dl.facts dd a:hover{color:var(--sky)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
 .newscard .newsimg{display:block;width:calc(100% + 32px);margin:-16px -16px 12px;max-width:none;aspect-ratio:16/9;object-fit:cover;border-radius:var(--radius) var(--radius) 0 0}
 .newsfull{max-width:46rem}
+.newsgal{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem;margin:1.4rem 0}
+.newsgal img{width:100%;height:130px;object-fit:cover;border-radius:8px;cursor:zoom-in;display:block}
 .newsimg-full{display:block;width:100%;height:auto;border-radius:var(--radius);margin:0 0 1.2rem}
 .prose{font-size:1.08rem;line-height:1.65}
 .pageintro{max-width:60rem;padding:1.6rem 0 .2rem;overflow:hidden}
@@ -382,11 +384,11 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 182';
+const BUILD = 'build 183';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 /* If a newer index.html has been published, reload once to pick it up (GitHub Pages can serve a cached copy for a few minutes). */
 function checkNewer(){
-  fetch(location.pathname.replace(/[^\/]*$/, '') + 'index.html?v=' + Date.now(), { cache:'no-store' }).then(r => r.ok ? r.text() : '').then(t => {
+  fetch((window.BASE || '/') + 'index.html?v=' + Date.now(), { cache:'no-store' }).then(r => r.ok ? r.text() : '').then(t => {
     const m = /const BUILD = '([^']+)'/.exec(t || ''); if (!m || m[1] === BUILD) return;
     let done = ''; try { done = sessionStorage.getItem('reloadedFor') || ''; } catch (e) {}
     if (done !== m[1]) { try { sessionStorage.setItem('reloadedFor', m[1]); } catch (e) {} location.reload(); return; }
@@ -752,6 +754,7 @@ function newsPage(id){
     <div class="wrap"><section class="section"><article class="newsfull">
       ${n.image ? `<img class="newsimg-full" src="${esc(imgSrc(n.image))}" alt="${esc(n.imageAlt || '')}">` : ''}
       <div class="prose">${richHTML(n.text)}</div>
+      ${(Array.isArray(n.images) ? n.images : []).filter(Boolean).length ? `<div class="newsgal">${n.images.filter(Boolean).map(u => `<img src="${esc(imgSrc(u))}" alt="" loading="lazy">`).join('')}</div>` : ''}
       ${n.link ? `<p><a class="btn small line" href="${esc(n.link)}" ${ext}>Original news page</a></p>` : ''}
     </article></section></div>`;
 }
@@ -1631,7 +1634,7 @@ function introText(name, html){
 }
 /* Click a picture at the top of a page to see it full size. */
 document.addEventListener('click', e => {
-  const im = e.target.closest && e.target.closest('.pageintro img');
+  const im = e.target.closest && e.target.closest('.pageintro img, .newsimg-full, .newsgal img');
   if (!im) return;
   const lb = document.createElement('div');
   lb.className = 'lightbox';
