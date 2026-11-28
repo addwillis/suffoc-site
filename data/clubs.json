@@ -42,6 +42,7 @@
     {
       "name": "SMOC",
       "fullName": "South Midlands Orienteering Club",
+      "eaoa": true,
       "id": "smoc"
     },
     {
