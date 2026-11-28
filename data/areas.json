@@ -1,6 +1,13 @@
 {
   "areas": [
     {
+      "name": "Abbey Gardens",
+      "town": "Bury St Edmunds",
+      "mapType": "SUFFOC map",
+      "gridRef": "TL 857637",
+      "id": "abbey-gardens"
+    },
+    {
       "name": "Alton Water",
       "mapType": "SUFFOC map",
       "gridRef": "TM 139364",
@@ -241,6 +248,12 @@
       "id": "raf-honington"
     },
     {
+      "name": "Ravenswood and Brazier Wood",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 190416",
+      "id": "ravenswood-and-brazier-wood"
+    },
+    {
       "name": "Rendlesham Forest",
       "mapType": "SUFFOC map",
       "gridRef": "TM356500",
@@ -251,6 +264,24 @@
       "mapType": "SUFFOC map",
       "gridRef": "TM 166 351",
       "id": "royal-hospital-school"
+    },
+    {
+      "name": "Rushmere Country Park",
+      "mapType": "Other club's map",
+      "gridRef": "SP 917292",
+      "id": "rushmere-country-park"
+    },
+    {
+      "name": "Sandringham",
+      "mapType": "Other club's map",
+      "gridRef": "TF 695288",
+      "id": "sandringham"
+    },
+    {
+      "name": "Shouldham",
+      "mapType": "Other club's map",
+      "gridRef": "TF 675105",
+      "id": "shouldham"
     },
     {
       "name": "Shrubland Park",
@@ -277,6 +308,18 @@
       "lat": 52.1211,
       "lon": 1.5036,
       "id": "tunstall"
+    },
+    {
+      "name": "Walberswick",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 493745",
+      "id": "walberswick"
+    },
+    {
+      "name": "Wattisham airfield",
+      "mapType": "SUFFOC map",
+      "gridRef": "TM 013505",
+      "id": "wattisham-airfield"
     },
     {
       "name": "West Harling Heath",
