@@ -8,5 +8,7 @@
       "role": "Regional Representative"
     }
   ],
-  "photo": "/images/people/andrew-elliott.jpg"
+  "photo": "/images/people/andrew-elliott.jpg",
+  "yob": 1971,
+  "gender": "M"
 }

@@ -8,7 +8,22 @@
         }
       ],
       "photo": "/images/people/IMG_3258 - Copy.jpg",
+      "yob": 1993,
+      "gender": "M",
       "id": "adam-willis"
+    },
+    {
+      "name": "Alan Anstead",
+      "id": "alan-anstead"
+    },
+    {
+      "name": "Alan Bedder",
+      "club": "NOR",
+      "id": "alan-bedder"
+    },
+    {
+      "name": "Andrew Cordle",
+      "id": "andrew-cordle"
     },
     {
       "name": "Andrew Elliott",
@@ -21,7 +36,61 @@
         }
       ],
       "photo": "/images/people/andrew-elliott.jpg",
+      "yob": 1971,
+      "gender": "M",
       "id": "andrew-elliott"
+    },
+    {
+      "name": "Anne Elvidge",
+      "id": "anne-elvidge"
+    },
+    {
+      "name": "Bert Park",
+      "yob": 1965,
+      "gender": "M",
+      "id": "bert-park"
+    },
+    {
+      "name": "Bill McLean",
+      "id": "bill-mclean"
+    },
+    {
+      "name": "Bob Hill",
+      "id": "bob-hill"
+    },
+    {
+      "name": "Bruce Marshall",
+      "id": "bruce-marshall"
+    },
+    {
+      "name": "Bryn Wilkinson",
+      "yob": 1997,
+      "gender": "M",
+      "id": "bryn-wilkinson"
+    },
+    {
+      "name": "Chloe Cracknell",
+      "id": "chloe-cracknell"
+    },
+    {
+      "name": "Chris Davies",
+      "id": "chris-davies"
+    },
+    {
+      "name": "Chris Gay",
+      "id": "chris-gay"
+    },
+    {
+      "name": "Clarissa Napier",
+      "id": "clarissa-napier"
+    },
+    {
+      "name": "Clive Coles",
+      "id": "clive-coles"
+    },
+    {
+      "name": "Clive Tant",
+      "id": "clive-tant"
     },
     {
       "name": "Clive Wilkinson",
@@ -35,18 +104,34 @@
       "id": "clive-wilkinson"
     },
     {
+      "name": "Colin Butler",
+      "id": "colin-butler"
+    },
+    {
       "name": "Colin West",
       "club": "SOS",
       "id": "colin-west"
     },
     {
+      "name": "David Butler",
+      "id": "david-butler"
+    },
+    {
       "name": "David Hodkinson",
+      "yob": 1984,
+      "gender": "M",
       "id": "david-hodkinson"
     },
     {
       "name": "Eddie Banks",
       "club": "SOS",
       "id": "eddie-banks"
+    },
+    {
+      "name": "Emily Vallow",
+      "yob": 1990,
+      "gender": "W",
+      "id": "emily-vallow"
     },
     {
       "name": "Ethan Radcliffe",
@@ -59,6 +144,11 @@
       "id": "ethan-radcliffe"
     },
     {
+      "name": "Freya Askham",
+      "club": "SMOC",
+      "id": "freya-askham"
+    },
+    {
       "name": "Gareth Radcliffe",
       "roles": [
         {
@@ -66,7 +156,17 @@
         }
       ],
       "photo": "/images/people/gareth-radcliffe.jpg",
+      "yob": 1980,
+      "gender": "M",
       "id": "gareth-radcliffe"
+    },
+    {
+      "name": "Goff Hill",
+      "id": "goff-hill"
+    },
+    {
+      "name": "Graham Louth",
+      "id": "graham-louth"
     },
     {
       "name": "Hannah Constable-Simmonds",
@@ -89,6 +189,19 @@
       "id": "jeanette-downing"
     },
     {
+      "name": "Jeff Baker",
+      "club": "LOG",
+      "id": "jeff-baker"
+    },
+    {
+      "name": "John Clarke",
+      "id": "john-clarke"
+    },
+    {
+      "name": "John Collyer",
+      "id": "john-collyer"
+    },
+    {
       "name": "John Liston",
       "roles": [
         {
@@ -101,9 +214,33 @@
       "id": "john-liston"
     },
     {
+      "name": "John Webb",
+      "id": "john-webb"
+    },
+    {
+      "name": "Jon Housego",
+      "id": "jon-housego"
+    },
+    {
+      "name": "Jonathan Creak",
+      "id": "jonathan-creak"
+    },
+    {
+      "name": "Julian Dean",
+      "id": "julian-dean"
+    },
+    {
       "name": "Kevin Machin",
       "club": "SOS",
       "id": "kevin-machin"
+    },
+    {
+      "name": "Kim Eden",
+      "id": "kim-eden"
+    },
+    {
+      "name": "Lenka Anstead",
+      "id": "lenka-anstead"
     },
     {
       "name": "Louise Walker",
@@ -113,6 +250,8 @@
         }
       ],
       "photo": "/images/people/Walker_Louise_001935_061.jpg",
+      "yob": 1965,
+      "gender": "W",
       "id": "louise-walker"
     },
     {
@@ -123,7 +262,17 @@
         }
       ],
       "photo": "/images/people/martin-hore-1.jpg",
+      "yob": 1950,
+      "gender": "M",
       "id": "martin-hore"
+    },
+    {
+      "name": "Martin Sellens",
+      "id": "martin-sellens"
+    },
+    {
+      "name": "Matt Clarke",
+      "id": "matt-clarke"
     },
     {
       "name": "Michael Chopping",
@@ -136,9 +285,25 @@
       "id": "mike-bickle"
     },
     {
+      "name": "Mike Capper",
+      "id": "mike-capper"
+    },
+    {
       "name": "Mike Edwards",
       "club": "RAFO",
       "id": "mike-edwards"
+    },
+    {
+      "name": "Mike Sherwen",
+      "id": "mike-sherwen"
+    },
+    {
+      "name": "Neil Carter",
+      "id": "neil-carter"
+    },
+    {
+      "name": "Norman King",
+      "id": "norman-king"
     },
     {
       "name": "Oliver Hague",
@@ -146,9 +311,41 @@
       "id": "oliver-hague"
     },
     {
+      "name": "Pat Martin",
+      "id": "pat-martin"
+    },
+    {
       "name": "Paul Beckett",
       "club": "HAVOC",
       "id": "paul-beckett"
+    },
+    {
+      "name": "Paul Butt",
+      "id": "paul-butt"
+    },
+    {
+      "name": "Paul Lowe",
+      "id": "paul-lowe"
+    },
+    {
+      "name": "Perry Mole",
+      "id": "perry-mole"
+    },
+    {
+      "name": "Pete Gay",
+      "id": "pete-gay"
+    },
+    {
+      "name": "Peter Duthie",
+      "id": "peter-duthie"
+    },
+    {
+      "name": "Peter Haynes",
+      "id": "peter-haynes"
+    },
+    {
+      "name": "Peter Warland",
+      "id": "peter-warland"
     },
     {
       "name": "Peter Woods",
@@ -157,6 +354,8 @@
     },
     {
       "name": "Phil Halford",
+      "yob": 1954,
+      "gender": "M",
       "id": "phil-halford"
     },
     {
@@ -165,7 +364,17 @@
       "id": "richard-bonnett"
     },
     {
+      "name": "Richard Johnson",
+      "id": "richard-johnson"
+    },
+    {
+      "name": "Rob Coulter",
+      "id": "rob-coulter"
+    },
+    {
       "name": "Robin Thomas",
+      "yob": 1951,
+      "gender": "M",
       "id": "robin-thomas"
     },
     {
@@ -182,7 +391,17 @@
         }
       ],
       "photo": "/images/people/rod-mansel.jpg",
+      "yob": 1959,
+      "gender": "M",
       "id": "rod-mansel"
+    },
+    {
+      "name": "Roderick Mansel",
+      "id": "roderick-mansel"
+    },
+    {
+      "name": "Roger Orpin",
+      "id": "roger-orpin"
     },
     {
       "name": "Sally Wilkinson",
@@ -199,6 +418,10 @@
       ],
       "photo": "/images/people/492498193_1151921863399253_1709721349349532313_n.jpg",
       "id": "sally-wilkinson"
+    },
+    {
+      "name": "Sammy Gibbs",
+      "id": "sammy-gibbs"
     },
     {
       "name": "Sarah Mansel",
@@ -220,6 +443,8 @@
         }
       ],
       "photo": "/images/people/sarah-mansel.jpg",
+      "yob": 1965,
+      "gender": "W",
       "id": "sarah-mansel"
     },
     {
@@ -234,6 +459,39 @@
       "id": "simon-hooton"
     },
     {
+      "name": "Simon Peck",
+      "id": "simon-peck"
+    },
+    {
+      "name": "Stephen Borrill",
+      "club": "WAOC",
+      "id": "stephen-borrill"
+    },
+    {
+      "name": "Steve Bones",
+      "id": "steve-bones"
+    },
+    {
+      "name": "Steve Nobbs",
+      "id": "steve-nobbs"
+    },
+    {
+      "name": "Steve Robertson",
+      "id": "steve-robertson"
+    },
+    {
+      "name": "Steve Scoffin",
+      "id": "steve-scoffin"
+    },
+    {
+      "name": "Tim Eden",
+      "id": "tim-eden"
+    },
+    {
+      "name": "Tim Harrison",
+      "id": "tim-harrison"
+    },
+    {
       "name": "Will Harrison",
       "roles": [
         {
@@ -243,6 +501,14 @@
       ],
       "photo": "/images/people/will-harrison.jpg",
       "id": "will-harrison"
+    },
+    {
+      "name": "Wilson McLean",
+      "id": "wilson-mclean"
+    },
+    {
+      "name": "Yvonne McLean",
+      "id": "yvonne-mclean"
     }
   ]
 }

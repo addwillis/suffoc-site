@@ -17,5 +17,7 @@
       "email": "membership"
     }
   ],
-  "photo": "/images/people/sarah-mansel.jpg"
+  "photo": "/images/people/sarah-mansel.jpg",
+  "yob": 1965,
+  "gender": "W"
 }

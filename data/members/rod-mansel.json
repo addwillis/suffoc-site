@@ -11,5 +11,7 @@
       "role": "SI Coordinator"
     }
   ],
-  "photo": "/images/people/rod-mansel.jpg"
+  "photo": "/images/people/rod-mansel.jpg",
+  "yob": 1959,
+  "gender": "M"
 }

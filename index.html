@@ -385,7 +385,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 190';
+const BUILD = 'build 192';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 /* If a newer index.html has been published, reload once to pick it up (GitHub Pages can serve a cached copy for a few minutes). */
 function checkNewer(){
@@ -1179,6 +1179,16 @@ function tagPage(kind, slug){
     </div>`;
 }
 /* One page per club member: their details and every event they have organised, planned or controlled. */
+/* Age class from year of birth (age on 31 Dec this year): Junior, 21, 35, 40 ... 90. The year itself is never shown. */
+function ageClass(m){
+  if (m.junior === true || m.junior === 'true') return 'Junior';
+  const y = parseInt(m.yob, 10); if (!y) return '';
+  const a = new Date().getFullYear() - y;
+  if (a < 21) return 'Junior';
+  const g = /^[MW]$/.test(m.gender) ? m.gender : '';
+  const b = a < 35 ? 21 : Math.min(90, Math.floor(a / 5) * 5);
+  return g ? g + b : 'Age class ' + b;
+}
 function personPage(id){
   const m = MEMBERS[id];
   if (!m) return VIEWS.club();
@@ -1193,7 +1203,7 @@ function personPage(id){
       ${m.roles.length ? '<a class="back" href="#club-committee">&larr; Back to Committee</a>' : '<a class="back" href="#club">&larr; Back to Club</a>'}
       <div class="person">
         ${m.photo ? `<img class="personimg" src="${esc(imgSrc(m.photo))}" alt="${esc(m.name)}">` : ''}
-        <div><h1 class="event-title">${esc(m.name)}</h1>${m.club ? '<p class="meta">' + clubTag(m.club) + '</p>' : ''}</div>
+        <div><h1 class="event-title">${esc(m.name)}</h1>${(m.club || ageClass(m)) ? '<p class="meta">' + (m.club ? clubTag(m.club) : '') + (m.club && ageClass(m) ? ' &middot; ' : '') + esc(ageClass(m)) + '</p>' : ''}</div>
       </div>
     </div></section>
     <div class="wrap">
