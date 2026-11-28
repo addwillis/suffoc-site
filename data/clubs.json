@@ -60,6 +60,7 @@
     {
       "name": "WAOC",
       "fullName": "West Anglian Orienteering Club",
+      "eaoa": true,
       "id": "waoc"
     }
   ]
