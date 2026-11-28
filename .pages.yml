@@ -125,7 +125,7 @@ content:
           - "Sutton Common"
           - "Tunstall Forest"
           - "Walberswick"
-          - "Wattisham airfield"
+          - "Wattisham Airfield"
           - "West Harling Heath"
           # END areas
       - name: about
@@ -754,7 +754,7 @@ content:
           - "Sutton Common"
           - "Tunstall Forest"
           - "Walberswick"
-          - "Wattisham airfield"
+          - "Wattisham Airfield"
           - "West Harling Heath"
           # END areas
       - name: description
