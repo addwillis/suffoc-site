@@ -249,6 +249,7 @@
     },
     {
       "name": "Ravenswood and Brazier Wood",
+      "town": "Ipswich",
       "mapType": "SUFFOC map",
       "gridRef": "TM 190416",
       "id": "ravenswood-and-brazier-wood"
