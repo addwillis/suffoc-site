@@ -1,5 +1,8 @@
 {
   "name": "John Liston",
+  "junior": false,
+  "gender": "M",
+  "yob": 1971,
   "roles": [
     {
       "role": "Safety Liaison Officer"
