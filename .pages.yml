@@ -921,6 +921,7 @@ content:
           - "RAFO"
           - "SMOC"
           - "SOS"
+          - "SUFFOC"
           - "WAOC"
           # END clubs
       - name: phone
@@ -1102,6 +1103,7 @@ content:
             - "RAFO"
             - "SMOC"
             - "SOS"
+            - "SUFFOC"
             - "WAOC"
             # END clubs
         - name: startFrom
@@ -1169,6 +1171,7 @@ content:
             - "RAFO"
             - "SMOC"
             - "SOS"
+            - "SUFFOC"
             - "WAOC"
             # END clubs
         - name: eventLink
