@@ -907,9 +907,9 @@ content:
         type: string
         required: true
       - name: club
-        label: Club (leave empty for SUFFOC)
+        label: Club (leave empty if you don't know)
         type: select
-        description: Only choose a club if this person is from another club, for example a controller. Pick from Other clubs. If the club is not listed, add it first using Other clubs in the menu.
+        description: Choose SUFFOC for members and past members of our club. Choose another club if this person is from one, for example a controller. If the club is not listed, add it first using Clubs in the menu. Leave empty if you are not sure. This does not show on the site for SUFFOC or empty.
         options:
           values:
           # BEGIN clubs
@@ -1011,14 +1011,14 @@ content:
         label: What The Role Does (optional)
         type: text
     - name: clubs
-      label: Other Clubs
+      label: Clubs
       type: collection
       path: data/clubs
       format: json
       filename: '{primary}.json'
       view:
         primary: name
-        fields: [name, fullName]
+        fields: [name, fullName, website]
       fields:
       - name: name
         label: Short name
@@ -1092,7 +1092,7 @@ content:
         - name: club
           label: Host club
           type: select
-          description: Pick from Other clubs. If the club is not listed, add it first using Other clubs in the menu.
+          description: Pick from Clubs. If the club is not listed, add it first using Clubs in the menu.
           options:
             values:
             # BEGIN clubs
@@ -1161,7 +1161,7 @@ content:
         - name: club
           label: Host club (optional)
           type: select
-          description: Pick from Other clubs if another club hosted it.
+          description: Pick from Clubs if another club hosted it.
           options:
             values:
             # BEGIN clubs

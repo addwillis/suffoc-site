@@ -385,7 +385,7 @@ dl.facts dd a:hover{color:var(--sky)}
    Events and areas are in data/events.json and data/areas.json (edit them in Pages CMS). The lists below are news and club pages.
    Coordinates are approximate sample values.
    ===================================================================== */
-const BUILD = 'build 188';
+const BUILD = 'build 190';
 function status(msg){ let el = document.getElementById('status'); if(!el){ el = document.createElement('p'); el.id='status'; el.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:.4rem .8rem;background:#fff3cd;color:#222;font:13px sans-serif;z-index:99'; document.body.appendChild(el);} el.textContent = BUILD + ': ' + msg; }
 /* If a newer index.html has been published, reload once to pick it up (GitHub Pages can serve a cached copy for a few minutes). */
 function checkNewer(){
@@ -495,6 +495,7 @@ function loadMembers(list){
     rs = rs.map(r => typeof r === 'object' && r ? { role: String(r.role || '').trim(), email: fullEmail(r.email) } : { role: String(r).trim(), email: '' }).filter(r => r.role);
     rs.forEach(r => { if (!r.email) { const ro = roleByName(r.role); if (ro && ro.email) r.email = fullEmail(ro.email); } });  /* the role's own email, unless the person has one of their own */
     if (rs.length && m.email && !rs[0].email) rs[0].email = String(m.email).trim();  /* older entries had one email per person */
+    if (/^suffoc$/i.test(String(m.club || '').trim())) m.club = '';  /* SUFFOC means our own club, the same as leaving it blank */
     m.roles = rs; MEMBERS[m.id || personKey(m.name)] = m; } });
 }
 /* Which member does a name (or the file path Pages CMS may store) refer to? */
@@ -1405,7 +1406,7 @@ function leaguePage(){
   return `${pageHead('League', 'Club league events, rules and standings.', 'league', true)}
   <div class="wrap"><section class="section">
     <a class="back" href="#club">&larr; Back to Club</a>
-    ${CLUBS.length ? '<p class="meta" style="margin:.8rem 0 0">Hosted by other clubs? See <a href="#otherclubs">neighbouring clubs</a>.</p>' : ''}
+    ${CLUBS.some(c => !/^suffoc$/i.test(String(c.name).trim())) ? '<p class="meta" style="margin:.8rem 0 0">Hosted by other clubs? See <a href="#otherclubs">neighbouring clubs</a>.</p>' : ''}
     ${rules || table ? `<div class="btns" style="margin:1rem 0 0">${table ? `<a class="btn gold" href="${esc(table)}" ${ext}>League table</a>` : ''}${rules ? `<a class="btn ${table ? 'line' : 'gold'}" href="${esc(rules)}" ${ext}>League rules</a>` : ''}</div>` : ''}
     <div class="section-head" style="margin-top:1.8rem"><h2>Upcoming league events</h2></div>
     ${up.length ? `<div class="events">${up.map(i => leagueCard(i, false)).join('')}</div>` : '<div class="empty">No league events are listed yet. Check back soon.</div>'}
@@ -1415,7 +1416,7 @@ function leaguePage(){
 /* Other clubs: a list page, and one page per club showing the league and championship events they host. */
 function otherClubsPage(){
   const all = leagueItems().filter(i => !i.own);
-  const tiles = CLUBS.slice().sort((a, b) => String(a.name).localeCompare(String(b.name))).map(c => {
+  const tiles = CLUBS.filter(c => !/^suffoc$/i.test(String(c.name).trim())).sort((a, b) => String(a.name).localeCompare(String(b.name))).map(c => {
     const n = all.filter(i => leagueIsUp(i) && clubByName(i.club) === c).length;
     return `<a class="tile" href="#otherclub-${esc(c.id)}"><h3>${ct('club', esc(c.name))}</h3><p>${esc(c.fullName || '')}${n ? (c.fullName ? '. ' : '') + n + ' upcoming league event' + (n > 1 ? 's' : '') : ''}</p></a>`;
   }).join('');
