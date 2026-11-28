@@ -100,7 +100,7 @@
     },
     {
       "name": "Secretary",
-      "email": "secretary@suffoc.uk",
+      "email": "secretary",
       "group": "Committee",
       "order": 5,
       "id": "secretary"
