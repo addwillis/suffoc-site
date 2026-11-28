@@ -1136,7 +1136,7 @@ content:
       filename: '{primary}.json'
       view:
         primary: name
-        fields: [name, club, roles]
+        fields: [name, club, yob, gender, roles]
       fields:
       - name: name
         label: Name
