@@ -522,7 +522,11 @@ content:
       - name: order
         label: Order in the dropdown
         type: number
-        description: 1 comes first. National 1, Regional 2, Local 3.
+        description: 1 comes first. Major 1, National 2, Regional 3, Local 4.
+      - name: grade
+        label: Old grade letter (optional)
+        type: string
+        description: The British Orienteering grade this level matches, for example Level C for Regional. Used for old events that were tagged by letter.
     - name: series
       label: Event Series
       type: collection
