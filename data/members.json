@@ -424,6 +424,9 @@
     },
     {
       "name": "Sammy Gibbs",
+      "junior": false,
+      "gender": "M",
+      "yob": 1987,
       "id": "sammy-gibbs"
     },
     {
