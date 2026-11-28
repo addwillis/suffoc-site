@@ -1,5 +1,8 @@
 {
   "name": "Clive Wilkinson",
+  "junior": false,
+  "gender": "M",
+  "yob": 1962,
   "roles": [
     {
       "role": "Coach",
