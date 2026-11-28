@@ -1,5 +1,8 @@
 {
   "name": "Simon Hooton",
+  "junior": false,
+  "gender": "M",
+  "yob": 1956,
   "roles": [
     {
       "role": "Coach",
